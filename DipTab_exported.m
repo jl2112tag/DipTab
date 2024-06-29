@@ -1,12 +1,12 @@
-classdef DipTabInsight_exported < matlab.apps.AppBase
+classdef DipTab_exported < matlab.apps.AppBase
 
     % Properties that correspond to app components
     properties (Access = public)
-        DipTabInsightUIFigure           matlab.ui.Figure
+        DipTabUIFigure                  matlab.ui.Figure
         SampleDescriptionEditField      matlab.ui.control.EditField
         DescriptionEditFieldLabel       matlab.ui.control.Label
         DeployButton                    matlab.ui.control.Button
-        DipTabInsightLabel              matlab.ui.control.Label
+        DipTabLabel                     matlab.ui.control.Label
         Image                           matlab.ui.control.Image
         StopProcessButton               matlab.ui.control.Button
         TabGroup                        matlab.ui.container.TabGroup
@@ -570,7 +570,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
                 xData = app.FData.xData;
                 freq = app.FData.freq;
             catch ME
-                fig = app.DipTabInsightUIFigure;
+                fig = app.DipTabUIFigure;
                 uialert(fig,'No filtered data set','Warning');
                 app.EnableButton_2.Value = 0;
                 EnableButton_2ValueChanged(app,0);
@@ -728,7 +728,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
             dataset = app.DatasettoUseButtonGroup.SelectedObject.Text;
             
             if isempty(mItems)
-                fig = app.DipTabInsightUIFigure;
+                fig = app.DipTabUIFigure;
                 uialert(fig,'No profiles selected','Warning');
                 return;                
             end
@@ -822,7 +822,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
             sBatch = app.BatchListBox.Items(bItems);
             
             if isempty(bItems)
-                fig = app.DipTabInsightUIFigure;
+                fig = app.DipTabUIFigure;
                 uialert(fig,'No batch selected','Warning');
                 return;
             end
@@ -1121,7 +1121,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
             app.ProjectNameEditField.Value = ProjectName;
             
             app.DeployButton.Enable = true;
-            figure(app.DipTabInsightUIFigure);            
+            figure(app.DipTabUIFigure);            
         end
 
         % Button pushed function: LoadProjectButton
@@ -1169,7 +1169,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
                 xData = app.TData.xData;
                 ToF = app.TData.ToF;
             catch ME
-                fig = app.DipTabInsightUIFigure;
+                fig = app.DipTabUIFigure;
                 uialert(fig,'Load Data first','Warning');
                 app.EnableButton.Value = false;
                 return;
@@ -1307,7 +1307,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
             
             % lb, ub availability check
             if xlbLoc==0 || xubLoc>measNum || xlbLoc>xubLoc
-                fig = app.DipTabInsightUIFigure;
+                fig = app.DipTabUIFigure;
                 uialert(fig,'Incorrect X-truncation setting','Warning');
                 app.DeployButton.Enable = true;
                 app.TruncateButton.Enable = true;
@@ -1317,7 +1317,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
 
            % lb, ub availability check
             if ylbLoc==0 || yubLoc>dataLength || ylbLoc>yubLoc
-                fig = app.DipTabInsightUIFigure;
+                fig = app.DipTabUIFigure;
                 uialert(fig,'Incorrect Y-truncation setting','Warning');
                 app.DeployButton.Enable = true;
                 app.TruncateButton.Enable = true;
@@ -1535,7 +1535,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
                 magData = app.FData.magData;
                 phsData = app.FData.phsData;
             catch ME
-                fig = app.DipTabInsightUIFigure;
+                fig = app.DipTabUIFigure;
                 uialert(fig,'Load Data first','Warning');
                 app.EnableButton.Value = false;
                 return;
@@ -1716,7 +1716,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
                 xData = app.TData.xData;
                 ingressDepth = app.TData.ToF;
             catch ME
-                fig = app.DipTabInsightUIFigure;
+                fig = app.DipTabUIFigure;
                 uialert(fig,'Load Data first','Warning');
                 app.EnableButton.Value = false;
                 return;
@@ -1774,7 +1774,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
                 xData = app.TData.ToF;
                 ftdSam = app.TData.ftdSam;
             catch ME
-                fig = app.DipTabInsightUIFigure;
+                fig = app.DipTabUIFigure;
                 uialert(fig,'Load Data first','Warning');
                 app.EnableButton.Value = false;
                 return;
@@ -1826,7 +1826,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
                 lfDis = app.LfData.lfDis;
                 app.LfData.algoROI = [];
             catch ME
-                fig = app.DipTabInsightUIFigure;
+                fig = app.DipTabUIFigure;
                 uialert(fig,'Dataset is not ready','Warning');
                 return;
             end
@@ -1852,7 +1852,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
                 lfTime = app.LfData.lfTime;
                 lfDis = app.LfData.lfDis;
             catch ME
-                fig = app.DipTabInsightUIFigure;
+                fig = app.DipTabUIFigure;
                 uialert(fig,'Dataset is not ready','Warning');
                 return
             end
@@ -1864,7 +1864,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
                     try
                        ROI = app.LfData.algoROI;
                     catch ME
-                       fig = app.DipTabInsightUIFigure;
+                       fig = app.DipTabUIFigure;
                        uialert(fig,'Algorithm dataset is not ready','Warning');
                        app.EnableButton.Value = false;
                        return;
@@ -1873,7 +1873,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
                     try
                        ROI = app.LfData.fhROI;
                     catch ME
-                       fig = app.DipTabInsightUIFigure;
+                       fig = app.DipTabUIFigure;
                        uialert(fig,'Freehand dataset is not ready','Warning');
                        app.EnableButton.Value = false;
                        return;
@@ -1884,7 +1884,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
                        fhROI = app.LfData.fhROI;
                        ROI = algoROI.*fhROI;
                     catch ME
-                       fig = app.DipTabInsightUIFigure;
+                       fig = app.DipTabUIFigure;
                        uialert(fig,'ROI datasets are not ready','Warning');
                        return;
                     end
@@ -1981,7 +1981,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
                 lfTime = app.LfData.lfTime;
                 ingressTime = app.LiquidIngressTimesecEditField.Value;
             catch ME
-                fig = app.DipTabInsightUIFigure;
+                fig = app.DipTabUIFigure;
                 uialert(fig,'Dataset is not ready','Warning');
                 return;
             end
@@ -2315,7 +2315,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
             
             % lb, ub availability check
             if lbLoc==0 || ubLoc>measNum || lbLoc>ubLoc
-                fig = app.DipTabInsightUIFigure;
+                fig = app.DipTabUIFigure;
                 uialert(fig,'Incorrect Y-truncation setting','Warning');
                  app.DeployButton.Enable = true;
                 app.TruncateButton.Enable = true;
@@ -2409,7 +2409,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
                 lfTime = app.LfData.lfTime;
                 lfDis = app.LfData.lfDis;
             catch ME
-                fig = app.DipTabInsightUIFigure;
+                fig = app.DipTabUIFigure;
                 uialert(fig,'Dataset is not ready','Warning');
                 app.EnableButton.Value = false;
                 return
@@ -2530,7 +2530,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
                 lfTime = app.LfData.lfTime;
                 lfDis = app.LfData.lfDis;
             catch ME
-                fig = app.DipTabInsightUIFigure;
+                fig = app.DipTabUIFigure;
                 uialert(fig,'Dataset is not ready','Warning');
                 app.EnableButton.Value = false;
                 return
@@ -2565,7 +2565,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
                     fhROI = app.LfData.fhROI;
                     ROI = algoROI.*fhROI;
                 catch ME
-                    fig = app.DipTabInsightUIFigure;
+                    fig = app.DipTabUIFigure;
                     uialert(fig,'ROI datasets are not ready','Warning');
                     return;
                 end
@@ -2604,7 +2604,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
             listItems = app.MeasurementListBox.Items;
             
             if isempty(mItems)
-                fig = app.DipTabInsightUIFigure;
+                fig = app.DipTabUIFigure;
                 uialert(fig,'No profiles selected','Warning');
                 return;                
             end
@@ -2651,7 +2651,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
             listItems = app.MeasurementListBox.Items;
             
             if isempty(mItems)
-                fig = app.DipTabInsightUIFigure;
+                fig = app.DipTabUIFigure;
                 uialert(fig,'No profiles selected','Warning');
                 return;                
             end
@@ -2930,46 +2930,46 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
             % Get the file path for locating images
             pathToMLAPP = fileparts(mfilename('fullpath'));
 
-            % Create DipTabInsightUIFigure and hide until all components are created
-            app.DipTabInsightUIFigure = uifigure('Visible', 'off');
-            app.DipTabInsightUIFigure.Position = [100 100 1484 916];
-            app.DipTabInsightUIFigure.Name = 'DipTab Insight';
-            app.DipTabInsightUIFigure.Icon = fullfile(pathToMLAPP, 'Images', 'icon.png');
+            % Create DipTabUIFigure and hide until all components are created
+            app.DipTabUIFigure = uifigure('Visible', 'off');
+            app.DipTabUIFigure.Position = [100 100 1484 916];
+            app.DipTabUIFigure.Name = 'DipTab Insight';
+            app.DipTabUIFigure.Icon = fullfile(pathToMLAPP, 'Images', 'icon.png');
 
             % Create ImportthzFileButton
-            app.ImportthzFileButton = uibutton(app.DipTabInsightUIFigure, 'push');
+            app.ImportthzFileButton = uibutton(app.DipTabUIFigure, 'push');
             app.ImportthzFileButton.ButtonPushedFcn = createCallbackFcn(app, @ImportthzFileButtonPushed, true);
             app.ImportthzFileButton.FontWeight = 'bold';
-            app.ImportthzFileButton.Position = [334 850 114 28];
+            app.ImportthzFileButton.Position = [313 851 114 28];
             app.ImportthzFileButton.Text = 'Import .thz File';
 
             % Create TerahertzLqiuidFrontDateAnalyserLabel
-            app.TerahertzLqiuidFrontDateAnalyserLabel = uilabel(app.DipTabInsightUIFigure);
+            app.TerahertzLqiuidFrontDateAnalyserLabel = uilabel(app.DipTabUIFigure);
             app.TerahertzLqiuidFrontDateAnalyserLabel.FontWeight = 'bold';
             app.TerahertzLqiuidFrontDateAnalyserLabel.FontAngle = 'italic';
             app.TerahertzLqiuidFrontDateAnalyserLabel.Position = [84 840 224 29];
             app.TerahertzLqiuidFrontDateAnalyserLabel.Text = 'Terahertz LqiuidFront Date Analyser';
 
             % Create ProjectNameEditField
-            app.ProjectNameEditField = uieditfield(app.DipTabInsightUIFigure, 'text');
+            app.ProjectNameEditField = uieditfield(app.DipTabUIFigure, 'text');
             app.ProjectNameEditField.Editable = 'off';
             app.ProjectNameEditField.BackgroundColor = [0.9412 0.9412 0.9412];
-            app.ProjectNameEditField.Position = [463 853 432 22];
+            app.ProjectNameEditField.Position = [440 854 432 22];
 
             % Create SystemStatusEditFieldLabel
-            app.SystemStatusEditFieldLabel = uilabel(app.DipTabInsightUIFigure);
+            app.SystemStatusEditFieldLabel = uilabel(app.DipTabUIFigure);
             app.SystemStatusEditFieldLabel.BackgroundColor = [0.9412 0.9412 0.9412];
             app.SystemStatusEditFieldLabel.HorizontalAlignment = 'right';
             app.SystemStatusEditFieldLabel.Position = [30 12 83 22];
             app.SystemStatusEditFieldLabel.Text = 'System Status';
 
             % Create SystemStatusEditField
-            app.SystemStatusEditField = uieditfield(app.DipTabInsightUIFigure, 'text');
+            app.SystemStatusEditField = uieditfield(app.DipTabUIFigure, 'text');
             app.SystemStatusEditField.BackgroundColor = [0.9412 0.9412 0.9412];
             app.SystemStatusEditField.Position = [128 12 822 22];
 
             % Create TabGroup
-            app.TabGroup = uitabgroup(app.DipTabInsightUIFigure);
+            app.TabGroup = uitabgroup(app.DipTabUIFigure);
             app.TabGroup.AutoResizeChildren = 'off';
             app.TabGroup.Position = [19 46 1446 790];
 
@@ -3152,7 +3152,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
             app.TruncateButton.ButtonPushedFcn = createCallbackFcn(app, @TruncateButtonPushed, true);
             app.TruncateButton.BackgroundColor = [1 1 1];
             app.TruncateButton.FontWeight = 'bold';
-            app.TruncateButton.FontColor = [0 0.4471 0.7412];
+            app.TruncateButton.FontColor = [0.149 0.149 0.149];
             app.TruncateButton.Position = [116 12 93 23];
             app.TruncateButton.Text = 'Truncate';
 
@@ -3391,7 +3391,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
             app.FourierTransformPanel = uipanel(app.FrequencydomainTab);
             app.FourierTransformPanel.AutoResizeChildren = 'off';
             app.FourierTransformPanel.Title = 'Fourier Transform';
-            app.FourierTransformPanel.Position = [13 404 240 290];
+            app.FourierTransformPanel.Position = [13 403 240 290];
 
             % Create TransformButton
             app.TransformButton = uibutton(app.FourierTransformPanel, 'push');
@@ -3545,14 +3545,14 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
             app.NextButton.ButtonPushedFcn = createCallbackFcn(app, @NextButtonPushed, true);
             app.NextButton.FontWeight = 'bold';
             app.NextButton.Enable = 'off';
-            app.NextButton.Position = [25 150 220 24];
+            app.NextButton.Position = [27 53 215 24];
             app.NextButton.Text = 'Next';
 
             % Create SingleMeasurementPanel
             app.SingleMeasurementPanel = uipanel(app.FrequencydomainTab);
             app.SingleMeasurementPanel.AutoResizeChildren = 'off';
             app.SingleMeasurementPanel.Title = 'Single Measurement';
-            app.SingleMeasurementPanel.Position = [13 144 240 108];
+            app.SingleMeasurementPanel.Position = [13 140 240 108];
 
             % Create EnableButton_2
             app.EnableButton_2 = uibutton(app.SingleMeasurementPanel, 'state');
@@ -3585,14 +3585,14 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
             % Create AssiginFFTDatainworkspaceButton
             app.AssiginFFTDatainworkspaceButton = uibutton(app.FrequencydomainTab, 'push');
             app.AssiginFFTDatainworkspaceButton.ButtonPushedFcn = createCallbackFcn(app, @AssiginFFTDatainworkspaceButtonPushed, true);
-            app.AssiginFFTDatainworkspaceButton.Position = [24 108 215 23];
+            app.AssiginFFTDatainworkspaceButton.Position = [27 19 215 24];
             app.AssiginFFTDatainworkspaceButton.Text = 'Assigin FFT Data in workspace';
 
             % Create ColormapcontrolPanel
             app.ColormapcontrolPanel = uipanel(app.FrequencydomainTab);
             app.ColormapcontrolPanel.AutoResizeChildren = 'off';
             app.ColormapcontrolPanel.Title = 'Colormap control';
-            app.ColormapcontrolPanel.Position = [13 257 239 141];
+            app.ColormapcontrolPanel.Position = [13 255 239 141];
 
             % Create PlotButton_3
             app.PlotButton_3 = uibutton(app.ColormapcontrolPanel, 'push');
@@ -3898,7 +3898,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
             % Create BatchManagementButton
             app.BatchManagementButton = uibutton(app.ExtractionTab, 'push');
             app.BatchManagementButton.ButtonPushedFcn = createCallbackFcn(app, @BatchManagementButtonPushed, true);
-            app.BatchManagementButton.Position = [32 3 246 30];
+            app.BatchManagementButton.Position = [46 10 246 30];
             app.BatchManagementButton.Text = 'Batch Management';
 
             % Create BatchAnalysisTab
@@ -3946,17 +3946,17 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
             app.InformationPanel = uipanel(app.BatchAnalysisTab);
             app.InformationPanel.AutoResizeChildren = 'off';
             app.InformationPanel.Title = 'Information';
-            app.InformationPanel.Position = [15 10 227 223];
+            app.InformationPanel.Position = [18 78 220 223];
 
             % Create DistancetoCentremmLabel
             app.DistancetoCentremmLabel = uilabel(app.InformationPanel);
             app.DistancetoCentremmLabel.HorizontalAlignment = 'right';
-            app.DistancetoCentremmLabel.Position = [16 95 128 22];
+            app.DistancetoCentremmLabel.Position = [7 95 128 22];
             app.DistancetoCentremmLabel.Text = 'Distance to Centre (ps)';
 
             % Create BIDistanceToCentreEditField
             app.BIDistanceToCentreEditField = uieditfield(app.InformationPanel, 'numeric');
-            app.BIDistanceToCentreEditField.Position = [167 96 52 22];
+            app.BIDistanceToCentreEditField.Position = [158 96 52 22];
 
             % Create SampleDescriptionLabel
             app.SampleDescriptionLabel = uilabel(app.InformationPanel);
@@ -3967,7 +3967,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
             % Create BIDescriptionEditField
             app.BIDescriptionEditField = uieditfield(app.InformationPanel, 'text');
             app.BIDescriptionEditField.ValueChangedFcn = createCallbackFcn(app, @BIDescriptionEditFieldValueChanged, true);
-            app.BIDescriptionEditField.Position = [7 154 211 22];
+            app.BIDescriptionEditField.Position = [7 154 201 22];
 
             % Create RefractiveIndexEditField_2Label
             app.RefractiveIndexEditField_2Label = uilabel(app.InformationPanel);
@@ -3977,7 +3977,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
 
             % Create BIRefractiveIndexEditField
             app.BIRefractiveIndexEditField = uieditfield(app.InformationPanel, 'numeric');
-            app.BIRefractiveIndexEditField.Position = [167 67 52 22];
+            app.BIRefractiveIndexEditField.Position = [159 67 52 22];
 
             % Create IngressTimesecEditFieldLabel
             app.IngressTimesecEditFieldLabel = uilabel(app.InformationPanel);
@@ -3987,7 +3987,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
 
             % Create BIIngressTimesecEditField
             app.BIIngressTimesecEditField = uieditfield(app.InformationPanel, 'numeric');
-            app.BIIngressTimesecEditField.Position = [167 39 52 22];
+            app.BIIngressTimesecEditField.Position = [159 39 52 22];
 
             % Create MeanSpeedmmminLabel
             app.MeanSpeedmmminLabel = uilabel(app.InformationPanel);
@@ -3997,7 +3997,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
 
             % Create BIMeanSpeedEditField
             app.BIMeanSpeedEditField = uieditfield(app.InformationPanel, 'numeric');
-            app.BIMeanSpeedEditField.Position = [167 12 52 22];
+            app.BIMeanSpeedEditField.Position = [159 12 52 22];
 
             % Create BatchLabel
             app.BatchLabel = uilabel(app.InformationPanel);
@@ -4007,7 +4007,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
 
             % Create BIBatchEditField
             app.BIBatchEditField = uieditfield(app.InformationPanel, 'text');
-            app.BIBatchEditField.Position = [55 124 163 22];
+            app.BIBatchEditField.Position = [55 124 156 22];
 
             % Create MeasurementListBoxLabel
             app.MeasurementListBoxLabel = uilabel(app.BatchAnalysisTab);
@@ -4062,7 +4062,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
             % Create RemoveButton_2
             app.RemoveButton_2 = uibutton(app.BatchAnalysisTab, 'push');
             app.RemoveButton_2.ButtonPushedFcn = createCallbackFcn(app, @RemoveButton_2Pushed, true);
-            app.RemoveButton_2.Position = [28 319 182 29];
+            app.RemoveButton_2.Position = [28 314 182 29];
             app.RemoveButton_2.Text = 'Remove';
 
             % Create AddButton
@@ -4074,19 +4074,19 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
             % Create AssigndatainworkspaceButton
             app.AssigndatainworkspaceButton = uibutton(app.BatchAnalysisTab, 'push');
             app.AssigndatainworkspaceButton.ButtonPushedFcn = createCallbackFcn(app, @AssigndatainworkspaceButtonPushed, true);
-            app.AssigndatainworkspaceButton.Position = [22 43 158 32];
+            app.AssigndatainworkspaceButton.Position = [22 16 158 32];
             app.AssigndatainworkspaceButton.Text = 'Assign data in workspace';
 
             % Create SaveProjectButton
             app.SaveProjectButton = uibutton(app.BatchAnalysisTab, 'push');
             app.SaveProjectButton.ButtonPushedFcn = createCallbackFcn(app, @SaveProjectButtonPushed, true);
-            app.SaveProjectButton.Position = [189 43 78 32];
+            app.SaveProjectButton.Position = [188 16 78 32];
             app.SaveProjectButton.Text = 'Save Project';
 
             % Create LoadProjectButton
             app.LoadProjectButton = uibutton(app.BatchAnalysisTab, 'push');
             app.LoadProjectButton.ButtonPushedFcn = createCallbackFcn(app, @LoadProjectButtonPushed, true);
-            app.LoadProjectButton.Position = [273 43 78 32];
+            app.LoadProjectButton.Position = [280 16 78 32];
             app.LoadProjectButton.Text = 'Load Project';
 
             % Create UITable
@@ -4105,7 +4105,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
             app.DisplayButtonGroup = uibuttongroup(app.BatchAnalysisTab);
             app.DisplayButtonGroup.AutoResizeChildren = 'off';
             app.DisplayButtonGroup.Title = 'Display';
-            app.DisplayButtonGroup.Position = [251 282 120 72];
+            app.DisplayButtonGroup.Position = [251 285 120 72];
 
             % Create IndividualButton
             app.IndividualButton = uiradiobutton(app.DisplayButtonGroup);
@@ -4122,7 +4122,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
             app.StyleButtonGroup = uibuttongroup(app.BatchAnalysisTab);
             app.StyleButtonGroup.AutoResizeChildren = 'off';
             app.StyleButtonGroup.Title = 'Style';
-            app.StyleButtonGroup.Position = [251 175 120 100];
+            app.StyleButtonGroup.Position = [251 178 120 100];
 
             % Create AllRangeButton
             app.AllRangeButton = uiradiobutton(app.StyleButtonGroup);
@@ -4154,26 +4154,26 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
             % Create PlotButton_2
             app.PlotButton_2 = uibutton(app.BatchAnalysisTab, 'push');
             app.PlotButton_2.ButtonPushedFcn = createCallbackFcn(app, @PlotButton_2Pushed, true);
-            app.PlotButton_2.Position = [256 154 109 42];
+            app.PlotButton_2.Position = [257 129 109 42];
             app.PlotButton_2.Text = 'Plot';
 
             % Create DPlotNewButton
             app.DPlotNewButton = uibutton(app.BatchAnalysisTab, 'push');
             app.DPlotNewButton.ButtonPushedFcn = createCallbackFcn(app, @DPlotNewButtonPushed, true);
-            app.DPlotNewButton.Position = [254 120 114 27];
+            app.DPlotNewButton.Position = [254 95 114 27];
             app.DPlotNewButton.Text = '3D Plot (New)';
 
             % Create ColourPlotNewButton
             app.ColourPlotNewButton = uibutton(app.BatchAnalysisTab, 'push');
             app.ColourPlotNewButton.ButtonPushedFcn = createCallbackFcn(app, @ColourPlotNewButtonPushed, true);
-            app.ColourPlotNewButton.Position = [254 87 114 27];
+            app.ColourPlotNewButton.Position = [254 62 114 27];
             app.ColourPlotNewButton.Text = 'Colour Plot (New)';
 
             % Create DatasettoUseButtonGroup
             app.DatasettoUseButtonGroup = uibuttongroup(app.BatchAnalysisTab);
             app.DatasettoUseButtonGroup.AutoResizeChildren = 'off';
             app.DatasettoUseButtonGroup.Title = 'Dataset to Use';
-            app.DatasettoUseButtonGroup.Position = [251 361 120 74];
+            app.DatasettoUseButtonGroup.Position = [251 364 120 74];
 
             % Create ScatteredButton
             app.ScatteredButton = uiradiobutton(app.DatasettoUseButtonGroup);
@@ -4187,46 +4187,46 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
             app.MeanButton.Position = [11 6 65 22];
 
             % Create StopProcessButton
-            app.StopProcessButton = uibutton(app.DipTabInsightUIFigure, 'push');
+            app.StopProcessButton = uibutton(app.DipTabUIFigure, 'push');
             app.StopProcessButton.ButtonPushedFcn = createCallbackFcn(app, @StopProcessButtonPushed, true);
             app.StopProcessButton.FontWeight = 'bold';
             app.StopProcessButton.Position = [959 11 110 23];
             app.StopProcessButton.Text = 'Stop Process';
 
             % Create Image
-            app.Image = uiimage(app.DipTabInsightUIFigure);
+            app.Image = uiimage(app.DipTabUIFigure);
             app.Image.Position = [19 846 67 60];
             app.Image.ImageSource = fullfile(pathToMLAPP, 'Images', 'dotTHz_logo.png');
 
-            % Create DipTabInsightLabel
-            app.DipTabInsightLabel = uilabel(app.DipTabInsightUIFigure);
-            app.DipTabInsightLabel.FontSize = 32;
-            app.DipTabInsightLabel.FontWeight = 'bold';
-            app.DipTabInsightLabel.FontAngle = 'italic';
-            app.DipTabInsightLabel.FontColor = [0.149 0.149 0.149];
-            app.DipTabInsightLabel.Position = [85 859 228 47];
-            app.DipTabInsightLabel.Text = 'DipTab Insight';
+            % Create DipTabLabel
+            app.DipTabLabel = uilabel(app.DipTabUIFigure);
+            app.DipTabLabel.FontSize = 32;
+            app.DipTabLabel.FontWeight = 'bold';
+            app.DipTabLabel.FontAngle = 'italic';
+            app.DipTabLabel.FontColor = [0.149 0.149 0.149];
+            app.DipTabLabel.Position = [85 859 228 47];
+            app.DipTabLabel.Text = 'DipTab';
 
             % Create DeployButton
-            app.DeployButton = uibutton(app.DipTabInsightUIFigure, 'push');
+            app.DeployButton = uibutton(app.DipTabUIFigure, 'push');
             app.DeployButton.ButtonPushedFcn = createCallbackFcn(app, @DeployButtonPushed, true);
             app.DeployButton.FontWeight = 'bold';
-            app.DeployButton.Position = [907 850 114 28];
+            app.DeployButton.Position = [886 851 122 28];
             app.DeployButton.Text = 'Deploy';
 
             % Create DescriptionEditFieldLabel
-            app.DescriptionEditFieldLabel = uilabel(app.DipTabInsightUIFigure);
+            app.DescriptionEditFieldLabel = uilabel(app.DipTabUIFigure);
             app.DescriptionEditFieldLabel.HorizontalAlignment = 'right';
-            app.DescriptionEditFieldLabel.Position = [1043 852 66 22];
+            app.DescriptionEditFieldLabel.Position = [1022 853 66 22];
             app.DescriptionEditFieldLabel.Text = 'Description';
 
             % Create SampleDescriptionEditField
-            app.SampleDescriptionEditField = uieditfield(app.DipTabInsightUIFigure, 'text');
+            app.SampleDescriptionEditField = uieditfield(app.DipTabUIFigure, 'text');
             app.SampleDescriptionEditField.HorizontalAlignment = 'right';
-            app.SampleDescriptionEditField.Position = [1119 853 303 20];
+            app.SampleDescriptionEditField.Position = [1098 854 303 20];
 
             % Show the figure after all components are created
-            app.DipTabInsightUIFigure.Visible = 'on';
+            app.DipTabUIFigure.Visible = 'on';
         end
     end
 
@@ -4234,13 +4234,13 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
     methods (Access = public)
 
         % Construct app
-        function app = DipTabInsight_exported
+        function app = DipTab_exported
 
             % Create UIFigure and components
             createComponents(app)
 
             % Register the app with App Designer
-            registerApp(app, app.DipTabInsightUIFigure)
+            registerApp(app, app.DipTabUIFigure)
 
             % Execute the startup function
             runStartupFcn(app, @startupFcn)
@@ -4254,7 +4254,7 @@ classdef DipTabInsight_exported < matlab.apps.AppBase
         function delete(app)
 
             % Delete UIFigure when app is deleted
-            delete(app.DipTabInsightUIFigure)
+            delete(app.DipTabUIFigure)
         end
     end
 end
