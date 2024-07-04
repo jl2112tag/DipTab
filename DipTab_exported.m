@@ -816,20 +816,17 @@ classdef DipTab_exported < matlab.apps.AppBase
                 cnt2 = 0;
                 itpItvs = zeros(sum(bIdxMat),1); % interpolation interval vectors
                 mEndTs = zeros(sum(bIdxMat),1); % measurement end time
-                phaseTransitionTimes = zeros(sum(bIdxMat),1); % phase transition time
                 
                 %calculate a suitable interpolation interval for batch data
                 for idx = 1:tNum
                     if bIdxMat(idx)
                         itpItvs(idx) = meta(idx).MeasurementInterval;
-                        phaseTransitionTimes(idx) = meta(idx).PhaseTransitionTime;
                         mEndTs(idx) = Peaks{idx}(1,end);
                     end
                 end
                 
                 itpItv = min(nonzeros(itpItvs));
                 mEndT = min(nonzeros(mEndTs));
-                phaseTransitionTime = mean(phaseTransitionTimes);
                 
                 for idx = 1:tNum
                     if bIdxMat(idx)
@@ -861,7 +858,6 @@ classdef DipTab_exported < matlab.apps.AppBase
                 
 
                 bMat(cnt,4) = {LFb};
-                bMat(cnt,3) = {phaseTransitionTime};
                 cnt = cnt + 1;
        end
 
@@ -872,13 +868,10 @@ classdef DipTab_exported < matlab.apps.AppBase
             pMethod = app.StyleButtonGroup.SelectedObject.Text;
             cnt = 1;
             lh = []; %line handler
-            ks1 = zeros(size(bItems,2),1);
-            frss1 = zeros(size(bItems,2),1);
-            frms1 = zeros(size(bItems,2),1);
-            ks2 = zeros(size(bItems,2),1);
-            ds2 = zeros(size(bItems,2),1);
-            frss2 = zeros(size(bItems,2),1);
-            frms2 = zeros(size(bItems,2),1);
+            k = zeros(size(bItems,2),1);
+            d = zeros(size(bItems,2),1);
+            frss = zeros(size(bItems,2),1);
+            frms = zeros(size(bItems,2),1);
             xData = cell(size(bItems,2));
             fData = cell(size(bItems,2));
             
@@ -903,18 +896,13 @@ classdef DipTab_exported < matlab.apps.AppBase
                 end
                 
                 if app.FittingCheckBox.Value;
-                    [k1,frs1,frm1,fitData1,k2,d,frs2,frm2,fitData2] = PLFitting(app,cnt,'batch');
-                    ks1(cnt) = k1;
-                    frss1(cnt) = frs1; %rsquare
-                    frms1(cnt) = frm1; %RMSE
-                    h2 = plot(ax,sbMat(1,1:length(fitData1)),fitData1,'--');
-                    h2.Color = [h1.Color, 0.4];
-                    ks2(cnt) = k2;
-                    ds2(cnt) = d;
-                    frss2(cnt) = frs2; %rsquare
-                    frms2(cnt) = frm2; %RMSE
-                    h3 = plot(ax,sbMat(1,length(fitData1):end),fitData2,'--');
-                    h3.Color = [h1.Color, 0.4];
+                    [k,d,frs,frm,fitData] = PLFitting(app,cnt,'batch');
+                    k(cnt) = k2;
+                    d(cnt) = d;
+                    frss(cnt) = frs; %rsquare
+                    frms(cnt) = frm; %RMSE
+                    h1 = plot(ax,sbMat(1,length(fitData1):end),fitData2,'--');
+                    h1.Color = [h1.Color, 0.4];
                 end
                 cnt = cnt + 1;
             end
@@ -930,41 +918,28 @@ classdef DipTab_exported < matlab.apps.AppBase
          
         end
         
-        function [k1,frs1,frm1,fitData1,k2,d,frs2,frm2,fitData2] = PLFitting(app,idx,opt)
+        function [k,d,frs,frm,fitData] = PLFitting(app,idx,opt)
             
             if isequal(opt,'individual')
                 Peaks = app.BData.Peaks{idx};
                 meta = app.BData.meta(idx);
-                phaseTransitionTime = meta.PhaseTransitionTime;
                 xData = Peaks(1,:)';
                 yData = Peaks(2,:)';
             else
                 bMat = app.BData.bMat{idx,4};
-                phaseTransitionTime = app.BData.bMat{idx,3};
                 xData = bMat(1,:)';
                 yData = bMat(4,:)';   
             end
-            
-            phaseTransitionLoc = sum(xData <= phaseTransitionTime);
-            
-            % Phase 2 fitting
-            ft = fittype('k2*x + d');
-            options = fitoptions('Method','NonlinearLeastSquares','Lower',[0 0 0],'Upper',[100 20 10]);
-            [f2, fitness2] = fit(xData(phaseTransitionLoc:end),yData(phaseTransitionLoc:end),ft,options);
-            k2 = f2.k2;
-            d = f2.d;
-            frs2 = fitness2.rsquare;
-            frm2 = fitness2.rmse;
-            fitData2 = feval(f2,xData(phaseTransitionLoc:end));
-            
-            % Phase 1 fitting
-            ft = fittype('k1*x');
-            options = fitoptions('Method','NonlinearLeastSquares','Lower',[0],'Upper',[100]);
-            [f1, fitness1] = fit([0, phaseTransitionTime]',[0, fitData2(1)]',ft,options);
-            k1 = f1.k1;
-            frs1 = fitness1.rsquare;
-            frm1 = fitness1.rmse;
-            fitData1 = feval(f1,xData(1:phaseTransitionLoc));
+                        
+            % Regime 2 fitting
+            ft = fittype('k*x + d');
+            options = fitoptions('Method','NonlinearLeastSquares');
+            [f, fitness] = fit(xData,yData,ft,options);
+            k = f.k;
+            d = f.d;
+            frs = fitness.rsquare;
+            frm = fitness.rmse;
+            fitData = feval(f,xData);
         end
           
         
@@ -1672,10 +1647,14 @@ classdef DipTab_exported < matlab.apps.AppBase
             meta.thickness = app.ThicknessmmEditField_LE.Value;
             meta.refractiveIndex = app.RefractiveIndexEditField_LE.Value;
             meta.ingressTime = ingressTime;
+            parameter.k = app.kmmsEditField.Value;
+            parameter.d = app.dmmEditField.Value;
+            parameter.R2 = app.R2EditField.Value;
+            parameter.RM = app.RMSEEditField.Value;
             batch = {''};
 
-            ubLoc = sum(xData<=ingressTime);
-            yLocs(ubLoc:end,:) = [];
+            % ubLoc = sum(xData<=ingressTime);
+            % yLocs(ubLoc:end,:) = [];
             
             try
                 dpIdx = size(app.BData.Peaks,2)+1;
@@ -1684,9 +1663,10 @@ classdef DipTab_exported < matlab.apps.AppBase
                 dpIdx = 1;
             end
             
-            app.BData.Peaks(dpIdx) = Peaks;
+            app.BData.Peaks(dpIdx) = {Peaks};
             app.BData.meta(dpIdx) = meta;
             app.BData.batch(dpIdx) = batch;
+            app.BData.parameter(dpIdx) = {parameter};
             
             %measurment list update
             ListBoxItems={};
@@ -1741,14 +1721,12 @@ classdef DipTab_exported < matlab.apps.AppBase
                 app.BICentreLinemmEditField.Value = meta.thickness/2;
                 app.BIRefractiveIndexEditField.Value = meta.refractiveIndex;
                 app.BIIngressTimesecEditField.Value = meta.ingressTime;
-                app.BIMeanSpeedEditField.Value = (meta.thickness)/(meta.ingressTime)*60;
             else
                 app.BIBatchEditField.Value = '';
                 app.BIDescriptionEditField.Value = '';
                 app.BICentreLinemmEditField.Value = 0;
                 app.BIRefractiveIndexEditField.Value = 0;
                 app.BIIngressTimesecEditField.Value = 0;
-                app.BIMeanSpeedEditField.Value = 0;
             end 
         end
 
@@ -1776,7 +1754,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             
             for idx = 1:tNum
                 meta = app.BData.meta(idx);
-                AddItem = {meta.SampleName};
+                AddItem = {meta.sampleName};
                 cBatch = app.BData.batch(idx);
                 if ~isempty(AddItem)&&sum(strcmp(cBatch,sBatch))
                    ListBoxItems(cnt) = AddItem;
@@ -1838,7 +1816,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             
             for idx = 1:tNum
                 meta = app.BData.meta(idx);
-                cMeas = {meta.Description};
+                cMeas = {meta.description};
                 sMeas = ListBoxItems(delItem);
                 if sum(strcmp(cMeas,sMeas))
                    app.BData.batch{idx}='';
@@ -1865,7 +1843,7 @@ classdef DipTab_exported < matlab.apps.AppBase
         % Value changed function: BIDescriptionEditField
         function BIDescriptionEditFieldValueChanged(app, event)
             value = app.BIDescriptionEditField.Value;
-            
+           
         end
 
         % Button pushed function: CaculateFittingParametersButton
