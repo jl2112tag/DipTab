@@ -11,7 +11,11 @@ classdef DipTab_exported < matlab.apps.AppBase
         StopProcessButton               matlab.ui.control.Button
         TabGroup                        matlab.ui.container.TabGroup
         TimeDomainTab                   matlab.ui.container.Tab
-        KernelSmootherButton            matlab.ui.control.Button
+        LoadRawDataButton               matlab.ui.control.Button
+        KernelSmoothingPanel            matlab.ui.container.Panel
+        gausswinEditField               matlab.ui.control.NumericEditField
+        gausswinEditFieldLabel          matlab.ui.control.Label
+        ApplyButton                     matlab.ui.control.Button
         LiquidfrontExtractionButton     matlab.ui.control.Button
         SetDownLimitButton              matlab.ui.control.Button
         SetLeftLimitButton              matlab.ui.control.Button
@@ -44,17 +48,15 @@ classdef DipTab_exported < matlab.apps.AppBase
         LeftEditFieldLabel              matlab.ui.control.Label
         RemoveBaseButton_Tab1           matlab.ui.control.Button
         TruncateButton                  matlab.ui.control.Button
-        SpectrumPanel                   matlab.ui.container.Panel
-        AutoScanSpectrumCheckBox        matlab.ui.control.CheckBox
-        PowerSpectrumButton             matlab.ui.control.Button
-        SpectrogramButton               matlab.ui.control.Button
         ColormapPanel                   matlab.ui.container.Panel
         DCheckBox                       matlab.ui.control.CheckBox
         colorbarCheckBox                matlab.ui.control.CheckBox
         PlotButton                      matlab.ui.control.Button
         ColormapDropDown                matlab.ui.control.DropDown
-        GuideLinesPanel                 matlab.ui.container.Panel
-        SetInitButton                   matlab.ui.control.Button
+        GuidelinesPanel                 matlab.ui.container.Panel
+        AutoScanSpectrumCheckBox        matlab.ui.control.CheckBox
+        PowerSpectrumButton             matlab.ui.control.Button
+        SpectrogramButton               matlab.ui.control.Button
         EnableButton                    matlab.ui.control.StateButton
         GeneralInformationPanel         matlab.ui.container.Panel
         RefractiveIndexEditField        matlab.ui.control.NumericEditField
@@ -69,10 +71,90 @@ classdef DipTab_exported < matlab.apps.AppBase
         DataNumberLabel                 matlab.ui.control.Label
         DataLengthEditField             matlab.ui.control.NumericEditField
         DataLengthLabel                 matlab.ui.control.Label
-        UIAxes14                        matlab.ui.control.UIAxes
-        UIAxes13                        matlab.ui.control.UIAxes
-        UIAxes12                        matlab.ui.control.UIAxes
-        UIAxes11                        matlab.ui.control.UIAxes
+        UIAxesTD4                       matlab.ui.control.UIAxes
+        UIAxesTD3                       matlab.ui.control.UIAxes
+        UIAxesTD2                       matlab.ui.control.UIAxes
+        UIAxesTD1                       matlab.ui.control.UIAxes
+        LiquidfrontExtractionTab        matlab.ui.container.Tab
+        LinearFittingPanel              matlab.ui.container.Panel
+        RMSEEditField                   matlab.ui.control.NumericEditField
+        RMSEEditFieldLabel              matlab.ui.control.Label
+        R2EditField                     matlab.ui.control.NumericEditField
+        R2EditFieldLabel                matlab.ui.control.Label
+        FittingFunctionktdLabel         matlab.ui.control.Label
+        dmmEditField                    matlab.ui.control.NumericEditField
+        dmmEditFieldLabel               matlab.ui.control.Label
+        kmmsEditField                   matlab.ui.control.NumericEditField
+        kmmsEditFieldLabel              matlab.ui.control.Label
+        CaculateFittingParametersButton  matlab.ui.control.Button
+        LiquidIngressTimesecEditField   matlab.ui.control.NumericEditField
+        LiquidIngressTimesecEditFieldLabel  matlab.ui.control.Label
+        GeneralInformationPanel_LE      matlab.ui.container.Panel
+        RefractiveIndexEditField_LE     matlab.ui.control.NumericEditField
+        n_effLabel                      matlab.ui.control.Label
+        ThicknessmmEditField_LE         matlab.ui.control.NumericEditField
+        ThicknessmmEditField_2Label     matlab.ui.control.Label
+        dataNumberEditField_LE          matlab.ui.control.NumericEditField
+        NumberofScansEditField_2Label_2  matlab.ui.control.Label
+        dataLengthEditField_LE          matlab.ui.control.NumericEditField
+        DataLengthEditField_2Label_2    matlab.ui.control.Label
+        BatchManagementButton           matlab.ui.control.Button
+        ROISelectionPanel               matlab.ui.container.Panel
+        CentreLineCheckBox              matlab.ui.control.CheckBox
+        ROIwidthEditField               matlab.ui.control.NumericEditField
+        ROIwidthEditFieldLabel          matlab.ui.control.Label
+        DrawPolylineButton              matlab.ui.control.Button
+        LfPlotButton                    matlab.ui.control.Button
+        ExtColormapDropDown             matlab.ui.control.DropDown
+        AlphaDropDown                   matlab.ui.control.DropDown
+        AlphaDropDown_2Label            matlab.ui.control.Label
+        UIAxesLE3                       matlab.ui.control.UIAxes
+        UIAxesLE2                       matlab.ui.control.UIAxes
+        UIAxesLE1                       matlab.ui.control.UIAxes
+        BatchAnalysisTab                matlab.ui.container.Tab
+        ColourPlotNewButton             matlab.ui.control.Button
+        DPlotNewButton                  matlab.ui.control.Button
+        PlotButton_2                    matlab.ui.control.Button
+        FittingCheckBox                 matlab.ui.control.CheckBox
+        LegendCheckBox                  matlab.ui.control.CheckBox
+        StyleButtonGroup                matlab.ui.container.ButtonGroup
+        SDErrorBarButton                matlab.ui.control.RadioButton
+        SDShadowedButton                matlab.ui.control.RadioButton
+        AllRangeButton                  matlab.ui.control.RadioButton
+        DisplayButtonGroup              matlab.ui.container.ButtonGroup
+        BatchButton                     matlab.ui.control.RadioButton
+        IndividualButton                matlab.ui.control.RadioButton
+        FittingFunctionParametersLabel  matlab.ui.control.Label
+        UITable                         matlab.ui.control.Table
+        LoadProjectButton               matlab.ui.control.Button
+        SaveProjectButton               matlab.ui.control.Button
+        AssigndatainworkspaceButton     matlab.ui.control.Button
+        AddButton                       matlab.ui.control.Button
+        RemoveButton_2                  matlab.ui.control.Button
+        BatchDetailListBox              matlab.ui.control.ListBox
+        BatchDetailListBoxLabel         matlab.ui.control.Label
+        BatchListBox                    matlab.ui.control.ListBox
+        BatchListBoxLabel               matlab.ui.control.Label
+        BatchNameEditField              matlab.ui.control.EditField
+        BatchNameEditFieldLabel         matlab.ui.control.Label
+        MeasurementListBox              matlab.ui.control.ListBox
+        MeasurementListBoxLabel         matlab.ui.control.Label
+        InformationPanel                matlab.ui.container.Panel
+        BIBatchEditField                matlab.ui.control.EditField
+        BatchLabel                      matlab.ui.control.Label
+        BIIngressTimesecEditField       matlab.ui.control.NumericEditField
+        IngressTimesecEditFieldLabel    matlab.ui.control.Label
+        BIRefractiveIndexEditField      matlab.ui.control.NumericEditField
+        RefractiveIndexEditField_2Label  matlab.ui.control.Label
+        BIDescriptionEditField          matlab.ui.control.EditField
+        SampleDescriptionLabel          matlab.ui.control.Label
+        BICentreLinemmEditField         matlab.ui.control.NumericEditField
+        DistancetoCentremmLabel         matlab.ui.control.Label
+        RemoveButton                    matlab.ui.control.Button
+        UngroupButton                   matlab.ui.control.Button
+        GroupButton                     matlab.ui.control.Button
+        UIAxesBs1                       matlab.ui.control.UIAxes
+        UIAxesBs2                       matlab.ui.control.UIAxes
         FrequencyDomainTab              matlab.ui.container.Tab
         ColormapcontrolPanel            matlab.ui.container.Panel
         ftColorbarCheckBox              matlab.ui.control.CheckBox
@@ -95,9 +177,9 @@ classdef DipTab_exported < matlab.apps.AppBase
         EnableButton_2                  matlab.ui.control.StateButton
         NextButton                      matlab.ui.control.Button
         DataInformationPanel            matlab.ui.container.Panel
-        dataNumberEditField_2           matlab.ui.control.NumericEditField
+        dataNumberEditField_FD          matlab.ui.control.NumericEditField
         NumberofScansEditField_2Label   matlab.ui.control.Label
-        dataLengthEditField_2           matlab.ui.control.NumericEditField
+        dataLengthEditField_FD          matlab.ui.control.NumericEditField
         DataLengthEditField_2Label      matlab.ui.control.Label
         FourierTransformPanel           matlab.ui.container.Panel
         FunctionDropDown                matlab.ui.control.DropDown
@@ -119,95 +201,10 @@ classdef DipTab_exported < matlab.apps.AppBase
         fromLabel                       matlab.ui.control.Label
         FrequencyRangeTHzLabel          matlab.ui.control.Label
         TransformButton                 matlab.ui.control.Button
-        UIAxes24                        matlab.ui.control.UIAxes
-        UIAxes23                        matlab.ui.control.UIAxes
-        UIAxes22                        matlab.ui.control.UIAxes
-        UIAxes21                        matlab.ui.control.UIAxes
-        LiquidfrontExtractionTab        matlab.ui.container.Tab
-        BatchManagementButton           matlab.ui.control.Button
-        ExtractReflectionPointsPanel    matlab.ui.container.Panel
-        ROIDropDown                     matlab.ui.control.DropDown
-        ROIDropDownLabel                matlab.ui.control.Label
-        FREEHANDROIButton               matlab.ui.control.Button
-        ExcludeuptopsEditField          matlab.ui.control.NumericEditField
-        ExcludeuptopsEditFieldLabel     matlab.ui.control.Label
-        ROITheasholdSlider              matlab.ui.control.Slider
-        ROITheasholdSliderLabel         matlab.ui.control.Label
-        ExcludeLowerReflectionsCheckBox  matlab.ui.control.CheckBox
-        LiquidIngressTimesecEditField   matlab.ui.control.NumericEditField
-        LiquidIngressTimesecEditFieldLabel  matlab.ui.control.Label
-        Range220EditField               matlab.ui.control.NumericEditField
-        Range220EditFieldLabel          matlab.ui.control.Label
-        DBSCANNeighborhoodRadiusSwitch  matlab.ui.control.Switch
-        DBSCANNeighborhoodRadiusSwitchLabel  matlab.ui.control.Label
-        DistancetoCentrepsEditField     matlab.ui.control.NumericEditField
-        DistancetoCentrepsEditFieldLabel  matlab.ui.control.Label
-        ALGORITHMROIButton              matlab.ui.control.Button
-        RefractiveIndexEditField_T3     matlab.ui.control.NumericEditField
-        n_effLabel                      matlab.ui.control.Label
-        CaculateIngressTimeButton       matlab.ui.control.Button
-        SampleDescriptionEditField_T3   matlab.ui.control.EditField
-        SampleNameEditField_T3Label     matlab.ui.control.Label
-        ExtractLiquidFrontButton        matlab.ui.control.Button
-        LfPlotButton                    matlab.ui.control.Button
-        ExtColormapDropDown             matlab.ui.control.DropDown
-        CmapLabel                       matlab.ui.control.Label
-        AlphaDropDown                   matlab.ui.control.DropDown
-        AlphaDropDown_2Label            matlab.ui.control.Label
-        UIAxes35                        matlab.ui.control.UIAxes
-        UIAxes34                        matlab.ui.control.UIAxes
-        UIAxes33                        matlab.ui.control.UIAxes
-        UIAxes32                        matlab.ui.control.UIAxes
-        UIAxes31                        matlab.ui.control.UIAxes
-        BatchAnalysisTab                matlab.ui.container.Tab
-        DatasettoUseButtonGroup         matlab.ui.container.ButtonGroup
-        MeanButton                      matlab.ui.control.RadioButton
-        ScatteredButton                 matlab.ui.control.RadioButton
-        ColourPlotNewButton             matlab.ui.control.Button
-        DPlotNewButton                  matlab.ui.control.Button
-        PlotButton_2                    matlab.ui.control.Button
-        FittingCheckBox                 matlab.ui.control.CheckBox
-        LegendCheckBox                  matlab.ui.control.CheckBox
-        StyleButtonGroup                matlab.ui.container.ButtonGroup
-        SDErrorBarButton                matlab.ui.control.RadioButton
-        SDShadowedButton                matlab.ui.control.RadioButton
-        AllRangeButton                  matlab.ui.control.RadioButton
-        DisplayButtonGroup              matlab.ui.container.ButtonGroup
-        BatchButton                     matlab.ui.control.RadioButton
-        IndividualButton                matlab.ui.control.RadioButton
-        FittingFunctionParametersunderdevelopmentLabel  matlab.ui.control.Label
-        UITable                         matlab.ui.control.Table
-        LoadProjectButton               matlab.ui.control.Button
-        SaveProjectButton               matlab.ui.control.Button
-        AssigndatainworkspaceButton     matlab.ui.control.Button
-        AddButton                       matlab.ui.control.Button
-        RemoveButton_2                  matlab.ui.control.Button
-        BatchDetailListBox              matlab.ui.control.ListBox
-        BatchDetailListBoxLabel         matlab.ui.control.Label
-        BatchListBox                    matlab.ui.control.ListBox
-        BatchListBoxLabel               matlab.ui.control.Label
-        BatchNameEditField              matlab.ui.control.EditField
-        BatchNameEditFieldLabel         matlab.ui.control.Label
-        MeasurementListBox              matlab.ui.control.ListBox
-        MeasurementListBoxLabel         matlab.ui.control.Label
-        InformationPanel                matlab.ui.container.Panel
-        BIBatchEditField                matlab.ui.control.EditField
-        BatchLabel                      matlab.ui.control.Label
-        BIMeanSpeedEditField            matlab.ui.control.NumericEditField
-        MeanSpeedmmminLabel             matlab.ui.control.Label
-        BIIngressTimesecEditField       matlab.ui.control.NumericEditField
-        IngressTimesecEditFieldLabel    matlab.ui.control.Label
-        BIRefractiveIndexEditField      matlab.ui.control.NumericEditField
-        RefractiveIndexEditField_2Label  matlab.ui.control.Label
-        BIDescriptionEditField          matlab.ui.control.EditField
-        SampleDescriptionLabel          matlab.ui.control.Label
-        BIDistanceToCentreEditField     matlab.ui.control.NumericEditField
-        DistancetoCentremmLabel         matlab.ui.control.Label
-        RemoveButton                    matlab.ui.control.Button
-        UngroupButton                   matlab.ui.control.Button
-        GroupButton                     matlab.ui.control.Button
-        UIAxes41                        matlab.ui.control.UIAxes
-        UIAxes42                        matlab.ui.control.UIAxes
+        UIAxesFD4                       matlab.ui.control.UIAxes
+        UIAxesFD3                       matlab.ui.control.UIAxes
+        UIAxesFD2                       matlab.ui.control.UIAxes
+        UIAxesFD1                       matlab.ui.control.UIAxes
         SystemStatusEditField           matlab.ui.control.EditField
         SystemStatusEditFieldLabel      matlab.ui.control.Label
         ProjectNameEditField            matlab.ui.control.EditField
@@ -227,12 +224,12 @@ classdef DipTab_exported < matlab.apps.AppBase
         filefullpath % imported project file full path
         TData % Time domain data (measurement)
         FData % Frequency domain data (fast Fourier transfrom)
-        LfData % Liquid Front Relevant Datasets 
         stopProcess % variable for forcing process stopped     
         Handler % axis component handler
         BData % Batch data
         plotUpdate % display update option
         maxSam % max sample value
+        inAng = deg2rad(8.8) % THz beam incident angle
     end
     
     methods (Access = private)
@@ -252,8 +249,8 @@ classdef DipTab_exported < matlab.apps.AppBase
             xData = app.TData.xData;
             app.maxSam = max(samData,[],"all");
             
-            ax1 = app.UIAxes11;
-            ax3 = app.UIAxes13;
+            ax1 = app.UIAxesTD1;
+            ax3 = app.UIAxesTD3;
             app.stopProcess = 0;
             app.EnableButton.Value = false;
             
@@ -277,7 +274,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.SystemStatusEditField.Value = 'Displaying...';
             drawnow;
             
-            if app.DCheckBox.Value
+            if app.DCheckBox.Value % 3D checkbox
                 surf(ax1,xData,ToF,samData,"EdgeColor","none");
                 view(ax1,2);
             else                
@@ -301,7 +298,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             xData = app.TData.xData;
             ToF = app.TData.ToF;
             maxSam = app.maxSam;
-            ax2 = app.UIAxes12;
+            ax2 = app.UIAxesTD2;
 
             grid(ax2,"on");
             
@@ -325,16 +322,15 @@ classdef DipTab_exported < matlab.apps.AppBase
         
         function clearMemory(app)
             app.TData = [];
-            app.LfData = [];
             app.Handler = [];
         end
         
         
         function plotSpectra(app)       
-            ax = app.UIAxes21;
+            ax = app.UIAxesFD1;
             
             clo(ax)
-            clo(app.UIAxes22)
+            clo(app.UIAxesFD2)
             axis(ax,"tight")
             cmap = app.ftColormapDropDown.Value;
             colormap(ax,cmap);
@@ -374,12 +370,12 @@ classdef DipTab_exported < matlab.apps.AppBase
                  return
              end
             
-            ax = app.UIAxes22;
+            ax = app.UIAxesFD2;
             app.stopProcess = 0;
             app.EnableButton.Value = false;
             
             clo(ax)
-            clo(app.UIAxes23)
+            clo(app.UIAxesFD3)
             axis(ax,"tight")
             cmap = app.ftColormapDropDown.Value;
             colormap(ax,cmap)
@@ -569,8 +565,8 @@ classdef DipTab_exported < matlab.apps.AppBase
             %yPick = app.tPickSlider_Y.Value;
             xPick = app.LocationSlider.Value;
             %sf = 1/app.ToFSpacingpsEditField.Value;
-            ax3 = app.UIAxes23;
-            ax4 = app.UIAxes24;
+            ax3 = app.UIAxesFD3;
+            ax4 = app.UIAxesFD4;
             
             try 
                 xData = app.FData.xData;
@@ -634,8 +630,8 @@ classdef DipTab_exported < matlab.apps.AppBase
             magData = app.FData.magData;
             phsData = app.FData.phsData;
 
-            ax3 = app.UIAxes23;
-            ax4 = app.UIAxes24;
+            ax3 = app.UIAxesFD3;
+            ax4 = app.UIAxesFD4;
 
             app.Handler.xline_21.Value = xPick;
             app.Handler.xline_22.Value = xPick;
@@ -667,45 +663,38 @@ classdef DipTab_exported < matlab.apps.AppBase
         end
         
         function LfPlot(app)
-            lfRawData = app.LfData.lfRawData;
-            lfFtdData = app.LfData.lfFtdData;
-            lfTime = app.LfData.lfTime;
-            lfDis = app.LfData.lfDis;
+            samData = app.TData.samData;
+            xData = app.TData.xData;
+            displacement = app.TData.displacement;
             alp = str2num(app.AlphaDropDown.Value);
             cmap = app.ExtColormapDropDown.Value;
+            thickness = app.ThicknessmmEditField_LE.Value;
             normOpt = 0; %normalise two sets of data
             
             if normOpt
-                lfRawData = lfRawData/max(lfRawData,[],'all');
-                lfFtdData = lfFtdData/max(lfFtdData,[],'all');
+                samData = samData/max(samData,[],'all');
             end
            
-            ax1 = app.UIAxes31;
-            ax2 = app.UIAxes32;
-            ax3 = app.UIAxes33;
-            ax4 = app.UIAxes34;
-            ax5 = app.UIAxes35;
+            ax1 = app.UIAxesLE1;
+            ax2 = app.UIAxesLE2;
+            ax3 = app.UIAxesLE3;
             
             cla(ax1);
             cla(ax2);
             cla(ax3);
-            cla(ax4);
-            cla(ax5);
             
-            imagesc(ax1,lfTime,lfDis,lfRawData,'AlphaData',alp);
-            imagesc(ax2,lfTime,lfDis,lfFtdData,'AlphaData',alp);
-            
-            ax1.YDir = 'normal';
-            ax2.YDir = 'normal';
-            
+            imagesc(ax1,xData,displacement,samData,'AlphaData',alp);
+            axis(ax1,"xy");            
             axis(ax1,'tight');
-            axis(ax2,'tight');
+
+            if app.CentreLineCheckBox.Value
+                hold(ax1,"on");
+                yline(ax1,thickness/2,'--','Centre Line');
+            end
             
             colormap(ax1,cmap);
-            colormap(ax2,cmap);
 
-            app.LiquidIngressTimesecEditField.Value = 0;
-            
+            app.LiquidIngressTimesecEditField.Value = 0;         
         end
         
         
@@ -731,7 +720,6 @@ classdef DipTab_exported < matlab.apps.AppBase
             linearFitExtract = 1; % option boolean for extracting linear fitting function from the measurement data
             mItems = app.MeasurementListBox.Value;
             listItems = app.MeasurementListBox.Items;
-            dataset = app.DatasettoUseButtonGroup.SelectedObject.Text;
             
             if isempty(mItems)
                 fig = app.DipTabUIFigure;
@@ -739,11 +727,10 @@ classdef DipTab_exported < matlab.apps.AppBase
                 return;                
             end
 
-            dpMat = app.BData.dpMat;
-            dpMatMean = app.BData.dpMatMean;
+            Peaks = app.BData.Peaks;
             
-            ax1 = app.UIAxes41;
-            ax2 = app.UIAxes42;
+            ax1 = app.UIAxesBs1;
+            ax2 = app.UIAxesBs2;
             axis(ax1,'tight');
             axis(ax2,'tight');
             xlim(ax2,[0 inf]);
@@ -754,15 +741,13 @@ classdef DipTab_exported < matlab.apps.AppBase
             hold(ax2,'on');
             
             % fit function data for table fill-in
-            ks1 = zeros(size(mItems,2),1);
-            frss1 = zeros(size(mItems,2),1);
-            frms1 = zeros(size(mItems,2),1);
-            ks2 = zeros(size(mItems,2),1);
-            ds2 = zeros(size(mItems,2),1);
-            frss2 = zeros(size(mItems,2),1);
-            frms2 = zeros(size(mItems,2),1);
+            ingressTime = zeros(size(mItems,2),1);
+            k = zeros(size(mItems,2),1);
+            d = zeros(size(mItems,2),1);
+            frss = zeros(size(mItems,2),1);
+            frms = zeros(size(mItems,2),1);
             
-            xData = cell(size(mItems,2));
+            xLocs = cell(size(mItems,2));
             fData = cell(size(mItems,2));
             
             lh1 = [];
@@ -770,45 +755,21 @@ classdef DipTab_exported < matlab.apps.AppBase
             cnt = 1;
             
             for idx = mItems
-                if isequal(dataset,'Scattered')
-                    xData = dpMat{idx}(:,1);    
-                    yData_Intensity = dpMat{idx}(:,3);
-                    yData_Displacement = dpMat{idx}(:,2);
-                else
-                    xData = dpMatMean{idx}(:,1);    
-                    yData_Intensity = dpMatMean{idx}(:,3);
-                    yData_Displacement = dpMatMean{idx}(:,2);
-                end
+                xLocs = Peaks{idx}.xLocs;    
+                eFieldAmp = Peaks{idx}.eFieldAmp;
+                yLocs = Peaks{idx}.yLocs;
 
-                h1 = plot(ax1,xData,yData_Intensity,'.');
-                h2 = plot(ax2,xData,yData_Displacement,'.');
+                h1 = plot(ax1,xLocs,eFieldAmp,'.');
+                h2 = plot(ax2,xLocs,yLocs,'.');
                 lh1(cnt) = h1;
                 lh2(cnt) = h2;
-                
-%                 if app.FittingCheckBox.Value;
-%                     [k1,frs1,frm1,fitData1,k2,d,frs2,frm2,fitData2] = PLFitting(app,idx,'individual');
-%                     ks1(cnt) = k1;
-%                     frss1(cnt) = frs1; %rsquare
-%                     frms1(cnt) = frm1; %RMSE
-%                     h2 = plot(ax,dpMat{idx}(1,1:length(fitData1)),fitData1,'--');
-%                     h2.Color = [h1.Color, 0.4];
-%                     ks2(cnt) = k2;
-%                     ds2(cnt) = d;
-%                     frss2(cnt) = frs2; %rsquare
-%                     frms2(cnt) = frm2; %RMSE
-%                     h3 = plot(ax,dpMat{idx}(1,length(fitData1):end),fitData2,'--');
-%                     h3.Color = [h1.Color, 0.4];
-%                 end
-%                 
-%                 if linearFitExtract
-%                     app.BData.dpMat{idx}(3,:) = dpMat{idx}(2,:)-(k2*dpMat{idx}(1,:)+d);    
-%                 end
+              
                 
                 cnt = cnt + 1;
             end
             
             if app.FittingCheckBox.Value;
-                T = table(listItems([mItems])',ks1,frss1,frms1,ks2,ds2,frss2,frms2);
+                T = table(listItems([mItems])',ingressTime,k,d,frss,frms);
                 app.UITable.Data = T;    
             end
             
@@ -834,13 +795,13 @@ classdef DipTab_exported < matlab.apps.AppBase
             end
             
             Data = app.BData;
-            dpMat = Data.dpMat;
+            Peaks = Data.Peaks;
             batch = Data.batch;
             meta = Data.meta;
-            tNum = size(dpMat,2);
+            tNum = size(Peaks,2);
             bMat = {}; %for batch data set plotting
             
-            ax = app.UIAxes42;
+            ax = app.UIAxesBs2;
             axis(ax,'tight');
             xlim(ax,[0, inf]);
             ylim(ax,[0, inf]);
@@ -862,7 +823,7 @@ classdef DipTab_exported < matlab.apps.AppBase
                     if bIdxMat(idx)
                         itpItvs(idx) = meta(idx).MeasurementInterval;
                         phaseTransitionTimes(idx) = meta(idx).PhaseTransitionTime;
-                        mEndTs(idx) = dpMat{idx}(1,end);
+                        mEndTs(idx) = Peaks{idx}(1,end);
                     end
                 end
                 
@@ -873,9 +834,9 @@ classdef DipTab_exported < matlab.apps.AppBase
                 for idx = 1:tNum
                     if bIdxMat(idx)
                         cnt2 = cnt2 + 1;
-                        ubLoc = sum(dpMat{idx}(1,:) <= mEndT);
-                        iT = dpMat{idx}(1,1:ubLoc); %ingress time
-                        dT = dpMat{idx}(2,1:ubLoc); %displacement time
+                        ubLoc = sum(Peaks{idx}(1,:) <= mEndT);
+                        iT = Peaks{idx}(1,1:ubLoc); %ingress time
+                        dT = Peaks{idx}(2,1:ubLoc); %displacement time
                         xq = 0:itpItv:mEndT;
                         vq = interp1(iT,dT,xq,'linear');
                         vq(isnan(vq)) = 0;
@@ -972,11 +933,11 @@ classdef DipTab_exported < matlab.apps.AppBase
         function [k1,frs1,frm1,fitData1,k2,d,frs2,frm2,fitData2] = PLFitting(app,idx,opt)
             
             if isequal(opt,'individual')
-                dpMat = app.BData.dpMat{idx};
+                Peaks = app.BData.Peaks{idx};
                 meta = app.BData.meta(idx);
                 phaseTransitionTime = meta.PhaseTransitionTime;
-                xData = dpMat(1,:)';
-                yData = dpMat(2,:)';
+                xData = Peaks(1,:)';
+                yData = Peaks(2,:)';
             else
                 bMat = app.BData.bMat{idx,4};
                 phaseTransitionTime = app.BData.bMat{idx,3};
@@ -1009,47 +970,6 @@ classdef DipTab_exported < matlab.apps.AppBase
         
         
         
-        function bwDataset(app)
-            ax = app.UIAxes35;
-            cmap = app.ExtColormapDropDown.Value;
-            alp = str2num(app.AlphaDropDown.Value);
-            app.SystemStatusEditField.Value = "Dochotomising in process";
-            drawnow
-            
-            try
-                lfFtdData = app.LfData.lfFtdData;
-                lfDis = app.LfData.lfDis;
-                lfTime = app.LfData.lfTime;
-            catch ME
-            end
-            
-            threshold = app.ROITheasholdSlider.Value;
-            lfBWData = (lfFtdData>=threshold);
-
-            lb = app.ExcludeuptopsEditField.Value; % lower boundary
-
-            if lb>0
-                lbLoc = sum(lfDis<lb);
-                lfBWData(:,1:lbLoc) = false;
-            end
-
-            for idx = 1:length(lfDis)
-                if isequal(lfBWData(idx,1),true)
-                    break;
-                else
-                    lfBWData(idx,1) = true;
-                end
-            end
-
-            imagesc(ax,lfTime,lfDis,lfBWData,"AlphaData",0.1);
-            colormap(ax,cmap);
-            axis(ax,'tight');
-            ax.YDir = "normal";
-            app.LfData.lfBWData = lfBWData;
-            app.LfData.algoROI = lfBWData;
-            app.ROIDropDown.Value = "ALGORITHM ONLY";
-            app.SystemStatusEditField.Value = "Dichotomising finished";            
-        end
         
         function output = TDSunwrap(app,pData,freq)
             % unwrapping functon
@@ -1167,9 +1087,9 @@ classdef DipTab_exported < matlab.apps.AppBase
         % Value changed function: EnableButton
         function EnableButtonValueChanged(app, event)
             value = app.EnableButton.Value;
-            ax1 = app.UIAxes11;
-            ax2 = app.UIAxes12;
-            ax3 = app.UIAxes13;
+            ax1 = app.UIAxesTD1;
+            ax2 = app.UIAxesTD2;
+            ax3 = app.UIAxesTD3;
             
             try 
                 xData = app.TData.xData;
@@ -1189,7 +1109,6 @@ classdef DipTab_exported < matlab.apps.AppBase
                 %Enable Buttons
                 app.SpectrogramButton.Enable = true;
                 app.PowerSpectrumButton.Enable = true;
-                app.SetInitButton.Enable = true;
                 
                 app.tXPickSlider.Enable = true;
                 app.tXPickEditField.Enable = true;
@@ -1222,7 +1141,6 @@ classdef DipTab_exported < matlab.apps.AppBase
             else
                 app.SpectrogramButton.Enable = false;
                 app.PowerSpectrumButton.Enable = false;
-                app.SetInitButton.Enable = false;
                 app.tXPickSlider.Enable = false;
                 app.tXPickEditField.Enable = false;
                 app.tYPickSlider.Enable = false;
@@ -1251,7 +1169,7 @@ classdef DipTab_exported < matlab.apps.AppBase
 
         % Button pushed function: SaveFigureButton
         function SaveFigureButtonPushed(app, event)
-            ax = app.UIAxes11;
+            ax = app.UIAxesTD1;
             filter = {'*.pdf';'*.*'};
             [filename, filepath] = uiputfile(filter);
             
@@ -1275,11 +1193,18 @@ classdef DipTab_exported < matlab.apps.AppBase
         % Button pushed function: TruncateButton
         function TruncateButtonPushed(app, event)
             samData = app.TData.samData;
+            rawData = app.TData.rawData;
             xData = app.TData.xData; % x-axis
             ToF = app.TData.ToF; % time of flight (ps)
             
             app.DeployButton.Enable = false; % prevent performing twice
             app.SystemStatusEditField.Value = 'Truncating....';
+
+            if app.EnableButton.Value
+                app.EnableButton.Value = false;
+                EnableButtonValueChanged(app, event)
+            end
+
             drawnow
                                               
             dataLength=size(samData,1);
@@ -1332,6 +1257,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             end
 
             samData = samData(ylbLoc:yubLoc, xlbLoc:xubLoc);
+            rawData = rawData(ylbLoc:yubLoc, xlbLoc:xubLoc);
             
             [cmin cmax] = bounds(samData,"all");
 
@@ -1344,7 +1270,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.AOIRangeToEditField.Value = cmax;
                         
             % Scan information panel display
-            app.dataLengthEditField_2.Value = dataLength;
+            app.dataLengthEditField_FD.Value = dataLength;
             
             % assign truncated Y,X time
             xData = xData(xlbLoc:xubLoc) - xData(xlbLoc);
@@ -1354,7 +1280,8 @@ classdef DipTab_exported < matlab.apps.AppBase
             
             app.SystemStatusEditField.Value = 'Done';
             app.TData.samData = samData;
-            app.TData.ftdSam = samData;
+            app.TData.rawData = rawData;
+            % app.TData.ftdSam = samData;
             app.DeployButton.Enable = true;
             app.LeftEditField.Value = 0;
             app.RightEditField.Value = 0;
@@ -1367,12 +1294,16 @@ classdef DipTab_exported < matlab.apps.AppBase
         % Button pushed function: LfPlotButton
         function LfPlotButtonPushed(app, event)
             LfPlot(app);
+            app.kmmsEditField.Value = 0;
+            app.dmmEditField.Value = 0;
+            app.R2EditField.Value = 0;
+            app.RMSEEditField.Value = 0;
             app.SystemStatusEditField.Value = 'Replot Finished';
         end
 
         % Callback function
         function SaveFigureBRButtonPushed(app, event)
-            ax = app.UIAxes22;
+            ax = app.UIAxesFD2;
             filter = {'*.pdf';'*.*'};
             [filename, filepath] = uiputfile(filter);
             
@@ -1415,7 +1346,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             samSig = app.TData.samData(:,loc);
             ToF = app.TData.ToF;
             xData = app.TData.xData;
-            ax = app.UIAxes14;
+            ax = app.UIAxesTD4;
 
             cla(ax)
             axis(ax,'tight');
@@ -1474,7 +1405,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             samSig = app.TData.samData(:,loc);
             ToF = app.TData.ToF;
             xData = app.TData.xData;
-            ax4 = app.UIAxes14;
+            ax4 = app.UIAxesTD4;
             yULim = 0; % y-axis upper limit
 
             cla(ax4)
@@ -1530,10 +1461,10 @@ classdef DipTab_exported < matlab.apps.AppBase
         % Value changed function: EnableButton_2
         function EnableButton_2ValueChanged(app, event)
             value = app.EnableButton_2.Value;
-            ax1 = app.UIAxes21;
-            ax2 = app.UIAxes22;
-            ax3 = app.UIAxes23;
-            ax4 = app.UIAxes24;
+            ax1 = app.UIAxesFD1;
+            ax2 = app.UIAxesFD2;
+            ax3 = app.UIAxesFD3;
+            ax4 = app.UIAxesFD4;
             
             try 
                 xData = app.FData.xData;
@@ -1575,16 +1506,6 @@ classdef DipTab_exported < matlab.apps.AppBase
                     
                 end
         
-            end
-        end
-
-        % Callback function
-        function tPickSlider_YValueChanging(app, event)
-            changingValue = event.Value;
-            app.tPickEditField_Y.Value = changingValue;
-            
-            if app.EnableButton_2.Value
-                posT2_YLine(app);
             end
         end
 
@@ -1714,123 +1635,14 @@ classdef DipTab_exported < matlab.apps.AppBase
             plotPhases(app);
         end
 
-        % Callback function
-        function FindBottomSurfacePeakButtonPushed(app, event)
-            
-            try 
-                ftdData = app.TData.ftdSam;
-                xData = app.TData.xData;
-                ingressDepth = app.TData.ToF;
-            catch ME
-                fig = app.DipTabUIFigure;
-                uialert(fig,'Load Data first','Warning');
-                app.EnableButton.Value = false;
-                return;
-            end
-            
-            yPick = app.tPickSlider_Y.Value;
-            xPick = app.tPickSlider_XTime.Value;
-            ax4 = app.UIAxes24;
-            cla(ax4);
-            
-            yloc = sum(xData<=yPick);
-            xloc = sum(ingressDepth<=xPick);
-            if yloc <= 3
-                yloc = 5;
-                app.tPickSlider_Y.Value = xData(yloc);
-                app.tPickEditField_Y.Value = xData(yloc);
-            end
-            app.TData.yPick = yloc;
-            app.TData.xPick = xloc;
-            samMean = mean(ftdData(1:yloc,:));
-
-            try
-                [minVal minLoc] = min(samMean(xloc-80:xloc+80));
-            catch ME
-                [minVal minLoc] = min(samMean(xloc-80:end));
-            end
-            minLoc = minLoc + xloc - 80 -1;
-
-            app.Handler.ax4plot.yData = samMean;
-
-            plot(ax4,ingressDepth,samMean);
-            hold(ax4,'on')
-            plot(ax4,ingressDepth(minLoc),minVal,'r*');
-            title(ax4,'Bottom Surface Reflection (*)');
-            app.Handler.xline_24 = xline(ax4,ingressDepth(minLoc),'r--','LineWidth',1);
-            app.TData.btmDis = ingressDepth(minLoc);
-%             [pkVal, pkLoc] = max(samMean(minLoc-100:minLoc));
-%             plot(ax3,xData(pkLoc+minLoc-100),pkVal,"b*");
-%             app.TData.contactPeakGap = xData(minLoc) - xData(minLoc-100+pkLoc);
-            
-            app.tPickSlider_XTime.Value = ingressDepth(minLoc);
-            app.tPickEditField_X.Value = ingressDepth(minLoc);
-            posT2_XLine(app);
-            
-            msgTxt = strcat("Bottom surface reflection peak: ",compose('%5.2f',ingressDepth(minLoc))," mm");
-            app.SystemStatusEditField.Value = msgTxt;
-            
-        end
-
-        % Callback function
-        function FindLiquidContactTimeButtonPushed(app, event)
-            
-            try 
-                xData = app.TData.xData;
-                xData = app.TData.ToF;
-                ftdSam = app.TData.ftdSam;
-            catch ME
-                fig = app.DipTabUIFigure;
-                uialert(fig,'Load Data first','Warning');
-                app.EnableButton.Value = false;
-                return;
-            end
-            
-            ax1 = app.UIAxes21;
-            ax2 = app.UIAxes22;
-            ax3 = app.UIAxes23;
-            
-            % Liquid contact time (hydration start)
-            yPick = app.tPickSlider_Y.Value;
-            xPick = app.tPickSlider_XTime.Value;
-            yLoc1 = sum(xData <= (yPick - 10))+1; % scan +/- 5 second range for the given y-point
-            yLoc2 = sum(xData <= (yPick + 10));
-            xLoc = sum(xData <= xPick);
-            
-            bottomPeaks = ftdSam(yLoc1:yLoc2,xLoc)';
-            measureTime = xData(yLoc1:yLoc2);
-            
-            plot(ax3,measureTime,bottomPeaks);
-            axis(ax3,'tight');
-            xlabel(ax3,'Time (sec)');
-            app.tPickSlider_Xtime.Enable = "on";
-            app.tPickSlider_Xtime.Limits = [measureTime(1) measureTime(end)];
-            %title(ax3,'Bottom Surface Reflection Peak');
-            
-            [minVal, minLoc] = max(bottomPeaks);
-            liquidContactTime = measureTime(minLoc);
-            app.TData.liquidContactTime = liquidContactTime;
-            app.Handler.xline_23 = xline(ax3,liquidContactTime,'r--');
-            app.tPickSlider_Xtime.Value = liquidContactTime;
-            legendText = strcat('Contact Time:',compose("%5.2f",liquidContactTime));
-            legend(ax3,app.Handler.xline_23,legendText);
-            
-            app.Handler.yline_21cTime.Visible = true;
-            app.Handler.yline_22cTime.Visible = true;
-            
-            app.Handler.yline_21cTime.Value = liquidContactTime;
-            app.Handler.yline_22cTime.Value = liquidContactTime;
-            
-        end
-
         % Button pushed function: NextButton
         function NextButtonPushed(app, event)
             try
-                lfRawData = app.LfData.lfRawData;
-                lfFtdData = app.LfData.lfFtdData;
-                lfTime = app.LfData.lfTime;
-                lfDis = app.LfData.lfDis;
-                app.LfData.algoROI = [];
+                rawData = app.TData.rawData;
+                samData = app.TData.samData;
+                xData = app.TData.xData;
+                ToF = app.TData.ToF;
+                app.TData.algoROI = [];
             catch ME
                 fig = app.DipTabUIFigure;
                 uialert(fig,'Dataset is not ready','Warning');
@@ -1838,153 +1650,17 @@ classdef DipTab_exported < matlab.apps.AppBase
             end
 
             LfPlot(app);
-
-            bwLim = [min(lfFtdData,[],"all"), max(lfFtdData,[],"all")];
-            app.ROITheasholdSlider.Limits = bwLim;
-            app.ROITheasholdSlider.Value = mean(bwLim);
-            bwDataset(app);
           
-            app.TabGroup.SelectedTab = app.TabGroup.Children(3);
-            
-        end
-
-        % Button pushed function: ExtractLiquidFrontButton
-        function ExtractLiquidFrontButtonPushed(app, event)
-            app.stopProcess = 0;
-
-            try
-                %lfRawData = app.LfData.lfRawData;
-                lfFtdData = app.LfData.lfFtdData;
-                lfTime = app.LfData.lfTime;
-                lfDis = app.LfData.lfDis;
-            catch ME
-                fig = app.DipTabUIFigure;
-                uialert(fig,'Dataset is not ready','Warning');
-                return
-            end
-
-            ROI = app.ROIDropDown.Value;
-
-            switch ROI
-                case "ALGORITHM ONLY"
-                    try
-                       ROI = app.LfData.algoROI;
-                    catch ME
-                       fig = app.DipTabUIFigure;
-                       uialert(fig,'Algorithm dataset is not ready','Warning');
-                       app.EnableButton.Value = false;
-                       return;
-                    end
-                case "FREEHAND ONLY"
-                    try
-                       ROI = app.LfData.fhROI;
-                    catch ME
-                       fig = app.DipTabUIFigure;
-                       uialert(fig,'Freehand dataset is not ready','Warning');
-                       app.EnableButton.Value = false;
-                       return;
-                    end
-                otherwise
-                    try
-                       algoROI = app.LfData.algoROI;
-                       fhROI = app.LfData.fhROI;
-                       ROI = algoROI.*fhROI;
-                    catch ME
-                       fig = app.DipTabUIFigure;
-                       uialert(fig,'ROI datasets are not ready','Warning');
-                       return;
-                    end
-            end
-
-            ROI = ROI';
-            lfFtdData = lfFtdData';
-
-            measNum = length(lfTime);            
-            centreDis = app.DistancetoCentrepsEditField.Value;
-            lfMat = []; % liquid front matrix
-            
-            ax1 = app.UIAxes31;
-            ax2 = app.UIAxes32;
-            ax3 = app.UIAxes33;
-            ax4 = app.UIAxes34;
-            
-            hold(ax1,'on');
-            hold(ax2,'on');
-            hold(ax4,"on");
-            cla(ax3)
-            
-                        
-            % extract liquid front (LF)
-            crtLfLoc = 1; % the current liquid front location in the waveform vector
-            %lb = crtLfLoc;
-            
-            for idx = 1:measNum
-                tempVec = diff(ROI(idx,:));
-                tempVec = round([ROI(idx,1) tempVec]);
-                lbs = find(tempVec == 1);
-                ubs = find(tempVec == -1);
-                cnt = 1;
-
-                if app.stopProcess
-                    app.SystemStatusEditField.Value = "Process aborted";
-                    app.SpectrogramButton.Enable = true;
-                    return
-                end
-
-                for lb = lbs
-
-                    try
-                        ub = ubs(cnt);
-                    catch ME
-                        break
-                    end
-                    
-                    lfVec = lfFtdData(idx,lb:ub);% truncated liquid front vector
-                    
-                    try
-                        %[pks locs] = findpeaks(lfVec);
-                        [pks locs] = max(lfVec);
-                    catch ME
-                        [pks locs] = max(lfVec);
-                    end
-
-                    cnt2 = 1;
-                    
-                    for idx2 = locs
-                        lfMat= [lfMat; lfTime(idx), lfDis(idx2+lb-1),pks(cnt2)];
-                        cnt2 = cnt2 + 1;
-                    end
-                    cnt = cnt + 1;
-                end                
-                progressP = idx/measNum*100;
-                progressP = num2str(progressP,'%.0f');
-                progressP = strcat("Liquid Front Extracting: ", progressP,"%");
-                app.SystemStatusEditField.Value = progressP;
-                drawnow
-            end
-
-%             assignin("base","lfMat",lfMat);
-            
-            plot(ax2,lfMat(:,1),lfMat(:,2),'.');
-            plot(ax3,lfMat(:,1),lfMat(:,3),'.');
-            axis(ax3,'tight');
-                   
-            % display displacements        
-            app.Handler.LFline = plot(ax4,lfMat(:,1),lfMat(:,2),'.');
-            axis(ax4,'tight');
-            xlim(ax4,[0 inf]);
-            ylim(ax4,[0 inf]);
-                    
-            app.LfData.lfMat = lfMat;
-            assignin("base","lfMat",lfMat);
+            app.TabGroup.SelectedTab = app.TabGroup.Children(3);       
         end
 
         % Button pushed function: BatchManagementButton
         function BatchManagementButtonPushed(app, event)
            
             try
-                lfMat = app.LfData.lfMat;
-                lfTime = app.LfData.lfTime;
+                Peaks = app.TData.Peaks;
+                xData = app.TData.xData;
+                displacement = app.TData.displacement;
                 ingressTime = app.LiquidIngressTimesecEditField.Value;
             catch ME
                 fig = app.DipTabUIFigure;
@@ -1992,62 +1668,31 @@ classdef DipTab_exported < matlab.apps.AppBase
                 return;
             end
                         
-            meta.SampleName = app.SampleDescriptionEditField_T3.Value;
-            meta.totalDepth = app.DistancetoCentrepsEditField.Value;
-            meta.RefractiveIndex = app.RefractiveIndexEditField_T1.Value;
-            meta.IngressTime = ingressTime;
+            meta.sampleName = app.SampleDescriptionEditField.Value;
+            meta.thickness = app.ThicknessmmEditField_LE.Value;
+            meta.refractiveIndex = app.RefractiveIndexEditField_LE.Value;
+            meta.ingressTime = ingressTime;
             batch = {''};
 
-            ubLoc = sum(lfMat(:,1)<=ingressTime);
-            lfMat(ubLoc:end,:) = [];
+            ubLoc = sum(xData<=ingressTime);
+            yLocs(ubLoc:end,:) = [];
             
             try
-                dpIdx = size(app.BData.dpMat,2)+1;
+                dpIdx = size(app.BData.Peaks,2)+1;
             catch ME
-                app.BData.dpMat = {};
+                app.BData.Peaks = {};
                 dpIdx = 1;
             end
             
-            app.BData.dpMat(dpIdx) = {lfMat};
+            app.BData.Peaks(dpIdx) = Peaks;
             app.BData.meta(dpIdx) = meta;
             app.BData.batch(dpIdx) = batch;
-
-            % add mean point matrix (scattered points --> mean points)
-            meanMat = [];
-
-            for idx = 1:size(lfMat,1)-1
-                t = lfMat(idx,1);
-                diffVector = lfMat(:,1);
-                diffVector = diff(diffVector);
-                diffVector(diffVector>0) = 1;
-                diffVector = [1; diffVector];
-        
-                if isequal(diffVector(idx),1)
-                    intensity = lfMat(idx,3);
-                    displacement = lfMat(idx,2);
-                    cnt = 1;
-        
-                    if isequal(diffVector(idx+1),1)
-                        meanMat = [meanMat ; t,displacement,intensity];
-                    end
-                else
-                    intensity = intensity + lfMat(idx,3);
-                    displacement = displacement + lfMat(idx,2);
-                    cnt = cnt + 1;
-        
-                    if isequal(diffVector(idx+1),1)
-                        meanMat = [meanMat; t, displacement/cnt,intensity/cnt];
-                    end
-                end        
-            end
-
-            app.BData.dpMatMean(dpIdx) = {meanMat};
             
             %measurment list update
             ListBoxItems={};
             
             for MeasNum = 1:dpIdx
-                AddItem = app.BData.meta(MeasNum).SampleName;
+                AddItem = app.BData.meta(MeasNum).sampleName;
                 ListBoxItems{MeasNum} = AddItem;
             end
             
@@ -2055,7 +1700,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.MeasurementListBox.ItemsData = (1:MeasNum);
             app.MeasurementListBox.Items = ListBoxItems;
             
-            app.TabGroup.SelectedTab = app.TabGroup.Children(4);           
+            app.TabGroup.SelectedTab = app.TabGroup.Children(3);           
         end
 
         % Button pushed function: RemoveButton_2
@@ -2067,8 +1712,7 @@ classdef DipTab_exported < matlab.apps.AppBase
                 return;
             end
             
-            app.BData.dpMat(delItem) = [];
-            app.BData.dpMatMean(delItem) = [];
+            app.BData.Peaks(delItem) = [];
             app.BData.meta(delItem) = [];
             app.BData.batch(delItem) = [];
             ListBoxItems(delItem) = [];
@@ -2093,15 +1737,15 @@ classdef DipTab_exported < matlab.apps.AppBase
                 batch = app.BData.batch{value};
 
                 app.BIBatchEditField.Value = batch;
-                app.BIDescriptionEditField.Value = meta.SampleName;
-                app.BIDistanceToCentreEditField.Value = meta.totalDepth;
-                app.BIRefractiveIndexEditField.Value = meta.RefractiveIndex;
-                app.BIIngressTimesecEditField.Value = meta.IngressTime;
-                app.BIMeanSpeedEditField.Value = (meta.totalDepth)/(meta.IngressTime)*60;
+                app.BIDescriptionEditField.Value = meta.sampleName;
+                app.BICentreLinemmEditField.Value = meta.thickness/2;
+                app.BIRefractiveIndexEditField.Value = meta.refractiveIndex;
+                app.BIIngressTimesecEditField.Value = meta.ingressTime;
+                app.BIMeanSpeedEditField.Value = (meta.thickness)/(meta.ingressTime)*60;
             else
                 app.BIBatchEditField.Value = '';
                 app.BIDescriptionEditField.Value = '';
-                app.BIDistanceToCentreEditField.Value = 0;
+                app.BICentreLinemmEditField.Value = 0;
                 app.BIRefractiveIndexEditField.Value = 0;
                 app.BIIngressTimesecEditField.Value = 0;
                 app.BIMeanSpeedEditField.Value = 0;
@@ -2224,54 +1868,48 @@ classdef DipTab_exported < matlab.apps.AppBase
             
         end
 
-        % Button pushed function: CaculateIngressTimeButton
-        function CaculateIngressTimeButtonPushed(app, event)
-            lfMat = app.LfData.lfMat; % liquid front matrx: each row has [time, distance(ps), peak intensity]
-            lfDis = app.LfData.lfDis;
-            totNum = size(lfMat,1);
-            lfMat = lfMat(floor(4*totNum/10):floor(9.5*totNum/10),:); % 40% to 95%
-            centreDis = app.DistancetoCentrepsEditField.Value;
-            ax = app.UIAxes34;
+        % Button pushed function: CaculateFittingParametersButton
+        function CaculateFittingParametersButtonPushed(app, event)
+            try
+                Peaks = app.TData.Peaks;
+                xData = app.TData.xData;
+                thickness = app.ThicknessmmEditField_LE.Value;
+            catch
+                fig = app.DipTabUIFigure;
+                uialert(fig,'Invalid Datasets','Warning');
+                return;
+            end
+
+            xLocs = Peaks.xLocs;
+            yLocs = Peaks.yLocs;
+
+            % totNum = size(lfMat,1);
+
+            ax = app.UIAxesLE3;
             hold(ax,"on");
             
-            % Regime 2 fitting (f = k*t^m + 0.4)
             ft = fittype('k*x+d');
-            options = fitoptions('Method','NonlinearLeastSquares','Lower',[0 0 0],'Upper',[100 20 10]);
-            [f, fitness] = fit(lfMat(:,1),(lfMat(:,2)),ft,options);
+            options = fitoptions('Method','NonlinearLeastSquares');
+            [f, fitness] = fit(xLocs',yLocs',ft,options);
             k = f.k;
             d = f.d;
             frs = fitness.rsquare;
             frm = fitness.rmse;
 
-            if app.ExcludeLowerReflectionsCheckBox.Value
-                cnt = 0;
-                exclfMat = lfMat;
-                for idx=1:size(lfMat,1)
-                    if lfMat(idx,2) < feval(f,lfMat(idx,1))
-                        exclfMat(idx-cnt,:)=[];
-                        cnt = cnt+1;
-                    end
-                end
-                lfMat = exclfMat;
-
-                ft = fittype('k*x+d');
-                options = fitoptions('Method','NonlinearLeastSquares','Lower',[0 0 0],'Upper',[100 20 10]);
-                [f, fitness] = fit(lfMat(:,1),(lfMat(:,2)),ft,options);
-                k = f.k;
-                d = f.d;
-                frs = fitness.rsquare;
-                frm = fitness.rmse;
-            end
+            app.kmmsEditField.Value = k;
+            app.dmmEditField.Value = d;
+            app.R2EditField.Value = frs;
+            app.RMSEEditField.Value = frm;
                 
-            fitData = feval(f,lfMat(:,1)');
-            plot(ax,lfMat(:,1)',fitData,'m--');
-            ax.YLim = [0 lfDis(end)];
+            fitData = feval(f,xData);
+            plot(ax,xData,fitData,'m--');
+            % ax.YLim = [0 lfDis(end)];
             %txtMsg = strcat("k=",compose('%5.2f',k),", m=", compose('%5.2f',m),", d=", compose('%5.2f',d));
             legend(ax,"Liquid Front","Ingress Time Extrapolation Function","Location","southeast")
             %app.Handler.yline_34.Value = d;
             
             % Calculate the liquid ingress time in seconds
-            liquidIngressTime = (centreDis-d)/k;
+            liquidIngressTime = (thickness/2-d)/k;
             liquidIngressTime = floor(liquidIngressTime*100)/100;
             app.LiquidIngressTimesecEditField.Value = liquidIngressTime;
             
@@ -2399,142 +2037,13 @@ classdef DipTab_exported < matlab.apps.AppBase
             assignin("base","FData",FData);
         end
 
-        % Button pushed function: ALGORITHMROIButton
-        function ALGORITHMROIButtonPushed(app, event)
-            app.stopProcess = 0;
-            ax = app.UIAxes35;
-            cmap = app.ExtColormapDropDown.Value;
-            alp = str2num(app.AlphaDropDown.Value);
-            app.SystemStatusEditField.Value = "Candidate area narrowing...";
-            drawnow
-            
-            
+        % Button pushed function: DrawPolylineButton
+        function DrawPolylineButtonPushed(app, event)
             try
-                lfRawData = app.LfData.lfRawData;
-                lfBWData = app.LfData.lfBWData;
-                lfTime = app.LfData.lfTime;
-                lfDis = app.LfData.lfDis;
-            catch ME
-                fig = app.DipTabUIFigure;
-                uialert(fig,'Dataset is not ready','Warning');
-                app.EnableButton.Value = false;
-                return
-            end
-
-            autoRadius = app.DBSCANNeighborhoodRadiusSwitch.Value;
-
-            if isequal(autoRadius,"Auto")
-                nRadius = [5 10 15];
-            else
-                nRadius = app.Range220EditField.Value; % DBSCAN neighborhood radius
-            end
-
-            algoROI = zeros(size(lfBWData));
-
-            for nR = nRadius
-                lfBWData = app.LfData.lfBWData;
-                lfBWData = int8(lfBWData);
-                lfBWData = imgaussfilt(lfBWData,nR,"Padding","replicate");
-                algoROITemp = zeros(size(lfBWData));
-            
-                % desity clustering
-                ptX = 1;
-                ptY = 1;
-                ptXMax = length(lfDis);
-                ptYMax = length(lfTime)-nR+1;
-                initPtX = ptX;
-
-                while ptY<ptYMax       
-                    for ptX = initPtX
-                        xloof = true;
-                        while xloof
-                            if (ptX+nR-1)>=ptXMax
-                                xloof = false;
-                            else
-                                candArea = lfBWData(ptY:ptY+nR-1,ptX:ptX+nR-1);                            
-                                if isequal(sum(candArea(1,:)),0)
-                                    xloof = false;
-                                else
-                                    algoROITemp(ptY:ptY+nR-1,ptX:ptX+nR-1) = candArea;
-                                    ptX = ptX + nR;
-                                end
-                           end                        
-                        end
-                    end
-
-                    ptY = ptY + 1;
-                    initPtX = diff(algoROITemp(ptY,:));
-                    initPtX = [algoROITemp(ptY,1), initPtX];
-                    initPtX(initPtX < 0) = 0;
-                    initPtX = round(initPtX);
-                    initPtX = find(initPtX==1);
-                    xloof = true;
-                 
-                    if app.stopProcess
-                        app.SystemStatusEditField.Value = "Process aborted";
-                        app.SpectrogramButton.Enable = true;
-                        return
-                    end
-                end
-                algoROI = algoROI + algoROITemp;
-                algoROI(algoROI > 0) = 1;
-            end
-                        
-            app.LfData.algoROI = algoROI;
-            imagesc(ax,lfTime,lfDis,algoROI,"AlphaData",alp);
-            colormap(ax,cmap);
-            axis(ax,'tight');
-            ax.YDir = "normal";
-            app.SystemStatusEditField.Value = "Candidate area extracted";
-        end
-
-        % Value changed function: DBSCANNeighborhoodRadiusSwitch
-        function DBSCANNeighborhoodRadiusSwitchValueChanged(app, event)
-            value = app.DBSCANNeighborhoodRadiusSwitch.Value;
-            if isequal(value,"Manual")
-                app.Range220EditField.Editable = "on";
-            else
-                app.Range220EditField.Editable = "off";
-            end
-        end
-
-        % Callback function
-        function tPickSlider_XtimeValueChanging(app, event)
-            changingValue = event.Value;
-            liquidContactTime = changingValue;
-            ax = app.UIAxes23;
-            if app.EnableButton_2.Value
-                app.TData.liquidContactTime = liquidContactTime;
-                app.Handler.xline_23.Value = liquidContactTime;
-                legendText = strcat('Contact Time:',compose("%5.2f",liquidContactTime));
-                legend(ax,app.Handler.xline_23,legendText);
-            
-                app.Handler.yline_21cTime.Visible = true;
-                app.Handler.yline_22cTime.Visible = true;
-            
-                app.Handler.yline_21cTime.Value = liquidContactTime;
-                app.Handler.yline_22cTime.Value = liquidContactTime;
-            end
-        end
-
-        % Value changed function: ROITheasholdSlider
-        function ROITheasholdSliderValueChanged(app, event)
-            value = app.ROITheasholdSlider.Value;
-            bwDataset(app);
-        end
-
-        % Value changed function: ExcludeuptopsEditField
-        function ExcludeuptopsEditFieldValueChanged(app, event)
-            value = app.ExcludeuptopsEditField.Value;
-            bwDataset(app);
-        end
-
-        % Button pushed function: FREEHANDROIButton
-        function FREEHANDROIButtonPushed(app, event)
-            try
-                lfFtdData = app.LfData.lfFtdData;
-                lfTime = app.LfData.lfTime;
-                lfDis = app.LfData.lfDis;
+                samData = app.TData.samData;
+                xData = app.TData.xData;
+                displacement = app.TData.displacement;
+                thickness = app.ThicknessmmEditField_LE.Value;
             catch ME
                 fig = app.DipTabUIFigure;
                 uialert(fig,'Dataset is not ready','Warning');
@@ -2544,49 +2053,65 @@ classdef DipTab_exported < matlab.apps.AppBase
             
             cmap = app.ExtColormapDropDown.Value;
             alp = str2num(app.AlphaDropDown.Value);
+            ROIwidth = app.ROIwidthEditField.Value;
             
-            ax1 = app.UIAxes32;
-            ax2 = app.UIAxes35;
+            ax1 = app.UIAxesLE1;
+            ax2 = app.UIAxesLE2;
+            ax3 = app.UIAxesLE3;
+
+            hold(ax1,"on");
+            hold(ax3,"on");
             
-            app.SystemStatusEditField.Value = "Please select a freehand region of interest (ROI) at Filtered Measurement AX";
+            app.SystemStatusEditField.Value = "Please draw a polyline using mouse on the terahertz reflectometry plot";
 
-            roi = drawfreehand(ax1,"Color","r");
-            fhROI = createMask(roi);
-            imagesc(ax2,lfTime,lfDis,fhROI,"AlphaData",alp);
-            app.LfData.fhROI = fhROI;
-            colormap(ax2,cmap);
-            axis(ax2,'tight');
-            ax2.YDir = "normal";
-            app.ROIDropDown.Value = "FREEHAND ONLY";
-            app.SystemStatusEditField.Value = "Freehand ROI is selected.";
-        end
+            roi = drawpolyline(ax1,"Color","r");
+            ROImat = createMask(roi);
+            K1 = gausswin(ROIwidth);
+            ROImat = conv2(ROImat,K1,"same");
+            ROImat = ROImat ~= 0;
+            ROIvec = sum(ROImat,1);
+            ROIvec = ROIvec ~= 0;
+            colInitNum = find(ROIvec,1); % first non-zero column number
+            colNum = colInitNum;
 
-        % Value changed function: ROIDropDown
-        function ROIDropDownValueChanged(app, event)
-            value = app.ROIDropDown.Value;
+            K2 = gausswin(ceil(ROIwidth/2));
+            samData = conv2(samData,K2,"same");
+            samDataROI = samData.*ROImat;
+            eFiledAmp = [];
+            yLocs = [];
 
-            if isequal(value,"ALGORITHM + FREEHAND")
-                try
-                    algoROI = app.LfData.algoROI;
-                    fhROI = app.LfData.fhROI;
-                    ROI = algoROI.*fhROI;
-                catch ME
-                    fig = app.DipTabUIFigure;
-                    uialert(fig,'ROI datasets are not ready','Warning');
-                    return;
-                end
-                
-                ax = app.UIAxes35;
-                lfTime = app.LfData.lfTime;
-                lfDis = app.LfData.lfDis;
-                cmap = app.ExtColormapDropDown.Value;
-                alp = str2num(app.AlphaDropDown.Value);
-                imagesc(ax,lfDis,lfTime,ROI,"AlphaData",alp);
-                colormap(ax,cmap);
-                axis(ax,'tight');
-                ax.YDir = "normal";
+            while(ROIvec(colNum))
+                %[pks, locs] = findpeaks(samDataROI(:,colNum));
+                [pks, locs] = max(samDataROI(:,colNum));
+                eFiledAmp = [eFiledAmp pks];
+                yLocs = [yLocs displacement(locs)];
+                colNum = colNum + 1;
             end
-            
+
+            colVec = (colInitNum:colNum-1);
+            xLocs = xData(colVec);
+
+            plot(ax1,xLocs,yLocs,'.');            
+            plot(ax2,xLocs,eFiledAmp);
+            plot(ax3,xLocs,yLocs,'.');
+            xlim(ax2,[xData(1) xData(end)]);
+            xlim(ax3,[xData(1) xData(end)]);
+            ylim(ax3,[displacement(end) displacement(1)]);
+
+            if app.CentreLineCheckBox.Value
+                yline(ax3,thickness/2,'--','Centre Line');
+            end
+
+            Peaks.xLocs = xLocs;
+            Peaks.yLocs = yLocs;
+            Peaks.eFieldAmp = eFiledAmp;
+            app.TData.Peaks = Peaks;
+
+            app.TData.fhROI = ROImat;
+            colormap(ax1,cmap);
+            axis(ax1,'tight');
+
+            app.SystemStatusEditField.Value = "Liquidfront points are selected.";
         end
 
         % Button pushed function: DPlotNewButton
@@ -2594,7 +2119,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             % Create UIFigure and hide until all components are created
             fig = figure('Visible', 'on');
             fig.Position = [100 100 1200 800];
-            fig.Name = "CaTTrans 3D Plot";
+            fig.Name = "DipTab 3D Plot";
 
             % Create UIAxes
             ax = uiaxes(fig);
@@ -2615,13 +2140,13 @@ classdef DipTab_exported < matlab.apps.AppBase
                 return;                
             end
 
-            dpMat = app.BData.dpMat;            
+            Peaks = app.BData.Peaks;            
             lh1 = [];
             lh = [];
             cnt = 1;
             
             for idx = mItems
-                h = plot3(ax,dpMat{idx}(:,1),dpMat{idx}(:,2),dpMat{idx}(:,3),'.');
+                h = plot3(ax,Peaks{idx}.xLocs,Peaks{idx}.yLocs,Peaks{idx}.eFieldAmp,'.');
                 lh(cnt) = h;
                 
                 cnt = cnt + 1;
@@ -2639,7 +2164,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             % Create UIFigure and hide until all components are created
             fig = uifigure('Visible', 'on');
             fig.Position = [100 100 1200 900];
-            fig.Name = "CaTTrans Colour Plot";
+            fig.Name = "DipTab Colour Plot";
 
             % Create UIAxes
             ax = uiaxes(fig);
@@ -2662,13 +2187,13 @@ classdef DipTab_exported < matlab.apps.AppBase
                 return;                
             end
 
-            dpMat = app.BData.dpMat;            
+            Peaks = app.BData.Peaks;            
             lh1 = [];
             lh = [];
             cnt = 1;
             
             for idx = mItems
-                h = scatter(ax,dpMat{idx}(:,1),dpMat{idx}(:,2),[],dpMat{idx}(:,3),'.');
+                h = scatter(ax,Peaks{idx}.xLocs,Peaks{idx}.yLocs,[],Peaks{idx}.eFieldAmp,'.');
                 lh(cnt) = h;
                 
                 cnt = cnt + 1;
@@ -2687,14 +2212,18 @@ classdef DipTab_exported < matlab.apps.AppBase
             clearMemory(app);
             resetGeneralInfo(app);
             app.plotUpdate = true;
-            ax = app.UIAxes11;
+            ax = app.UIAxesTD1;
                         
             if isempty(fullfile)
                      return;
             end
 
-            question = "Select x-axis unit";
-            xUnit = questdlg('Select x-axis unit','X-axis Unit','Time (sec)','Position (mm)','Time (sec)');
+            try
+                question = "Select x-axis unit";
+                xUnit = questdlg('Select x-axis unit','X-axis Unit','Time (sec)','Position (mm)','Time (sec)');
+            catch
+                return;
+            end
 
             try
                 question = "Select Peak Polarity";
@@ -2762,6 +2291,12 @@ classdef DipTab_exported < matlab.apps.AppBase
             user = h5readatt(fullfile,srtGrp,"user");
             thickness = h5readatt(fullfile,srtGrp,"md1");
 
+            try
+                n_eff = h5readatt(fullfile,srtGrp,"md2");
+            catch
+                n_eff = 1.6;
+            end
+
             if isequal(instrument,"<missing>")
                 instrument = '';
             end
@@ -2771,7 +2306,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.TData.xData = xDataItv*(0:measNum-1);
             ToF = xSpacing*(0:dataLength-1);
             app.TData.ToF = ToF;
-            samData = zeros(dataLength,measNum);
+            rawData = zeros(dataLength,measNum);
 
             % Scan information panel display
             app.DataLengthEditField.Value = dataLength;
@@ -2779,6 +2314,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.ToFSpacingpsEditField.Value = xSpacing;
             app.TimeSpacingsEditField.Value = xDataItv;
             app.ThicknessmmEditField.Value = thickness;
+            app.RefractiveIndexEditField.Value = n_eff;
             % app.InstrumentEditField.Value = instrument;
             % app.UserEditField.Value = user;
             app.SampleDescriptionEditField.Value = description;
@@ -2789,9 +2325,9 @@ classdef DipTab_exported < matlab.apps.AppBase
                 measData = h5read(fullfile,dn);
 
                 if peakOption == "Negative"
-                    samData(:,idx) = measData(2,:)'*-1;
+                    rawData(:,idx) = measData(2,:)'*-1;
                 else
-                    samData(:,idx) = measData(2,:)';
+                    rawData(:,idx) = measData(2,:)';
                 end                
                
                 progressP = idx/measNum*100;
@@ -2801,11 +2337,12 @@ classdef DipTab_exported < matlab.apps.AppBase
                 drawnow
             end
 
-            app.TData.samData = samData;
+            app.TData.samData = rawData;
+            app.TData.rawData = rawData;
             app.SystemStatusEditField.Value = 'Done';
             drawnow
 
-            [cmin cmax] = bounds(samData,"all");
+            [cmin cmax] = bounds(rawData,"all");
 
             cmin = round(cmin*10^2)*10^-2;
             cmax = round(cmax*10^2)*10^-2;
@@ -2834,10 +2371,10 @@ classdef DipTab_exported < matlab.apps.AppBase
             samData = app.TData.samData;
             dataLength=size(samData,1);
             measNum = size(samData,2);
-            app.dataLengthEditField_2.Value = dataLength;
-            app.dataNumberEditField_2.Value = measNum;
+            app.dataLengthEditField_FD.Value = dataLength;
+            app.dataNumberEditField_FD.Value = measNum;
             app.DeployButton.Enable = true;
-            app.TabGroup.SelectedTab = app.TabGroup.Children(2);
+            app.TabGroup.SelectedTab = app.TabGroup.Children(3);
         end
 
         % Button pushed function: RemoveBaseButton_Tab1
@@ -2882,18 +2419,6 @@ classdef DipTab_exported < matlab.apps.AppBase
             end
         end
 
-        % Button pushed function: SetInitButton
-        function SetInitButtonPushed(app, event)
-            if app.EnableButton.Value
-                initY = app.tXPickSlider.Value;
-                initX = app.tYPickSlider.Value;
-                app.LeftEditField.Value = initY;
-                app.DownEditField.Value = initX;
-            else
-                return;
-            end
-        end
-
         % Button pushed function: PlotButton_3
         function PlotButton_3Pushed(app, event)
             plotSpectra(app);
@@ -2911,11 +2436,6 @@ classdef DipTab_exported < matlab.apps.AppBase
             posT2_XLine(app);
         end
 
-        % Callback function
-        function PlotButton_TDPushed(app, event)
-            tdPlot(app);
-        end
-
         % Button pushed function: SetDownLimitButton
         function SetDownLimitButtonPushed(app, event)
             value = app.tYPickEditField.Value;
@@ -2926,6 +2446,55 @@ classdef DipTab_exported < matlab.apps.AppBase
         function SetLeftLimitButtonPushed(app, event)
             value = app.tXPickEditField.Value;
             app.LeftEditField.Value = value;
+        end
+
+        % Button pushed function: ApplyButton
+        function ApplyButtonPushed(app, event)
+            samData = app.TData.samData;            
+            N = app.gausswinEditField.Value;
+            K = gausswin(N);
+            Zsmooth = conv2(samData,K,'same');
+            app.TData.samData = Zsmooth;
+            tdPlot(app);
+        end
+
+        % Button pushed function: LoadRawDataButton
+        function LoadRawDataButtonPushed(app, event)
+            rawData = app.TData.rawData;
+            app.TData.samData = rawData;
+            tdPlot(app);
+        end
+
+        % Button pushed function: LiquidfrontExtractionButton
+        function LiquidfrontExtractionButtonPushed(app, event)
+            try
+                samData = app.TData.samData;
+                ToF = app.TData.ToF;
+                app.TData.algoROI = [];
+            catch ME
+                fig = app.DipTabUIFigure;
+                uialert(fig,'Datasets are not ready','Warning');
+                return;
+            end
+
+            n_eff = app.RefractiveIndexEditField.Value;
+            inAng = app.inAng;
+            c = 3*10^8;
+
+            displacement = ToF*10^-12.*c*sqrt(n_eff^2-sin(inAng)^2)/(2*n_eff^2);
+            displacement = displacement * 10^3; % meter to millimeter
+            displacement = flip(displacement);
+            app.TData.displacement = displacement;
+
+            LfPlot(app);
+
+            app.ThicknessmmEditField_LE.Value = app.ThicknessmmEditField.Value;
+            app.RefractiveIndexEditField_LE.Value = app.RefractiveIndexEditField.Value;
+            
+            app.dataLengthEditField_LE.Value = size(samData,1);
+            app.dataNumberEditField_LE.Value = size(samData,2);
+          
+            app.TabGroup.SelectedTab = app.TabGroup.Children(2);
         end
     end
 
@@ -2940,15 +2509,17 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             % Create DipTabUIFigure and hide until all components are created
             app.DipTabUIFigure = uifigure('Visible', 'off');
-            app.DipTabUIFigure.Position = [100 100 1484 916];
-            app.DipTabUIFigure.Name = 'DipTab Insight';
+            app.DipTabUIFigure.Position = [100 50 1484 916];
+            app.DipTabUIFigure.Name = 'DipTab';
             app.DipTabUIFigure.Icon = fullfile(pathToMLAPP, 'Images', 'icon.png');
+            app.DipTabUIFigure.Scrollable = 'on';
 
             % Create ImportthzFileButton
             app.ImportthzFileButton = uibutton(app.DipTabUIFigure, 'push');
             app.ImportthzFileButton.ButtonPushedFcn = createCallbackFcn(app, @ImportthzFileButtonPushed, true);
+            app.ImportthzFileButton.FontSize = 14;
             app.ImportthzFileButton.FontWeight = 'bold';
-            app.ImportthzFileButton.Position = [313 851 114 28];
+            app.ImportthzFileButton.Position = [300 851 128 28];
             app.ImportthzFileButton.Text = 'Import .thz File';
 
             % Create TerahertzLqiuidFrontDateAnalyserLabel
@@ -2986,52 +2557,52 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.TimeDomainTab.AutoResizeChildren = 'off';
             app.TimeDomainTab.Title = 'Time Domain';
 
-            % Create UIAxes11
-            app.UIAxes11 = uiaxes(app.TimeDomainTab);
-            title(app.UIAxes11, '2D Image of Terahertz Reflectometry')
-            xlabel(app.UIAxes11, 'Time/Position (sec/mm)')
-            ylabel(app.UIAxes11, 'Time of flight (ps)')
-            app.UIAxes11.PlotBoxAspectRatio = [1 1.13357400722022 1];
-            app.UIAxes11.XTickLabelRotation = 0;
-            app.UIAxes11.YTickLabelRotation = 0;
-            app.UIAxes11.ZTickLabelRotation = 0;
-            app.UIAxes11.Box = 'on';
-            app.UIAxes11.FontSize = 11;
-            app.UIAxes11.Position = [238 53 636 700];
+            % Create UIAxesTD1
+            app.UIAxesTD1 = uiaxes(app.TimeDomainTab);
+            title(app.UIAxesTD1, '2D Image of Terahertz Reflectometry')
+            xlabel(app.UIAxesTD1, 'Time/Position (sec/mm)')
+            ylabel(app.UIAxesTD1, 'Time of flight (ps)')
+            app.UIAxesTD1.PlotBoxAspectRatio = [1 1.13357400722022 1];
+            app.UIAxesTD1.XTickLabelRotation = 0;
+            app.UIAxesTD1.YTickLabelRotation = 0;
+            app.UIAxesTD1.ZTickLabelRotation = 0;
+            app.UIAxesTD1.Box = 'on';
+            app.UIAxesTD1.FontSize = 11;
+            app.UIAxesTD1.Position = [237 42 640 710];
 
-            % Create UIAxes12
-            app.UIAxes12 = uiaxes(app.TimeDomainTab);
-            title(app.UIAxes12, 'Single E-field')
-            xlabel(app.UIAxes12, 'Time of flight (ps)')
-            ylabel(app.UIAxes12, 'E field (a.u.)')
-            app.UIAxes12.Box = 'on';
-            app.UIAxes12.FontSize = 11;
-            app.UIAxes12.Position = [881 539 560 220];
+            % Create UIAxesTD2
+            app.UIAxesTD2 = uiaxes(app.TimeDomainTab);
+            title(app.UIAxesTD2, 'Single E-field')
+            xlabel(app.UIAxesTD2, 'Time of flight (ps)')
+            ylabel(app.UIAxesTD2, 'E field (a.u.)')
+            app.UIAxesTD2.Box = 'on';
+            app.UIAxesTD2.FontSize = 11;
+            app.UIAxesTD2.Position = [881 539 560 220];
 
-            % Create UIAxes13
-            app.UIAxes13 = uiaxes(app.TimeDomainTab);
-            title(app.UIAxes13, 'Cummurative E-field')
-            xlabel(app.UIAxes13, 'Time/Position (sec/mm)')
-            ylabel(app.UIAxes13, 'E field (a.u.)')
-            app.UIAxes13.Box = 'on';
-            app.UIAxes13.FontSize = 11;
-            app.UIAxes13.Position = [883 262 560 220];
+            % Create UIAxesTD3
+            app.UIAxesTD3 = uiaxes(app.TimeDomainTab);
+            title(app.UIAxesTD3, 'Cummurative E-field')
+            xlabel(app.UIAxesTD3, 'Time/Position (sec/mm)')
+            ylabel(app.UIAxesTD3, 'E field (a.u.)')
+            app.UIAxesTD3.Box = 'on';
+            app.UIAxesTD3.FontSize = 11;
+            app.UIAxesTD3.Position = [883 262 560 220];
 
-            % Create UIAxes14
-            app.UIAxes14 = uiaxes(app.TimeDomainTab);
-            title(app.UIAxes14, 'Spectrogram / Spectrum')
-            xlabel(app.UIAxes14, 'Time (ps) / Frequency (THz)')
-            ylabel(app.UIAxes14, 'Frequency (THz) / E field')
-            zlabel(app.UIAxes14, 'Z')
-            app.UIAxes14.Box = 'on';
-            app.UIAxes14.FontSize = 11;
-            app.UIAxes14.Position = [883 6 560 200];
+            % Create UIAxesTD4
+            app.UIAxesTD4 = uiaxes(app.TimeDomainTab);
+            title(app.UIAxesTD4, 'Spectrogram / Spectrum')
+            xlabel(app.UIAxesTD4, 'Time (ps) / Frequency (THz)')
+            ylabel(app.UIAxesTD4, 'Frequency (THz) / E field')
+            zlabel(app.UIAxesTD4, 'Z')
+            app.UIAxesTD4.Box = 'on';
+            app.UIAxesTD4.FontSize = 11;
+            app.UIAxesTD4.Position = [883 6 560 200];
 
             % Create GeneralInformationPanel
             app.GeneralInformationPanel = uipanel(app.TimeDomainTab);
             app.GeneralInformationPanel.AutoResizeChildren = 'off';
             app.GeneralInformationPanel.Title = 'General Information';
-            app.GeneralInformationPanel.Position = [15 583 216 160];
+            app.GeneralInformationPanel.Position = [16 583 216 160];
 
             % Create DataLengthLabel
             app.DataLengthLabel = uilabel(app.GeneralInformationPanel);
@@ -3099,31 +2670,44 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.RefractiveIndexEditField.Limits = [0 Inf];
             app.RefractiveIndexEditField.ValueDisplayFormat = '%5.2f';
             app.RefractiveIndexEditField.Position = [140 5 70 22];
+            app.RefractiveIndexEditField.Value = 1.5;
 
-            % Create GuideLinesPanel
-            app.GuideLinesPanel = uipanel(app.TimeDomainTab);
-            app.GuideLinesPanel.AutoResizeChildren = 'off';
-            app.GuideLinesPanel.Title = 'Guide Lines';
-            app.GuideLinesPanel.Position = [15 329 216 62];
+            % Create GuidelinesPanel
+            app.GuidelinesPanel = uipanel(app.TimeDomainTab);
+            app.GuidelinesPanel.AutoResizeChildren = 'off';
+            app.GuidelinesPanel.Title = 'Guidelines';
+            app.GuidelinesPanel.Position = [16 303 216 91];
 
             % Create EnableButton
-            app.EnableButton = uibutton(app.GuideLinesPanel, 'state');
+            app.EnableButton = uibutton(app.GuidelinesPanel, 'state');
             app.EnableButton.ValueChangedFcn = createCallbackFcn(app, @EnableButtonValueChanged, true);
             app.EnableButton.Text = 'Enable';
-            app.EnableButton.Position = [10 9 92 23];
+            app.EnableButton.Position = [10 38 92 23];
 
-            % Create SetInitButton
-            app.SetInitButton = uibutton(app.GuideLinesPanel, 'push');
-            app.SetInitButton.ButtonPushedFcn = createCallbackFcn(app, @SetInitButtonPushed, true);
-            app.SetInitButton.Enable = 'off';
-            app.SetInitButton.Position = [113 9 92 23];
-            app.SetInitButton.Text = 'Set Init';
+            % Create SpectrogramButton
+            app.SpectrogramButton = uibutton(app.GuidelinesPanel, 'push');
+            app.SpectrogramButton.ButtonPushedFcn = createCallbackFcn(app, @SpectrogramButtonPushed, true);
+            app.SpectrogramButton.Enable = 'off';
+            app.SpectrogramButton.Position = [10 9 92 23];
+            app.SpectrogramButton.Text = 'Spectrogram';
+
+            % Create PowerSpectrumButton
+            app.PowerSpectrumButton = uibutton(app.GuidelinesPanel, 'push');
+            app.PowerSpectrumButton.ButtonPushedFcn = createCallbackFcn(app, @PowerSpectrumButtonPushed, true);
+            app.PowerSpectrumButton.Enable = 'off';
+            app.PowerSpectrumButton.Position = [107 10 100 23];
+            app.PowerSpectrumButton.Text = 'Power Spectrum';
+
+            % Create AutoScanSpectrumCheckBox
+            app.AutoScanSpectrumCheckBox = uicheckbox(app.GuidelinesPanel);
+            app.AutoScanSpectrumCheckBox.Text = 'Auto-Scan';
+            app.AutoScanSpectrumCheckBox.Position = [123 39 79 22];
 
             % Create ColormapPanel
             app.ColormapPanel = uipanel(app.TimeDomainTab);
             app.ColormapPanel.AutoResizeChildren = 'off';
             app.ColormapPanel.Title = 'Colormap';
-            app.ColormapPanel.Position = [15 399 216 85];
+            app.ColormapPanel.Position = [16 402 216 85];
 
             % Create ColormapDropDown
             app.ColormapDropDown = uidropdown(app.ColormapPanel);
@@ -3148,36 +2732,11 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.DCheckBox.Text = '3D';
             app.DCheckBox.Position = [11 37 37 22];
 
-            % Create SpectrumPanel
-            app.SpectrumPanel = uipanel(app.TimeDomainTab);
-            app.SpectrumPanel.AutoResizeChildren = 'off';
-            app.SpectrumPanel.Title = 'Spectrum';
-            app.SpectrumPanel.Position = [15 237 216 84];
-
-            % Create SpectrogramButton
-            app.SpectrogramButton = uibutton(app.SpectrumPanel, 'push');
-            app.SpectrogramButton.ButtonPushedFcn = createCallbackFcn(app, @SpectrogramButtonPushed, true);
-            app.SpectrogramButton.Enable = 'off';
-            app.SpectrogramButton.Position = [10 10 92 23];
-            app.SpectrogramButton.Text = 'Spectrogram';
-
-            % Create PowerSpectrumButton
-            app.PowerSpectrumButton = uibutton(app.SpectrumPanel, 'push');
-            app.PowerSpectrumButton.ButtonPushedFcn = createCallbackFcn(app, @PowerSpectrumButtonPushed, true);
-            app.PowerSpectrumButton.Enable = 'off';
-            app.PowerSpectrumButton.Position = [112 10 100 23];
-            app.PowerSpectrumButton.Text = 'Power Spectrum';
-
-            % Create AutoScanSpectrumCheckBox
-            app.AutoScanSpectrumCheckBox = uicheckbox(app.SpectrumPanel);
-            app.AutoScanSpectrumCheckBox.Text = 'Auto-Scan';
-            app.AutoScanSpectrumCheckBox.Position = [14 37 79 22];
-
             % Create AOIBoundaryTruncationPanel
             app.AOIBoundaryTruncationPanel = uipanel(app.TimeDomainTab);
             app.AOIBoundaryTruncationPanel.AutoResizeChildren = 'off';
             app.AOIBoundaryTruncationPanel.Title = 'AOI Boundary Truncation';
-            app.AOIBoundaryTruncationPanel.Position = [15 103 216 126];
+            app.AOIBoundaryTruncationPanel.Position = [16 169 216 126];
 
             % Create TruncateButton
             app.TruncateButton = uibutton(app.AOIBoundaryTruncationPanel, 'push');
@@ -3243,20 +2802,20 @@ classdef DipTab_exported < matlab.apps.AppBase
             % Create FrequencyDomainStudyButton
             app.FrequencyDomainStudyButton = uibutton(app.TimeDomainTab, 'push');
             app.FrequencyDomainStudyButton.ButtonPushedFcn = createCallbackFcn(app, @FrequencyDomainStudyButtonPushed, true);
-            app.FrequencyDomainStudyButton.Position = [25 39 193 25];
+            app.FrequencyDomainStudyButton.Position = [24 38 193 25];
             app.FrequencyDomainStudyButton.Text = 'Frequency Domain Study';
 
             % Create SaveTruncatedButton
             app.SaveTruncatedButton = uibutton(app.TimeDomainTab, 'push');
             app.SaveTruncatedButton.ButtonPushedFcn = createCallbackFcn(app, @SaveTruncatedButtonPushed, true);
-            app.SaveTruncatedButton.Position = [25 9 193 25];
+            app.SaveTruncatedButton.Position = [24 8 193 25];
             app.SaveTruncatedButton.Text = 'AOI THz Save';
 
             % Create ColormapcontrolPanel_TD
             app.ColormapcontrolPanel_TD = uipanel(app.TimeDomainTab);
             app.ColormapcontrolPanel_TD.AutoResizeChildren = 'off';
             app.ColormapcontrolPanel_TD.Title = 'Colormap control';
-            app.ColormapcontrolPanel_TD.Position = [15 492 216 80];
+            app.ColormapcontrolPanel_TD.Position = [16 495 216 80];
 
             % Create DataRangeEditFieldLabel
             app.DataRangeEditFieldLabel = uilabel(app.ColormapcontrolPanel_TD);
@@ -3307,7 +2866,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             % Create SaveFigureButton
             app.SaveFigureButton = uibutton(app.TimeDomainTab, 'push');
             app.SaveFigureButton.ButtonPushedFcn = createCallbackFcn(app, @SaveFigureButtonPushed, true);
-            app.SaveFigureButton.Position = [732 16 121 23];
+            app.SaveFigureButton.Position = [732 14 121 23];
             app.SaveFigureButton.Text = 'Save Figure';
 
             % Create tXPickSlider
@@ -3370,64 +2929,587 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             % Create LiquidfrontExtractionButton
             app.LiquidfrontExtractionButton = uibutton(app.TimeDomainTab, 'push');
-            app.LiquidfrontExtractionButton.Position = [25 69 193 25];
+            app.LiquidfrontExtractionButton.ButtonPushedFcn = createCallbackFcn(app, @LiquidfrontExtractionButtonPushed, true);
+            app.LiquidfrontExtractionButton.BackgroundColor = [1 1 1];
+            app.LiquidfrontExtractionButton.FontWeight = 'bold';
+            app.LiquidfrontExtractionButton.Position = [24 68 193 25];
             app.LiquidfrontExtractionButton.Text = 'Liquidfront Extraction';
 
-            % Create KernelSmootherButton
-            app.KernelSmootherButton = uibutton(app.TimeDomainTab, 'push');
-            app.KernelSmootherButton.Position = [280 16 120 23];
-            app.KernelSmootherButton.Text = 'Kernel Smoother';
+            % Create KernelSmoothingPanel
+            app.KernelSmoothingPanel = uipanel(app.TimeDomainTab);
+            app.KernelSmoothingPanel.AutoResizeChildren = 'off';
+            app.KernelSmoothingPanel.Title = 'Kernel Smoothing';
+            app.KernelSmoothingPanel.Position = [16 102 216 59];
+
+            % Create ApplyButton
+            app.ApplyButton = uibutton(app.KernelSmoothingPanel, 'push');
+            app.ApplyButton.ButtonPushedFcn = createCallbackFcn(app, @ApplyButtonPushed, true);
+            app.ApplyButton.Position = [115 8 91 23];
+            app.ApplyButton.Text = 'Apply';
+
+            % Create gausswinEditFieldLabel
+            app.gausswinEditFieldLabel = uilabel(app.KernelSmoothingPanel);
+            app.gausswinEditFieldLabel.HorizontalAlignment = 'right';
+            app.gausswinEditFieldLabel.Position = [7 9 55 22];
+            app.gausswinEditFieldLabel.Text = 'gausswin';
+
+            % Create gausswinEditField
+            app.gausswinEditField = uieditfield(app.KernelSmoothingPanel, 'numeric');
+            app.gausswinEditField.Limits = [1 100];
+            app.gausswinEditField.ValueDisplayFormat = '%.0f';
+            app.gausswinEditField.Position = [67 9 34 22];
+            app.gausswinEditField.Value = 6;
+
+            % Create LoadRawDataButton
+            app.LoadRawDataButton = uibutton(app.TimeDomainTab, 'push');
+            app.LoadRawDataButton.ButtonPushedFcn = createCallbackFcn(app, @LoadRawDataButtonPushed, true);
+            app.LoadRawDataButton.Position = [281 14 121 23];
+            app.LoadRawDataButton.Text = 'Load Raw Data';
+
+            % Create LiquidfrontExtractionTab
+            app.LiquidfrontExtractionTab = uitab(app.TabGroup);
+            app.LiquidfrontExtractionTab.AutoResizeChildren = 'off';
+            app.LiquidfrontExtractionTab.Title = 'Liquidfront Extraction';
+
+            % Create UIAxesLE1
+            app.UIAxesLE1 = uiaxes(app.LiquidfrontExtractionTab);
+            title(app.UIAxesLE1, 'Terahertz Reflectometry')
+            xlabel(app.UIAxesLE1, 'Time (sec)')
+            ylabel(app.UIAxesLE1, 'Displaement (mm)')
+            app.UIAxesLE1.Box = 'on';
+            app.UIAxesLE1.FontSize = 11;
+            app.UIAxesLE1.Position = [301 48 640 710];
+
+            % Create UIAxesLE2
+            app.UIAxesLE2 = uiaxes(app.LiquidfrontExtractionTab);
+            title(app.UIAxesLE2, 'Liquid Front Reflection')
+            xlabel(app.UIAxesLE2, 'Time (sec)')
+            ylabel(app.UIAxesLE2, 'E filed (a.u.)')
+            app.UIAxesLE2.Box = 'on';
+            app.UIAxesLE2.XGrid = 'on';
+            app.UIAxesLE2.YGrid = 'on';
+            app.UIAxesLE2.FontSize = 11;
+            app.UIAxesLE2.Position = [968 514 470 240];
+
+            % Create UIAxesLE3
+            app.UIAxesLE3 = uiaxes(app.LiquidfrontExtractionTab);
+            title(app.UIAxesLE3, 'Liquid Front Ingress')
+            xlabel(app.UIAxesLE3, 'Time (sec)')
+            ylabel(app.UIAxesLE3, 'Displacement (mm)')
+            app.UIAxesLE3.Box = 'on';
+            app.UIAxesLE3.XGrid = 'on';
+            app.UIAxesLE3.YGrid = 'on';
+            app.UIAxesLE3.FontSize = 11;
+            app.UIAxesLE3.Position = [972 50 470 427];
+
+            % Create ROISelectionPanel
+            app.ROISelectionPanel = uipanel(app.LiquidfrontExtractionTab);
+            app.ROISelectionPanel.AutoResizeChildren = 'off';
+            app.ROISelectionPanel.Title = 'ROI Selection';
+            app.ROISelectionPanel.Position = [18 495 264 158];
+
+            % Create AlphaDropDown_2Label
+            app.AlphaDropDown_2Label = uilabel(app.ROISelectionPanel);
+            app.AlphaDropDown_2Label.HorizontalAlignment = 'right';
+            app.AlphaDropDown_2Label.Position = [19 108 35 22];
+            app.AlphaDropDown_2Label.Text = 'Alpha';
+
+            % Create AlphaDropDown
+            app.AlphaDropDown = uidropdown(app.ROISelectionPanel);
+            app.AlphaDropDown.Items = {'1.0', '0.7', '0.5', '0.3', '0.1'};
+            app.AlphaDropDown.Position = [58 108 62 22];
+            app.AlphaDropDown.Value = '1.0';
+
+            % Create ExtColormapDropDown
+            app.ExtColormapDropDown = uidropdown(app.ROISelectionPanel);
+            app.ExtColormapDropDown.Items = {'parula', 'jet', 'copper', 'bone', 'hot'};
+            app.ExtColormapDropDown.Position = [20 78 97 23];
+            app.ExtColormapDropDown.Value = 'parula';
+
+            % Create LfPlotButton
+            app.LfPlotButton = uibutton(app.ROISelectionPanel, 'push');
+            app.LfPlotButton.ButtonPushedFcn = createCallbackFcn(app, @LfPlotButtonPushed, true);
+            app.LfPlotButton.BackgroundColor = [1 1 1];
+            app.LfPlotButton.FontWeight = 'bold';
+            app.LfPlotButton.Position = [130 78 115 23];
+            app.LfPlotButton.Text = 'Replot';
+
+            % Create DrawPolylineButton
+            app.DrawPolylineButton = uibutton(app.ROISelectionPanel, 'push');
+            app.DrawPolylineButton.ButtonPushedFcn = createCallbackFcn(app, @DrawPolylineButtonPushed, true);
+            app.DrawPolylineButton.BackgroundColor = [1 1 1];
+            app.DrawPolylineButton.FontWeight = 'bold';
+            app.DrawPolylineButton.Position = [17 10 231 28];
+            app.DrawPolylineButton.Text = 'Draw Polyline';
+
+            % Create ROIwidthEditFieldLabel
+            app.ROIwidthEditFieldLabel = uilabel(app.ROISelectionPanel);
+            app.ROIwidthEditFieldLabel.HorizontalAlignment = 'right';
+            app.ROIwidthEditFieldLabel.Position = [17 47 58 22];
+            app.ROIwidthEditFieldLabel.Text = 'ROI width';
+
+            % Create ROIwidthEditField
+            app.ROIwidthEditField = uieditfield(app.ROISelectionPanel, 'numeric');
+            app.ROIwidthEditField.Limits = [1 200];
+            app.ROIwidthEditField.ValueDisplayFormat = '%.0f';
+            app.ROIwidthEditField.Position = [81 47 40 22];
+            app.ROIwidthEditField.Value = 40;
+
+            % Create CentreLineCheckBox
+            app.CentreLineCheckBox = uicheckbox(app.ROISelectionPanel);
+            app.CentreLineCheckBox.Text = 'Centre Line';
+            app.CentreLineCheckBox.Position = [135 108 84 22];
+            app.CentreLineCheckBox.Value = true;
+
+            % Create BatchManagementButton
+            app.BatchManagementButton = uibutton(app.LiquidfrontExtractionTab, 'push');
+            app.BatchManagementButton.ButtonPushedFcn = createCallbackFcn(app, @BatchManagementButtonPushed, true);
+            app.BatchManagementButton.FontWeight = 'bold';
+            app.BatchManagementButton.Position = [26 229 246 33];
+            app.BatchManagementButton.Text = 'Batch Management';
+
+            % Create GeneralInformationPanel_LE
+            app.GeneralInformationPanel_LE = uipanel(app.LiquidfrontExtractionTab);
+            app.GeneralInformationPanel_LE.AutoResizeChildren = 'off';
+            app.GeneralInformationPanel_LE.Title = 'General Information';
+            app.GeneralInformationPanel_LE.Position = [18 661 263 84];
+
+            % Create DataLengthEditField_2Label_2
+            app.DataLengthEditField_2Label_2 = uilabel(app.GeneralInformationPanel_LE);
+            app.DataLengthEditField_2Label_2.Position = [3 34 74 22];
+            app.DataLengthEditField_2Label_2.Text = ' Data Length';
+
+            % Create dataLengthEditField_LE
+            app.dataLengthEditField_LE = uieditfield(app.GeneralInformationPanel_LE, 'numeric');
+            app.dataLengthEditField_LE.ValueDisplayFormat = '%.0f';
+            app.dataLengthEditField_LE.Position = [77 35 40 20];
+
+            % Create NumberofScansEditField_2Label_2
+            app.NumberofScansEditField_2Label_2 = uilabel(app.GeneralInformationPanel_LE);
+            app.NumberofScansEditField_2Label_2.HorizontalAlignment = 'right';
+            app.NumberofScansEditField_2Label_2.Position = [24 10 48 22];
+            app.NumberofScansEditField_2Label_2.Text = 'Number';
+
+            % Create dataNumberEditField_LE
+            app.dataNumberEditField_LE = uieditfield(app.GeneralInformationPanel_LE, 'numeric');
+            app.dataNumberEditField_LE.ValueDisplayFormat = '%.0f';
+            app.dataNumberEditField_LE.Position = [77 11 40 20];
+
+            % Create ThicknessmmEditField_2Label
+            app.ThicknessmmEditField_2Label = uilabel(app.GeneralInformationPanel_LE);
+            app.ThicknessmmEditField_2Label.HorizontalAlignment = 'right';
+            app.ThicknessmmEditField_2Label.Position = [119 34 90 22];
+            app.ThicknessmmEditField_2Label.Text = 'Thickness (mm)';
+
+            % Create ThicknessmmEditField_LE
+            app.ThicknessmmEditField_LE = uieditfield(app.GeneralInformationPanel_LE, 'numeric');
+            app.ThicknessmmEditField_LE.Limits = [0 Inf];
+            app.ThicknessmmEditField_LE.ValueDisplayFormat = '%5.2f';
+            app.ThicknessmmEditField_LE.Position = [214 34 40 22];
+
+            % Create n_effLabel
+            app.n_effLabel = uilabel(app.GeneralInformationPanel_LE);
+            app.n_effLabel.HorizontalAlignment = 'right';
+            app.n_effLabel.Position = [119 8 92 22];
+            app.n_effLabel.Text = 'Refractive Index';
+
+            % Create RefractiveIndexEditField_LE
+            app.RefractiveIndexEditField_LE = uieditfield(app.GeneralInformationPanel_LE, 'numeric');
+            app.RefractiveIndexEditField_LE.Limits = [0 Inf];
+            app.RefractiveIndexEditField_LE.ValueDisplayFormat = '%5.2f';
+            app.RefractiveIndexEditField_LE.Editable = 'off';
+            app.RefractiveIndexEditField_LE.Position = [214 8 40 22];
+
+            % Create LinearFittingPanel
+            app.LinearFittingPanel = uipanel(app.LiquidfrontExtractionTab);
+            app.LinearFittingPanel.AutoResizeChildren = 'off';
+            app.LinearFittingPanel.Title = 'Linear Fitting';
+            app.LinearFittingPanel.Position = [19 277 263 197];
+
+            % Create LiquidIngressTimesecEditFieldLabel
+            app.LiquidIngressTimesecEditFieldLabel = uilabel(app.LinearFittingPanel);
+            app.LiquidIngressTimesecEditFieldLabel.HorizontalAlignment = 'right';
+            app.LiquidIngressTimesecEditFieldLabel.FontWeight = 'bold';
+            app.LiquidIngressTimesecEditFieldLabel.Position = [16 13 149 22];
+            app.LiquidIngressTimesecEditFieldLabel.Text = 'Liquid Ingress Time (sec)';
+
+            % Create LiquidIngressTimesecEditField
+            app.LiquidIngressTimesecEditField = uieditfield(app.LinearFittingPanel, 'numeric');
+            app.LiquidIngressTimesecEditField.ValueDisplayFormat = '%5.2f';
+            app.LiquidIngressTimesecEditField.Editable = 'off';
+            app.LiquidIngressTimesecEditField.FontWeight = 'bold';
+            app.LiquidIngressTimesecEditField.Position = [175 13 64 22];
+
+            % Create CaculateFittingParametersButton
+            app.CaculateFittingParametersButton = uibutton(app.LinearFittingPanel, 'push');
+            app.CaculateFittingParametersButton.ButtonPushedFcn = createCallbackFcn(app, @CaculateFittingParametersButtonPushed, true);
+            app.CaculateFittingParametersButton.BackgroundColor = [1 1 1];
+            app.CaculateFittingParametersButton.FontWeight = 'bold';
+            app.CaculateFittingParametersButton.Position = [16 136 231 28];
+            app.CaculateFittingParametersButton.Text = 'Caculate Fitting Parameters';
+
+            % Create kmmsEditFieldLabel
+            app.kmmsEditFieldLabel = uilabel(app.LinearFittingPanel);
+            app.kmmsEditFieldLabel.HorizontalAlignment = 'right';
+            app.kmmsEditFieldLabel.Position = [21 75 52 22];
+            app.kmmsEditFieldLabel.Text = 'k (mm/s)';
+
+            % Create kmmsEditField
+            app.kmmsEditField = uieditfield(app.LinearFittingPanel, 'numeric');
+            app.kmmsEditField.ValueDisplayFormat = '%5.2f';
+            app.kmmsEditField.Position = [78 75 50 22];
+
+            % Create dmmEditFieldLabel
+            app.dmmEditFieldLabel = uilabel(app.LinearFittingPanel);
+            app.dmmEditFieldLabel.HorizontalAlignment = 'right';
+            app.dmmEditFieldLabel.Position = [135 75 43 22];
+            app.dmmEditFieldLabel.Text = 'd (mm)';
+
+            % Create dmmEditField
+            app.dmmEditField = uieditfield(app.LinearFittingPanel, 'numeric');
+            app.dmmEditField.ValueDisplayFormat = '%5.2f';
+            app.dmmEditField.Position = [189 75 50 22];
+
+            % Create FittingFunctionktdLabel
+            app.FittingFunctionktdLabel = uilabel(app.LinearFittingPanel);
+            app.FittingFunctionktdLabel.FontSize = 14;
+            app.FittingFunctionktdLabel.FontWeight = 'bold';
+            app.FittingFunctionktdLabel.Position = [22 104 156 22];
+            app.FittingFunctionktdLabel.Text = 'Fitting Function: kt + d';
+
+            % Create R2EditFieldLabel
+            app.R2EditFieldLabel = uilabel(app.LinearFittingPanel);
+            app.R2EditFieldLabel.HorizontalAlignment = 'right';
+            app.R2EditFieldLabel.Position = [37 48 26 22];
+            app.R2EditFieldLabel.Text = 'R^2';
+
+            % Create R2EditField
+            app.R2EditField = uieditfield(app.LinearFittingPanel, 'numeric');
+            app.R2EditField.ValueDisplayFormat = '%5.2f';
+            app.R2EditField.Position = [78 48 50 22];
+
+            % Create RMSEEditFieldLabel
+            app.RMSEEditFieldLabel = uilabel(app.LinearFittingPanel);
+            app.RMSEEditFieldLabel.HorizontalAlignment = 'right';
+            app.RMSEEditFieldLabel.Position = [135 48 40 22];
+            app.RMSEEditFieldLabel.Text = 'RMSE';
+
+            % Create RMSEEditField
+            app.RMSEEditField = uieditfield(app.LinearFittingPanel, 'numeric');
+            app.RMSEEditField.ValueDisplayFormat = '%5.2f';
+            app.RMSEEditField.Position = [189 48 50 22];
+
+            % Create BatchAnalysisTab
+            app.BatchAnalysisTab = uitab(app.TabGroup);
+            app.BatchAnalysisTab.AutoResizeChildren = 'off';
+            app.BatchAnalysisTab.Title = 'Batch Analysis';
+
+            % Create UIAxesBs2
+            app.UIAxesBs2 = uiaxes(app.BatchAnalysisTab);
+            title(app.UIAxesBs2, 'Liquid Front Ingress')
+            xlabel(app.UIAxesBs2, 'Time (sec)')
+            ylabel(app.UIAxesBs2, 'Displacement (mm)')
+            app.UIAxesBs2.Box = 'on';
+            app.UIAxesBs2.FontSize = 11;
+            app.UIAxesBs2.Position = [900 251 530 490];
+
+            % Create UIAxesBs1
+            app.UIAxesBs1 = uiaxes(app.BatchAnalysisTab);
+            title(app.UIAxesBs1, 'Liquid Front Reflection')
+            xlabel(app.UIAxesBs1, 'Time (sec)')
+            ylabel(app.UIAxesBs1, 'E field intensity (a.u.)')
+            app.UIAxesBs1.Box = 'on';
+            app.UIAxesBs1.FontSize = 11;
+            app.UIAxesBs1.Position = [900 7 530 230];
+
+            % Create GroupButton
+            app.GroupButton = uibutton(app.BatchAnalysisTab, 'push');
+            app.GroupButton.ButtonPushedFcn = createCallbackFcn(app, @GroupButtonPushed, true);
+            app.GroupButton.Position = [447 656 118 30];
+            app.GroupButton.Text = 'Group';
+
+            % Create UngroupButton
+            app.UngroupButton = uibutton(app.BatchAnalysisTab, 'push');
+            app.UngroupButton.ButtonPushedFcn = createCallbackFcn(app, @UngroupButtonPushed, true);
+            app.UngroupButton.Position = [446 615 119 30];
+            app.UngroupButton.Text = 'Ungroup';
+
+            % Create RemoveButton
+            app.RemoveButton = uibutton(app.BatchAnalysisTab, 'push');
+            app.RemoveButton.ButtonPushedFcn = createCallbackFcn(app, @RemoveButtonPushed, true);
+            app.RemoveButton.Position = [745 453 126 29];
+            app.RemoveButton.Text = 'Remove';
+
+            % Create InformationPanel
+            app.InformationPanel = uipanel(app.BatchAnalysisTab);
+            app.InformationPanel.AutoResizeChildren = 'off';
+            app.InformationPanel.Title = 'Information';
+            app.InformationPanel.Position = [17 548 189 193];
+
+            % Create DistancetoCentremmLabel
+            app.DistancetoCentremmLabel = uilabel(app.InformationPanel);
+            app.DistancetoCentremmLabel.HorizontalAlignment = 'right';
+            app.DistancetoCentremmLabel.Position = [8 65 98 22];
+            app.DistancetoCentremmLabel.Text = 'Centre Line (mm)';
+
+            % Create BICentreLinemmEditField
+            app.BICentreLinemmEditField = uieditfield(app.InformationPanel, 'numeric');
+            app.BICentreLinemmEditField.ValueDisplayFormat = '%5.2f';
+            app.BICentreLinemmEditField.Position = [124 65 52 22];
+
+            % Create SampleDescriptionLabel
+            app.SampleDescriptionLabel = uilabel(app.InformationPanel);
+            app.SampleDescriptionLabel.HorizontalAlignment = 'right';
+            app.SampleDescriptionLabel.Position = [12 146 110 22];
+            app.SampleDescriptionLabel.Text = 'Sample Description';
+
+            % Create BIDescriptionEditField
+            app.BIDescriptionEditField = uieditfield(app.InformationPanel, 'text');
+            app.BIDescriptionEditField.ValueChangedFcn = createCallbackFcn(app, @BIDescriptionEditFieldValueChanged, true);
+            app.BIDescriptionEditField.Position = [9 124 169 22];
+
+            % Create RefractiveIndexEditField_2Label
+            app.RefractiveIndexEditField_2Label = uilabel(app.InformationPanel);
+            app.RefractiveIndexEditField_2Label.HorizontalAlignment = 'right';
+            app.RefractiveIndexEditField_2Label.Position = [8 37 92 22];
+            app.RefractiveIndexEditField_2Label.Text = 'Refractive Index';
+
+            % Create BIRefractiveIndexEditField
+            app.BIRefractiveIndexEditField = uieditfield(app.InformationPanel, 'numeric');
+            app.BIRefractiveIndexEditField.ValueDisplayFormat = '%5.2f';
+            app.BIRefractiveIndexEditField.Position = [124 37 52 22];
+
+            % Create IngressTimesecEditFieldLabel
+            app.IngressTimesecEditFieldLabel = uilabel(app.InformationPanel);
+            app.IngressTimesecEditFieldLabel.HorizontalAlignment = 'right';
+            app.IngressTimesecEditFieldLabel.Position = [8 9 104 22];
+            app.IngressTimesecEditFieldLabel.Text = 'Ingress Time (sec)';
+
+            % Create BIIngressTimesecEditField
+            app.BIIngressTimesecEditField = uieditfield(app.InformationPanel, 'numeric');
+            app.BIIngressTimesecEditField.ValueDisplayFormat = '%5.2f';
+            app.BIIngressTimesecEditField.Position = [124 9 52 22];
+
+            % Create BatchLabel
+            app.BatchLabel = uilabel(app.InformationPanel);
+            app.BatchLabel.HorizontalAlignment = 'right';
+            app.BatchLabel.Position = [10 94 36 22];
+            app.BatchLabel.Text = 'Batch';
+
+            % Create BIBatchEditField
+            app.BIBatchEditField = uieditfield(app.InformationPanel, 'text');
+            app.BIBatchEditField.Position = [55 94 121 22];
+
+            % Create MeasurementListBoxLabel
+            app.MeasurementListBoxLabel = uilabel(app.BatchAnalysisTab);
+            app.MeasurementListBoxLabel.HorizontalAlignment = 'right';
+            app.MeasurementListBoxLabel.Position = [228 722 79 22];
+            app.MeasurementListBoxLabel.Text = 'Measurement';
+
+            % Create MeasurementListBox
+            app.MeasurementListBox = uilistbox(app.BatchAnalysisTab);
+            app.MeasurementListBox.Items = {};
+            app.MeasurementListBox.Multiselect = 'on';
+            app.MeasurementListBox.ValueChangedFcn = createCallbackFcn(app, @MeasurementListBoxValueChanged, true);
+            app.MeasurementListBox.Position = [226 118 206 603];
+            app.MeasurementListBox.Value = {};
+
+            % Create BatchNameEditFieldLabel
+            app.BatchNameEditFieldLabel = uilabel(app.BatchAnalysisTab);
+            app.BatchNameEditFieldLabel.HorizontalAlignment = 'right';
+            app.BatchNameEditFieldLabel.Position = [450 719 72 22];
+            app.BatchNameEditFieldLabel.Text = 'Batch Name';
+
+            % Create BatchNameEditField
+            app.BatchNameEditField = uieditfield(app.BatchAnalysisTab, 'text');
+            app.BatchNameEditField.Position = [448 694 117 25];
+
+            % Create BatchListBoxLabel
+            app.BatchListBoxLabel = uilabel(app.BatchAnalysisTab);
+            app.BatchListBoxLabel.HorizontalAlignment = 'right';
+            app.BatchListBoxLabel.Position = [579 721 33 22];
+            app.BatchListBoxLabel.Text = 'Batch';
+
+            % Create BatchListBox
+            app.BatchListBox = uilistbox(app.BatchAnalysisTab);
+            app.BatchListBox.Items = {};
+            app.BatchListBox.Multiselect = 'on';
+            app.BatchListBox.ValueChangedFcn = createCallbackFcn(app, @BatchListBoxValueChanged, true);
+            app.BatchListBox.Position = [577 451 148 269];
+            app.BatchListBox.Value = {};
+
+            % Create BatchDetailListBoxLabel
+            app.BatchDetailListBoxLabel = uilabel(app.BatchAnalysisTab);
+            app.BatchDetailListBoxLabel.HorizontalAlignment = 'right';
+            app.BatchDetailListBoxLabel.Position = [740 722 70 22];
+            app.BatchDetailListBoxLabel.Text = 'Batch Detail';
+
+            % Create BatchDetailListBox
+            app.BatchDetailListBox = uilistbox(app.BatchAnalysisTab);
+            app.BatchDetailListBox.Items = {};
+            app.BatchDetailListBox.Position = [737 492 142 228];
+            app.BatchDetailListBox.Value = {};
+
+            % Create RemoveButton_2
+            app.RemoveButton_2 = uibutton(app.BatchAnalysisTab, 'push');
+            app.RemoveButton_2.ButtonPushedFcn = createCallbackFcn(app, @RemoveButton_2Pushed, true);
+            app.RemoveButton_2.Position = [239 78 182 29];
+            app.RemoveButton_2.Text = 'Remove';
+
+            % Create AddButton
+            app.AddButton = uibutton(app.BatchAnalysisTab, 'push');
+            app.AddButton.ButtonPushedFcn = createCallbackFcn(app, @AddButtonPushed, true);
+            app.AddButton.Position = [446 575 119 30];
+            app.AddButton.Text = 'Add';
+
+            % Create AssigndatainworkspaceButton
+            app.AssigndatainworkspaceButton = uibutton(app.BatchAnalysisTab, 'push');
+            app.AssigndatainworkspaceButton.ButtonPushedFcn = createCallbackFcn(app, @AssigndatainworkspaceButtonPushed, true);
+            app.AssigndatainworkspaceButton.Position = [25 16 177 32];
+            app.AssigndatainworkspaceButton.Text = 'Assign data in workspace';
+
+            % Create SaveProjectButton
+            app.SaveProjectButton = uibutton(app.BatchAnalysisTab, 'push');
+            app.SaveProjectButton.ButtonPushedFcn = createCallbackFcn(app, @SaveProjectButtonPushed, true);
+            app.SaveProjectButton.Position = [211 16 106 32];
+            app.SaveProjectButton.Text = 'Save Project';
+
+            % Create LoadProjectButton
+            app.LoadProjectButton = uibutton(app.BatchAnalysisTab, 'push');
+            app.LoadProjectButton.ButtonPushedFcn = createCallbackFcn(app, @LoadProjectButtonPushed, true);
+            app.LoadProjectButton.Position = [326 15 106 32];
+            app.LoadProjectButton.Text = 'Load Project';
+
+            % Create UITable
+            app.UITable = uitable(app.BatchAnalysisTab);
+            app.UITable.ColumnName = {'Description'; 'Ingress Time'; 'k'; 'd'; 'R^2'; 'RMSE'};
+            app.UITable.ColumnWidth = {'auto', 60, 60, 60, 60, 60};
+            app.UITable.RowName = {};
+            app.UITable.Position = [448 113 436 299];
+
+            % Create FittingFunctionParametersLabel
+            app.FittingFunctionParametersLabel = uilabel(app.BatchAnalysisTab);
+            app.FittingFunctionParametersLabel.Position = [455 415 270 22];
+            app.FittingFunctionParametersLabel.Text = 'Fitting Function Parameters';
+
+            % Create DisplayButtonGroup
+            app.DisplayButtonGroup = uibuttongroup(app.BatchAnalysisTab);
+            app.DisplayButtonGroup.AutoResizeChildren = 'off';
+            app.DisplayButtonGroup.Title = 'Display';
+            app.DisplayButtonGroup.Position = [18 486 188 53];
+
+            % Create IndividualButton
+            app.IndividualButton = uiradiobutton(app.DisplayButtonGroup);
+            app.IndividualButton.Text = 'Individual';
+            app.IndividualButton.Position = [11 7 73 22];
+            app.IndividualButton.Value = true;
+
+            % Create BatchButton
+            app.BatchButton = uiradiobutton(app.DisplayButtonGroup);
+            app.BatchButton.Text = 'Batch';
+            app.BatchButton.Position = [117 7 54 22];
+
+            % Create StyleButtonGroup
+            app.StyleButtonGroup = uibuttongroup(app.BatchAnalysisTab);
+            app.StyleButtonGroup.AutoResizeChildren = 'off';
+            app.StyleButtonGroup.Title = 'Style';
+            app.StyleButtonGroup.Position = [19 373 187 103];
+
+            % Create AllRangeButton
+            app.AllRangeButton = uiradiobutton(app.StyleButtonGroup);
+            app.AllRangeButton.Text = 'All Range';
+            app.AllRangeButton.Position = [11 57 73 22];
+            app.AllRangeButton.Value = true;
+
+            % Create SDShadowedButton
+            app.SDShadowedButton = uiradiobutton(app.StyleButtonGroup);
+            app.SDShadowedButton.Text = 'SD (Shadowed)';
+            app.SDShadowedButton.Position = [11 35 105 22];
+
+            % Create SDErrorBarButton
+            app.SDErrorBarButton = uiradiobutton(app.StyleButtonGroup);
+            app.SDErrorBarButton.Text = 'SD (ErrorBar)';
+            app.SDErrorBarButton.Position = [11 11 92 22];
+
+            % Create LegendCheckBox
+            app.LegendCheckBox = uicheckbox(app.BatchAnalysisTab);
+            app.LegendCheckBox.Text = 'Legend';
+            app.LegendCheckBox.Position = [26 342 62 22];
+            app.LegendCheckBox.Value = true;
+
+            % Create FittingCheckBox
+            app.FittingCheckBox = uicheckbox(app.BatchAnalysisTab);
+            app.FittingCheckBox.Text = ' Fitting';
+            app.FittingCheckBox.Position = [106 342 63 22];
+
+            % Create PlotButton_2
+            app.PlotButton_2 = uibutton(app.BatchAnalysisTab, 'push');
+            app.PlotButton_2.ButtonPushedFcn = createCallbackFcn(app, @PlotButton_2Pushed, true);
+            app.PlotButton_2.Position = [28 292 163 30];
+            app.PlotButton_2.Text = 'Plot';
+
+            % Create DPlotNewButton
+            app.DPlotNewButton = uibutton(app.BatchAnalysisTab, 'push');
+            app.DPlotNewButton.ButtonPushedFcn = createCallbackFcn(app, @DPlotNewButtonPushed, true);
+            app.DPlotNewButton.Position = [28 253 163 30];
+            app.DPlotNewButton.Text = '3D Plot (New)';
+
+            % Create ColourPlotNewButton
+            app.ColourPlotNewButton = uibutton(app.BatchAnalysisTab, 'push');
+            app.ColourPlotNewButton.ButtonPushedFcn = createCallbackFcn(app, @ColourPlotNewButtonPushed, true);
+            app.ColourPlotNewButton.Position = [28 214 163 30];
+            app.ColourPlotNewButton.Text = 'Colour Plot (New)';
 
             % Create FrequencyDomainTab
             app.FrequencyDomainTab = uitab(app.TabGroup);
             app.FrequencyDomainTab.AutoResizeChildren = 'off';
             app.FrequencyDomainTab.Title = 'Frequency Domain';
 
-            % Create UIAxes21
-            app.UIAxes21 = uiaxes(app.FrequencyDomainTab);
-            title(app.UIAxes21, 'Power spectrum')
-            xlabel(app.UIAxes21, 'Time/Position (sec/mm)')
-            ylabel(app.UIAxes21, 'Frequency (THz)')
-            app.UIAxes21.PlotBoxAspectRatio = [1.0607476635514 1 1];
-            app.UIAxes21.XTickLabelRotation = 0;
-            app.UIAxes21.YTickLabelRotation = 0;
-            app.UIAxes21.ZTickLabelRotation = 0;
-            app.UIAxes21.Box = 'on';
-            app.UIAxes21.FontSize = 11;
-            app.UIAxes21.Position = [262 235 570 520];
+            % Create UIAxesFD1
+            app.UIAxesFD1 = uiaxes(app.FrequencyDomainTab);
+            title(app.UIAxesFD1, 'Power spectrum')
+            xlabel(app.UIAxesFD1, 'Time/Position (sec/mm)')
+            ylabel(app.UIAxesFD1, 'Frequency (THz)')
+            app.UIAxesFD1.PlotBoxAspectRatio = [1.0607476635514 1 1];
+            app.UIAxesFD1.XTickLabelRotation = 0;
+            app.UIAxesFD1.YTickLabelRotation = 0;
+            app.UIAxesFD1.ZTickLabelRotation = 0;
+            app.UIAxesFD1.Box = 'on';
+            app.UIAxesFD1.FontSize = 11;
+            app.UIAxesFD1.Position = [262 235 570 520];
 
-            % Create UIAxes22
-            app.UIAxes22 = uiaxes(app.FrequencyDomainTab);
-            title(app.UIAxes22, 'Phase')
-            xlabel(app.UIAxes22, 'Time/Position (sec/mm)')
-            ylabel(app.UIAxes22, 'Frequency (THz)')
-            zlabel(app.UIAxes22, 'Time (ps)')
-            app.UIAxes22.PlotBoxAspectRatio = [1.0607476635514 1 1];
-            app.UIAxes22.ZDir = 'reverse';
-            app.UIAxes22.XTickLabelRotation = 0;
-            app.UIAxes22.YTickLabelRotation = 0;
-            app.UIAxes22.ZTickLabelRotation = 0;
-            app.UIAxes22.Box = 'on';
-            app.UIAxes22.FontSize = 11;
-            app.UIAxes22.Position = [840 235 570 520];
+            % Create UIAxesFD2
+            app.UIAxesFD2 = uiaxes(app.FrequencyDomainTab);
+            title(app.UIAxesFD2, 'Phase')
+            xlabel(app.UIAxesFD2, 'Time/Position (sec/mm)')
+            ylabel(app.UIAxesFD2, 'Frequency (THz)')
+            zlabel(app.UIAxesFD2, 'Time (ps)')
+            app.UIAxesFD2.PlotBoxAspectRatio = [1.0607476635514 1 1];
+            app.UIAxesFD2.ZDir = 'reverse';
+            app.UIAxesFD2.XTickLabelRotation = 0;
+            app.UIAxesFD2.YTickLabelRotation = 0;
+            app.UIAxesFD2.ZTickLabelRotation = 0;
+            app.UIAxesFD2.Box = 'on';
+            app.UIAxesFD2.FontSize = 11;
+            app.UIAxesFD2.Position = [840 235 570 520];
 
-            % Create UIAxes23
-            app.UIAxes23 = uiaxes(app.FrequencyDomainTab);
-            xlabel(app.UIAxes23, 'Frequency (THz)')
-            ylabel(app.UIAxes23, 'E field (a.u.)')
-            app.UIAxes23.PlotBoxAspectRatio = [3.546875 1 1];
-            app.UIAxes23.Box = 'on';
-            app.UIAxes23.FontSize = 11;
-            app.UIAxes23.Position = [263 41 570 180];
+            % Create UIAxesFD3
+            app.UIAxesFD3 = uiaxes(app.FrequencyDomainTab);
+            xlabel(app.UIAxesFD3, 'Frequency (THz)')
+            ylabel(app.UIAxesFD3, 'E field (a.u.)')
+            app.UIAxesFD3.PlotBoxAspectRatio = [3.546875 1 1];
+            app.UIAxesFD3.Box = 'on';
+            app.UIAxesFD3.FontSize = 11;
+            app.UIAxesFD3.Position = [263 41 570 180];
 
-            % Create UIAxes24
-            app.UIAxes24 = uiaxes(app.FrequencyDomainTab);
-            xlabel(app.UIAxes24, 'Frequency (THz)')
-            ylabel(app.UIAxes24, 'Phase')
-            app.UIAxes24.PlotBoxAspectRatio = [3.546875 1 1];
-            app.UIAxes24.Box = 'on';
-            app.UIAxes24.FontSize = 11;
-            app.UIAxes24.Position = [841 41 570 180];
+            % Create UIAxesFD4
+            app.UIAxesFD4 = uiaxes(app.FrequencyDomainTab);
+            xlabel(app.UIAxesFD4, 'Frequency (THz)')
+            ylabel(app.UIAxesFD4, 'Phase')
+            app.UIAxesFD4.PlotBoxAspectRatio = [3.546875 1 1];
+            app.UIAxesFD4.Box = 'on';
+            app.UIAxesFD4.FontSize = 11;
+            app.UIAxesFD4.Position = [841 41 570 180];
 
             % Create FourierTransformPanel
             app.FourierTransformPanel = uipanel(app.FrequencyDomainTab);
@@ -3566,10 +3648,10 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.DataLengthEditField_2Label.Position = [7 8 70 22];
             app.DataLengthEditField_2Label.Text = ' DataLength';
 
-            % Create dataLengthEditField_2
-            app.dataLengthEditField_2 = uieditfield(app.DataInformationPanel, 'numeric');
-            app.dataLengthEditField_2.ValueDisplayFormat = '%.0f';
-            app.dataLengthEditField_2.Position = [86 9 40 20];
+            % Create dataLengthEditField_FD
+            app.dataLengthEditField_FD = uieditfield(app.DataInformationPanel, 'numeric');
+            app.dataLengthEditField_FD.ValueDisplayFormat = '%.0f';
+            app.dataLengthEditField_FD.Position = [86 9 40 20];
 
             % Create NumberofScansEditField_2Label
             app.NumberofScansEditField_2Label = uilabel(app.DataInformationPanel);
@@ -3577,10 +3659,10 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.NumberofScansEditField_2Label.Position = [132 8 48 22];
             app.NumberofScansEditField_2Label.Text = 'Number';
 
-            % Create dataNumberEditField_2
-            app.dataNumberEditField_2 = uieditfield(app.DataInformationPanel, 'numeric');
-            app.dataNumberEditField_2.ValueDisplayFormat = '%.0f';
-            app.dataNumberEditField_2.Position = [190 9 40 20];
+            % Create dataNumberEditField_FD
+            app.dataNumberEditField_FD = uieditfield(app.DataInformationPanel, 'numeric');
+            app.dataNumberEditField_FD.ValueDisplayFormat = '%.0f';
+            app.dataNumberEditField_FD.Position = [190 9 40 20];
 
             % Create NextButton
             app.NextButton = uibutton(app.FrequencyDomainTab, 'push');
@@ -3704,530 +3786,6 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.ftColorbarCheckBox.Text = 'Colorbar';
             app.ftColorbarCheckBox.Position = [14 9 69 22];
 
-            % Create LiquidfrontExtractionTab
-            app.LiquidfrontExtractionTab = uitab(app.TabGroup);
-            app.LiquidfrontExtractionTab.AutoResizeChildren = 'off';
-            app.LiquidfrontExtractionTab.Title = 'Liquidfront Extraction';
-
-            % Create UIAxes31
-            app.UIAxes31 = uiaxes(app.LiquidfrontExtractionTab);
-            title(app.UIAxes31, 'Raw Measurement ')
-            xlabel(app.UIAxes31, 'Time (sec)')
-            ylabel(app.UIAxes31, 'Distance (mm)')
-            app.UIAxes31.PlotBoxAspectRatio = [1.38414634146341 1 1];
-            app.UIAxes31.Box = 'on';
-            app.UIAxes31.FontSize = 11;
-            app.UIAxes31.Position = [325 375 500 380];
-
-            % Create UIAxes32
-            app.UIAxes32 = uiaxes(app.LiquidfrontExtractionTab);
-            title(app.UIAxes32, 'Filtered Measurement')
-            xlabel(app.UIAxes32, 'Time (sec)')
-            ylabel(app.UIAxes32, 'Distance (mm)')
-            app.UIAxes32.PlotBoxAspectRatio = [1.38414634146341 1 1];
-            app.UIAxes32.Box = 'on';
-            app.UIAxes32.FontSize = 11;
-            app.UIAxes32.Position = [825 375 500 380];
-
-            % Create UIAxes33
-            app.UIAxes33 = uiaxes(app.LiquidfrontExtractionTab);
-            title(app.UIAxes33, 'Liquid Front Reflection')
-            xlabel(app.UIAxes33, 'Time (sec)')
-            ylabel(app.UIAxes33, 'E filed (a.u.)')
-            app.UIAxes33.PlotBoxAspectRatio = [1.69402985074627 1 1];
-            app.UIAxes33.Box = 'on';
-            app.UIAxes33.FontSize = 11;
-            app.UIAxes33.Position = [323 42 500 320];
-
-            % Create UIAxes34
-            app.UIAxes34 = uiaxes(app.LiquidfrontExtractionTab);
-            title(app.UIAxes34, 'Liquid Front Ingress')
-            xlabel(app.UIAxes34, 'Time (sec)')
-            ylabel(app.UIAxes34, 'Distance (mm)')
-            app.UIAxes34.PlotBoxAspectRatio = [1.69402985074627 1 1];
-            app.UIAxes34.Box = 'on';
-            app.UIAxes34.FontSize = 11;
-            app.UIAxes34.Position = [825 42 500 320];
-
-            % Create UIAxes35
-            app.UIAxes35 = uiaxes(app.LiquidfrontExtractionTab);
-            title(app.UIAxes35, 'Liquid Front ROI')
-            xlabel(app.UIAxes35, 'Time (sec)')
-            ylabel(app.UIAxes35, 'Distance (mm)')
-            zlabel(app.UIAxes35, 'Z')
-            app.UIAxes35.Box = 'on';
-            app.UIAxes35.FontSize = 11;
-            app.UIAxes35.Position = [16 53 292 219];
-
-            % Create ExtractReflectionPointsPanel
-            app.ExtractReflectionPointsPanel = uipanel(app.LiquidfrontExtractionTab);
-            app.ExtractReflectionPointsPanel.AutoResizeChildren = 'off';
-            app.ExtractReflectionPointsPanel.Title = 'Extract Reflection Points';
-            app.ExtractReflectionPointsPanel.Position = [16 294 295 459];
-
-            % Create AlphaDropDown_2Label
-            app.AlphaDropDown_2Label = uilabel(app.ExtractReflectionPointsPanel);
-            app.AlphaDropDown_2Label.HorizontalAlignment = 'right';
-            app.AlphaDropDown_2Label.Position = [17 340 35 22];
-            app.AlphaDropDown_2Label.Text = 'Alpha';
-
-            % Create AlphaDropDown
-            app.AlphaDropDown = uidropdown(app.ExtractReflectionPointsPanel);
-            app.AlphaDropDown.Items = {'1.0', '0.7', '0.5', '0.3', '0.1'};
-            app.AlphaDropDown.Position = [61 340 79 22];
-            app.AlphaDropDown.Value = '1.0';
-
-            % Create CmapLabel
-            app.CmapLabel = uilabel(app.ExtractReflectionPointsPanel);
-            app.CmapLabel.HorizontalAlignment = 'right';
-            app.CmapLabel.Position = [14 315 38 22];
-            app.CmapLabel.Text = 'Cmap';
-
-            % Create ExtColormapDropDown
-            app.ExtColormapDropDown = uidropdown(app.ExtractReflectionPointsPanel);
-            app.ExtColormapDropDown.Items = {'parula', 'jet', 'copper', 'bone', 'hot'};
-            app.ExtColormapDropDown.Position = [61 315 80 22];
-            app.ExtColormapDropDown.Value = 'parula';
-
-            % Create LfPlotButton
-            app.LfPlotButton = uibutton(app.ExtractReflectionPointsPanel, 'push');
-            app.LfPlotButton.ButtonPushedFcn = createCallbackFcn(app, @LfPlotButtonPushed, true);
-            app.LfPlotButton.Position = [151 316 122 47];
-            app.LfPlotButton.Text = 'Replot';
-
-            % Create ExtractLiquidFrontButton
-            app.ExtractLiquidFrontButton = uibutton(app.ExtractReflectionPointsPanel, 'push');
-            app.ExtractLiquidFrontButton.ButtonPushedFcn = createCallbackFcn(app, @ExtractLiquidFrontButtonPushed, true);
-            app.ExtractLiquidFrontButton.FontWeight = 'bold';
-            app.ExtractLiquidFrontButton.Position = [20 91 258 30];
-            app.ExtractLiquidFrontButton.Text = 'Extract Liquid Front';
-
-            % Create SampleNameEditField_T3Label
-            app.SampleNameEditField_T3Label = uilabel(app.ExtractReflectionPointsPanel);
-            app.SampleNameEditField_T3Label.HorizontalAlignment = 'right';
-            app.SampleNameEditField_T3Label.Position = [7 414 110 22];
-            app.SampleNameEditField_T3Label.Text = 'Sample Description';
-
-            % Create SampleDescriptionEditField_T3
-            app.SampleDescriptionEditField_T3 = uieditfield(app.ExtractReflectionPointsPanel, 'text');
-            app.SampleDescriptionEditField_T3.Position = [11 394 268 22];
-
-            % Create CaculateIngressTimeButton
-            app.CaculateIngressTimeButton = uibutton(app.ExtractReflectionPointsPanel, 'push');
-            app.CaculateIngressTimeButton.ButtonPushedFcn = createCallbackFcn(app, @CaculateIngressTimeButtonPushed, true);
-            app.CaculateIngressTimeButton.Position = [19 33 259 30];
-            app.CaculateIngressTimeButton.Text = 'Caculate Ingress Time';
-
-            % Create n_effLabel
-            app.n_effLabel = uilabel(app.ExtractReflectionPointsPanel);
-            app.n_effLabel.HorizontalAlignment = 'right';
-            app.n_effLabel.Position = [195 368 32 22];
-            app.n_effLabel.Text = 'n_eff';
-
-            % Create RefractiveIndexEditField_T3
-            app.RefractiveIndexEditField_T3 = uieditfield(app.ExtractReflectionPointsPanel, 'numeric');
-            app.RefractiveIndexEditField_T3.Limits = [0 Inf];
-            app.RefractiveIndexEditField_T3.ValueDisplayFormat = '%5.2f';
-            app.RefractiveIndexEditField_T3.Editable = 'off';
-            app.RefractiveIndexEditField_T3.Position = [236 368 40 22];
-
-            % Create ALGORITHMROIButton
-            app.ALGORITHMROIButton = uibutton(app.ExtractReflectionPointsPanel, 'push');
-            app.ALGORITHMROIButton.ButtonPushedFcn = createCallbackFcn(app, @ALGORITHMROIButtonPushed, true);
-            app.ALGORITHMROIButton.Position = [21 160 125 30];
-            app.ALGORITHMROIButton.Text = 'ALGORITHM ROI';
-
-            % Create DistancetoCentrepsEditFieldLabel
-            app.DistancetoCentrepsEditFieldLabel = uilabel(app.ExtractReflectionPointsPanel);
-            app.DistancetoCentrepsEditFieldLabel.HorizontalAlignment = 'right';
-            app.DistancetoCentrepsEditFieldLabel.Position = [18 368 128 22];
-            app.DistancetoCentrepsEditFieldLabel.Text = 'Distance to Centre (ps)';
-
-            % Create DistancetoCentrepsEditField
-            app.DistancetoCentrepsEditField = uieditfield(app.ExtractReflectionPointsPanel, 'numeric');
-            app.DistancetoCentrepsEditField.Limits = [0 Inf];
-            app.DistancetoCentrepsEditField.ValueDisplayFormat = '%5.2f';
-            app.DistancetoCentrepsEditField.Position = [150 368 40 22];
-
-            % Create DBSCANNeighborhoodRadiusSwitchLabel
-            app.DBSCANNeighborhoodRadiusSwitchLabel = uilabel(app.ExtractReflectionPointsPanel);
-            app.DBSCANNeighborhoodRadiusSwitchLabel.HorizontalAlignment = 'center';
-            app.DBSCANNeighborhoodRadiusSwitchLabel.Position = [20 220 175 22];
-            app.DBSCANNeighborhoodRadiusSwitchLabel.Text = 'DBSCAN Neighborhood Radius';
-
-            % Create DBSCANNeighborhoodRadiusSwitch
-            app.DBSCANNeighborhoodRadiusSwitch = uiswitch(app.ExtractReflectionPointsPanel, 'slider');
-            app.DBSCANNeighborhoodRadiusSwitch.Items = {'Auto', 'Manual'};
-            app.DBSCANNeighborhoodRadiusSwitch.ValueChangedFcn = createCallbackFcn(app, @DBSCANNeighborhoodRadiusSwitchValueChanged, true);
-            app.DBSCANNeighborhoodRadiusSwitch.Position = [59 199 45 20];
-            app.DBSCANNeighborhoodRadiusSwitch.Value = 'Auto';
-
-            % Create Range220EditFieldLabel
-            app.Range220EditFieldLabel = uilabel(app.ExtractReflectionPointsPanel);
-            app.Range220EditFieldLabel.HorizontalAlignment = 'right';
-            app.Range220EditFieldLabel.Position = [153 199 76 22];
-            app.Range220EditFieldLabel.Text = '(Range 2-20)';
-
-            % Create Range220EditField
-            app.Range220EditField = uieditfield(app.ExtractReflectionPointsPanel, 'numeric');
-            app.Range220EditField.Limits = [2 20];
-            app.Range220EditField.ValueDisplayFormat = '%.0f';
-            app.Range220EditField.Editable = 'off';
-            app.Range220EditField.Position = [235 199 30 22];
-            app.Range220EditField.Value = 10;
-
-            % Create LiquidIngressTimesecEditFieldLabel
-            app.LiquidIngressTimesecEditFieldLabel = uilabel(app.ExtractReflectionPointsPanel);
-            app.LiquidIngressTimesecEditFieldLabel.HorizontalAlignment = 'right';
-            app.LiquidIngressTimesecEditFieldLabel.Position = [62 6 139 22];
-            app.LiquidIngressTimesecEditFieldLabel.Text = 'Liquid Ingress Time (sec)';
-
-            % Create LiquidIngressTimesecEditField
-            app.LiquidIngressTimesecEditField = uieditfield(app.ExtractReflectionPointsPanel, 'numeric');
-            app.LiquidIngressTimesecEditField.Limits = [0 Inf];
-            app.LiquidIngressTimesecEditField.ValueDisplayFormat = '%5.2f';
-            app.LiquidIngressTimesecEditField.Editable = 'off';
-            app.LiquidIngressTimesecEditField.Position = [208 6 64 22];
-
-            % Create ExcludeLowerReflectionsCheckBox
-            app.ExcludeLowerReflectionsCheckBox = uicheckbox(app.ExtractReflectionPointsPanel);
-            app.ExcludeLowerReflectionsCheckBox.Text = 'Exclude Lower Reflections';
-            app.ExcludeLowerReflectionsCheckBox.Position = [29 65 163 22];
-
-            % Create ROITheasholdSliderLabel
-            app.ROITheasholdSliderLabel = uilabel(app.ExtractReflectionPointsPanel);
-            app.ROITheasholdSliderLabel.HorizontalAlignment = 'right';
-            app.ROITheasholdSliderLabel.Position = [13 286 86 22];
-            app.ROITheasholdSliderLabel.Text = 'ROI Theashold';
-
-            % Create ROITheasholdSlider
-            app.ROITheasholdSlider = uislider(app.ExtractReflectionPointsPanel);
-            app.ROITheasholdSlider.ValueChangedFcn = createCallbackFcn(app, @ROITheasholdSliderValueChanged, true);
-            app.ROITheasholdSlider.Position = [44 275 210 3];
-
-            % Create ExcludeuptopsEditFieldLabel
-            app.ExcludeuptopsEditFieldLabel = uilabel(app.ExtractReflectionPointsPanel);
-            app.ExcludeuptopsEditFieldLabel.HorizontalAlignment = 'right';
-            app.ExcludeuptopsEditFieldLabel.Position = [133 285 98 22];
-            app.ExcludeuptopsEditFieldLabel.Text = 'Exclude upto (ps)';
-
-            % Create ExcludeuptopsEditField
-            app.ExcludeuptopsEditField = uieditfield(app.ExtractReflectionPointsPanel, 'numeric');
-            app.ExcludeuptopsEditField.Limits = [0 3];
-            app.ExcludeuptopsEditField.ValueDisplayFormat = '%3.1f';
-            app.ExcludeuptopsEditField.ValueChangedFcn = createCallbackFcn(app, @ExcludeuptopsEditFieldValueChanged, true);
-            app.ExcludeuptopsEditField.Position = [235 285 30 22];
-
-            % Create FREEHANDROIButton
-            app.FREEHANDROIButton = uibutton(app.ExtractReflectionPointsPanel, 'push');
-            app.FREEHANDROIButton.ButtonPushedFcn = createCallbackFcn(app, @FREEHANDROIButtonPushed, true);
-            app.FREEHANDROIButton.Position = [153 160 125 30];
-            app.FREEHANDROIButton.Text = 'FREEHAND ROI';
-
-            % Create ROIDropDownLabel
-            app.ROIDropDownLabel = uilabel(app.ExtractReflectionPointsPanel);
-            app.ROIDropDownLabel.HorizontalAlignment = 'right';
-            app.ROIDropDownLabel.Position = [23 130 27 22];
-            app.ROIDropDownLabel.Text = 'ROI';
-
-            % Create ROIDropDown
-            app.ROIDropDown = uidropdown(app.ExtractReflectionPointsPanel);
-            app.ROIDropDown.Items = {'ALGORITHM ONLY', 'FREEHAND ONLY', 'ALGORITHM + FREEHAND'};
-            app.ROIDropDown.ValueChangedFcn = createCallbackFcn(app, @ROIDropDownValueChanged, true);
-            app.ROIDropDown.Position = [59 130 220 22];
-            app.ROIDropDown.Value = 'ALGORITHM ONLY';
-
-            % Create BatchManagementButton
-            app.BatchManagementButton = uibutton(app.LiquidfrontExtractionTab, 'push');
-            app.BatchManagementButton.ButtonPushedFcn = createCallbackFcn(app, @BatchManagementButtonPushed, true);
-            app.BatchManagementButton.Position = [46 10 246 30];
-            app.BatchManagementButton.Text = 'Batch Management';
-
-            % Create BatchAnalysisTab
-            app.BatchAnalysisTab = uitab(app.TabGroup);
-            app.BatchAnalysisTab.AutoResizeChildren = 'off';
-            app.BatchAnalysisTab.Title = 'Batch Analysis';
-
-            % Create UIAxes42
-            app.UIAxes42 = uiaxes(app.BatchAnalysisTab);
-            title(app.UIAxes42, 'Liquid Front Ingress')
-            xlabel(app.UIAxes42, 'Time (sec)')
-            ylabel(app.UIAxes42, 'Displacement (mm)')
-            app.UIAxes42.Box = 'on';
-            app.UIAxes42.FontSize = 11;
-            app.UIAxes42.Position = [863 39 470 400];
-
-            % Create UIAxes41
-            app.UIAxes41 = uiaxes(app.BatchAnalysisTab);
-            title(app.UIAxes41, 'Liquid Front Reflection')
-            xlabel(app.UIAxes41, 'Time (sec)')
-            ylabel(app.UIAxes41, 'E field intensity (a.u.)')
-            app.UIAxes41.Box = 'on';
-            app.UIAxes41.FontSize = 11;
-            app.UIAxes41.Position = [383 39 470 400];
-
-            % Create GroupButton
-            app.GroupButton = uibutton(app.BatchAnalysisTab, 'push');
-            app.GroupButton.ButtonPushedFcn = createCallbackFcn(app, @GroupButtonPushed, true);
-            app.GroupButton.Position = [244 657 128 30];
-            app.GroupButton.Text = 'Group';
-
-            % Create UngroupButton
-            app.UngroupButton = uibutton(app.BatchAnalysisTab, 'push');
-            app.UngroupButton.ButtonPushedFcn = createCallbackFcn(app, @UngroupButtonPushed, true);
-            app.UngroupButton.Position = [243 616 129 30];
-            app.UngroupButton.Text = 'Ungroup';
-
-            % Create RemoveButton
-            app.RemoveButton = uibutton(app.BatchAnalysisTab, 'push');
-            app.RemoveButton.ButtonPushedFcn = createCallbackFcn(app, @RemoveButtonPushed, true);
-            app.RemoveButton.Position = [557 461 126 29];
-            app.RemoveButton.Text = 'Remove';
-
-            % Create InformationPanel
-            app.InformationPanel = uipanel(app.BatchAnalysisTab);
-            app.InformationPanel.AutoResizeChildren = 'off';
-            app.InformationPanel.Title = 'Information';
-            app.InformationPanel.Position = [18 78 220 223];
-
-            % Create DistancetoCentremmLabel
-            app.DistancetoCentremmLabel = uilabel(app.InformationPanel);
-            app.DistancetoCentremmLabel.HorizontalAlignment = 'right';
-            app.DistancetoCentremmLabel.Position = [7 95 128 22];
-            app.DistancetoCentremmLabel.Text = 'Distance to Centre (ps)';
-
-            % Create BIDistanceToCentreEditField
-            app.BIDistanceToCentreEditField = uieditfield(app.InformationPanel, 'numeric');
-            app.BIDistanceToCentreEditField.Position = [158 96 52 22];
-
-            % Create SampleDescriptionLabel
-            app.SampleDescriptionLabel = uilabel(app.InformationPanel);
-            app.SampleDescriptionLabel.HorizontalAlignment = 'right';
-            app.SampleDescriptionLabel.Position = [10 176 110 22];
-            app.SampleDescriptionLabel.Text = 'Sample Description';
-
-            % Create BIDescriptionEditField
-            app.BIDescriptionEditField = uieditfield(app.InformationPanel, 'text');
-            app.BIDescriptionEditField.ValueChangedFcn = createCallbackFcn(app, @BIDescriptionEditFieldValueChanged, true);
-            app.BIDescriptionEditField.Position = [7 154 201 22];
-
-            % Create RefractiveIndexEditField_2Label
-            app.RefractiveIndexEditField_2Label = uilabel(app.InformationPanel);
-            app.RefractiveIndexEditField_2Label.HorizontalAlignment = 'right';
-            app.RefractiveIndexEditField_2Label.Position = [8 67 92 22];
-            app.RefractiveIndexEditField_2Label.Text = 'Refractive Index';
-
-            % Create BIRefractiveIndexEditField
-            app.BIRefractiveIndexEditField = uieditfield(app.InformationPanel, 'numeric');
-            app.BIRefractiveIndexEditField.Position = [159 67 52 22];
-
-            % Create IngressTimesecEditFieldLabel
-            app.IngressTimesecEditFieldLabel = uilabel(app.InformationPanel);
-            app.IngressTimesecEditFieldLabel.HorizontalAlignment = 'right';
-            app.IngressTimesecEditFieldLabel.Position = [8 39 104 22];
-            app.IngressTimesecEditFieldLabel.Text = 'Ingress Time (sec)';
-
-            % Create BIIngressTimesecEditField
-            app.BIIngressTimesecEditField = uieditfield(app.InformationPanel, 'numeric');
-            app.BIIngressTimesecEditField.Position = [159 39 52 22];
-
-            % Create MeanSpeedmmminLabel
-            app.MeanSpeedmmminLabel = uilabel(app.InformationPanel);
-            app.MeanSpeedmmminLabel.HorizontalAlignment = 'right';
-            app.MeanSpeedmmminLabel.Position = [8 12 127 22];
-            app.MeanSpeedmmminLabel.Text = 'Mean Speed (mm/min)';
-
-            % Create BIMeanSpeedEditField
-            app.BIMeanSpeedEditField = uieditfield(app.InformationPanel, 'numeric');
-            app.BIMeanSpeedEditField.Position = [159 12 52 22];
-
-            % Create BatchLabel
-            app.BatchLabel = uilabel(app.InformationPanel);
-            app.BatchLabel.HorizontalAlignment = 'right';
-            app.BatchLabel.Position = [10 124 36 22];
-            app.BatchLabel.Text = 'Batch';
-
-            % Create BIBatchEditField
-            app.BIBatchEditField = uieditfield(app.InformationPanel, 'text');
-            app.BIBatchEditField.Position = [55 124 156 22];
-
-            % Create MeasurementListBoxLabel
-            app.MeasurementListBoxLabel = uilabel(app.BatchAnalysisTab);
-            app.MeasurementListBoxLabel.HorizontalAlignment = 'right';
-            app.MeasurementListBoxLabel.Position = [18 722 79 22];
-            app.MeasurementListBoxLabel.Text = 'Measurement';
-
-            % Create MeasurementListBox
-            app.MeasurementListBox = uilistbox(app.BatchAnalysisTab);
-            app.MeasurementListBox.Items = {};
-            app.MeasurementListBox.Multiselect = 'on';
-            app.MeasurementListBox.ValueChangedFcn = createCallbackFcn(app, @MeasurementListBoxValueChanged, true);
-            app.MeasurementListBox.Position = [18 357 206 364];
-            app.MeasurementListBox.Value = {};
-
-            % Create BatchNameEditFieldLabel
-            app.BatchNameEditFieldLabel = uilabel(app.BatchAnalysisTab);
-            app.BatchNameEditFieldLabel.HorizontalAlignment = 'right';
-            app.BatchNameEditFieldLabel.Position = [247 720 72 22];
-            app.BatchNameEditFieldLabel.Text = 'Batch Name';
-
-            % Create BatchNameEditField
-            app.BatchNameEditField = uieditfield(app.BatchAnalysisTab, 'text');
-            app.BatchNameEditField.Position = [245 695 127 25];
-
-            % Create BatchListBoxLabel
-            app.BatchListBoxLabel = uilabel(app.BatchAnalysisTab);
-            app.BatchListBoxLabel.HorizontalAlignment = 'right';
-            app.BatchListBoxLabel.Position = [391 722 33 22];
-            app.BatchListBoxLabel.Text = 'Batch';
-
-            % Create BatchListBox
-            app.BatchListBox = uilistbox(app.BatchAnalysisTab);
-            app.BatchListBox.Items = {};
-            app.BatchListBox.Multiselect = 'on';
-            app.BatchListBox.ValueChangedFcn = createCallbackFcn(app, @BatchListBoxValueChanged, true);
-            app.BatchListBox.Position = [389 461 148 260];
-            app.BatchListBox.Value = {};
-
-            % Create BatchDetailListBoxLabel
-            app.BatchDetailListBoxLabel = uilabel(app.BatchAnalysisTab);
-            app.BatchDetailListBoxLabel.HorizontalAlignment = 'right';
-            app.BatchDetailListBoxLabel.Position = [552 723 70 22];
-            app.BatchDetailListBoxLabel.Text = 'Batch Detail';
-
-            % Create BatchDetailListBox
-            app.BatchDetailListBox = uilistbox(app.BatchAnalysisTab);
-            app.BatchDetailListBox.Items = {};
-            app.BatchDetailListBox.Position = [549 498 142 223];
-            app.BatchDetailListBox.Value = {};
-
-            % Create RemoveButton_2
-            app.RemoveButton_2 = uibutton(app.BatchAnalysisTab, 'push');
-            app.RemoveButton_2.ButtonPushedFcn = createCallbackFcn(app, @RemoveButton_2Pushed, true);
-            app.RemoveButton_2.Position = [28 314 182 29];
-            app.RemoveButton_2.Text = 'Remove';
-
-            % Create AddButton
-            app.AddButton = uibutton(app.BatchAnalysisTab, 'push');
-            app.AddButton.ButtonPushedFcn = createCallbackFcn(app, @AddButtonPushed, true);
-            app.AddButton.Position = [243 576 129 30];
-            app.AddButton.Text = 'Add';
-
-            % Create AssigndatainworkspaceButton
-            app.AssigndatainworkspaceButton = uibutton(app.BatchAnalysisTab, 'push');
-            app.AssigndatainworkspaceButton.ButtonPushedFcn = createCallbackFcn(app, @AssigndatainworkspaceButtonPushed, true);
-            app.AssigndatainworkspaceButton.Position = [22 16 158 32];
-            app.AssigndatainworkspaceButton.Text = 'Assign data in workspace';
-
-            % Create SaveProjectButton
-            app.SaveProjectButton = uibutton(app.BatchAnalysisTab, 'push');
-            app.SaveProjectButton.ButtonPushedFcn = createCallbackFcn(app, @SaveProjectButtonPushed, true);
-            app.SaveProjectButton.Position = [188 16 78 32];
-            app.SaveProjectButton.Text = 'Save Project';
-
-            % Create LoadProjectButton
-            app.LoadProjectButton = uibutton(app.BatchAnalysisTab, 'push');
-            app.LoadProjectButton.ButtonPushedFcn = createCallbackFcn(app, @LoadProjectButtonPushed, true);
-            app.LoadProjectButton.Position = [280 16 78 32];
-            app.LoadProjectButton.Text = 'Load Project';
-
-            % Create UITable
-            app.UITable = uitable(app.BatchAnalysisTab);
-            app.UITable.ColumnName = {'Description'; 'Ingress Time'; 'Y-intercept'; 'para01'; 'para02'; 'd'; 'R^2'; 'RMSE'};
-            app.UITable.ColumnWidth = {'auto', 60, 60, 60, 60, 60, 60, 60};
-            app.UITable.RowName = {};
-            app.UITable.Position = [706 463 600 257];
-
-            % Create FittingFunctionParametersunderdevelopmentLabel
-            app.FittingFunctionParametersunderdevelopmentLabel = uilabel(app.BatchAnalysisTab);
-            app.FittingFunctionParametersunderdevelopmentLabel.Position = [710 723 270 22];
-            app.FittingFunctionParametersunderdevelopmentLabel.Text = 'Fitting Function Parameters (under development)';
-
-            % Create DisplayButtonGroup
-            app.DisplayButtonGroup = uibuttongroup(app.BatchAnalysisTab);
-            app.DisplayButtonGroup.AutoResizeChildren = 'off';
-            app.DisplayButtonGroup.Title = 'Display';
-            app.DisplayButtonGroup.Position = [251 285 120 72];
-
-            % Create IndividualButton
-            app.IndividualButton = uiradiobutton(app.DisplayButtonGroup);
-            app.IndividualButton.Text = 'Individual';
-            app.IndividualButton.Position = [11 26 73 22];
-            app.IndividualButton.Value = true;
-
-            % Create BatchButton
-            app.BatchButton = uiradiobutton(app.DisplayButtonGroup);
-            app.BatchButton.Text = 'Batch';
-            app.BatchButton.Position = [11 4 54 22];
-
-            % Create StyleButtonGroup
-            app.StyleButtonGroup = uibuttongroup(app.BatchAnalysisTab);
-            app.StyleButtonGroup.AutoResizeChildren = 'off';
-            app.StyleButtonGroup.Title = 'Style';
-            app.StyleButtonGroup.Position = [251 178 120 100];
-
-            % Create AllRangeButton
-            app.AllRangeButton = uiradiobutton(app.StyleButtonGroup);
-            app.AllRangeButton.Text = 'All Range';
-            app.AllRangeButton.Position = [11 54 73 22];
-            app.AllRangeButton.Value = true;
-
-            % Create SDShadowedButton
-            app.SDShadowedButton = uiradiobutton(app.StyleButtonGroup);
-            app.SDShadowedButton.Text = 'SD (Shadowed)';
-            app.SDShadowedButton.Position = [11 32 105 22];
-
-            % Create SDErrorBarButton
-            app.SDErrorBarButton = uiradiobutton(app.StyleButtonGroup);
-            app.SDErrorBarButton.Text = 'SD (ErrorBar)';
-            app.SDErrorBarButton.Position = [11 8 92 22];
-
-            % Create LegendCheckBox
-            app.LegendCheckBox = uicheckbox(app.BatchAnalysisTab);
-            app.LegendCheckBox.Text = 'Legend';
-            app.LegendCheckBox.Position = [261 226 62 22];
-            app.LegendCheckBox.Value = true;
-
-            % Create FittingCheckBox
-            app.FittingCheckBox = uicheckbox(app.BatchAnalysisTab);
-            app.FittingCheckBox.Text = ' Fitting';
-            app.FittingCheckBox.Position = [261 202 63 22];
-
-            % Create PlotButton_2
-            app.PlotButton_2 = uibutton(app.BatchAnalysisTab, 'push');
-            app.PlotButton_2.ButtonPushedFcn = createCallbackFcn(app, @PlotButton_2Pushed, true);
-            app.PlotButton_2.Position = [257 129 109 42];
-            app.PlotButton_2.Text = 'Plot';
-
-            % Create DPlotNewButton
-            app.DPlotNewButton = uibutton(app.BatchAnalysisTab, 'push');
-            app.DPlotNewButton.ButtonPushedFcn = createCallbackFcn(app, @DPlotNewButtonPushed, true);
-            app.DPlotNewButton.Position = [254 95 114 27];
-            app.DPlotNewButton.Text = '3D Plot (New)';
-
-            % Create ColourPlotNewButton
-            app.ColourPlotNewButton = uibutton(app.BatchAnalysisTab, 'push');
-            app.ColourPlotNewButton.ButtonPushedFcn = createCallbackFcn(app, @ColourPlotNewButtonPushed, true);
-            app.ColourPlotNewButton.Position = [254 62 114 27];
-            app.ColourPlotNewButton.Text = 'Colour Plot (New)';
-
-            % Create DatasettoUseButtonGroup
-            app.DatasettoUseButtonGroup = uibuttongroup(app.BatchAnalysisTab);
-            app.DatasettoUseButtonGroup.AutoResizeChildren = 'off';
-            app.DatasettoUseButtonGroup.Title = 'Dataset to Use';
-            app.DatasettoUseButtonGroup.Position = [251 364 120 74];
-
-            % Create ScatteredButton
-            app.ScatteredButton = uiradiobutton(app.DatasettoUseButtonGroup);
-            app.ScatteredButton.Text = 'Scattered';
-            app.ScatteredButton.Position = [11 28 73 22];
-            app.ScatteredButton.Value = true;
-
-            % Create MeanButton
-            app.MeanButton = uiradiobutton(app.DatasettoUseButtonGroup);
-            app.MeanButton.Text = 'Mean';
-            app.MeanButton.Position = [11 6 65 22];
-
             % Create StopProcessButton
             app.StopProcessButton = uibutton(app.DipTabUIFigure, 'push');
             app.StopProcessButton.ButtonPushedFcn = createCallbackFcn(app, @StopProcessButtonPushed, true);
@@ -4252,6 +3810,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             % Create DeployButton
             app.DeployButton = uibutton(app.DipTabUIFigure, 'push');
             app.DeployButton.ButtonPushedFcn = createCallbackFcn(app, @DeployButtonPushed, true);
+            app.DeployButton.FontSize = 14;
             app.DeployButton.FontWeight = 'bold';
             app.DeployButton.Position = [886 851 122 28];
             app.DeployButton.Text = 'Deploy';
