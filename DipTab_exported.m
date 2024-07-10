@@ -1276,20 +1276,6 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.SystemStatusEditField.Value = 'Replot Finished';
         end
 
-        % Callback function
-        function SaveFigureBRButtonPushed(app, event)
-            ax = app.UIAxesFD2;
-            filter = {'*.pdf';'*.*'};
-            [filename, filepath] = uiputfile(filter);
-            
-            if isequal(filename,0)||isequal(filepath,0)
-                return;          
-            end
-            
-            fullfile = strcat(filepath,filename);
-            exportgraphics(ax,fullfile);
-        end
-
         % Button pushed function: SaveProjectButton
         function SaveProjectButtonPushed(app, event)
 
@@ -2352,7 +2338,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.dataLengthEditField_FD.Value = dataLength;
             app.dataNumberEditField_FD.Value = measNum;
             app.DeployButton.Enable = true;
-            app.TabGroup.SelectedTab = app.TabGroup.Children(3);
+            app.TabGroup.SelectedTab = app.TabGroup.Children(4);
         end
 
         % Button pushed function: RemoveBaseButton_Tab1
@@ -2527,12 +2513,10 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             % Create TabGroup
             app.TabGroup = uitabgroup(app.DipTabUIFigure);
-            app.TabGroup.AutoResizeChildren = 'off';
             app.TabGroup.Position = [19 46 1446 790];
 
             % Create TimeDomainTab
             app.TimeDomainTab = uitab(app.TabGroup);
-            app.TimeDomainTab.AutoResizeChildren = 'off';
             app.TimeDomainTab.Title = 'Time Domain';
 
             % Create UIAxesTD1
@@ -2578,7 +2562,6 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             % Create GeneralInformationPanel
             app.GeneralInformationPanel = uipanel(app.TimeDomainTab);
-            app.GeneralInformationPanel.AutoResizeChildren = 'off';
             app.GeneralInformationPanel.Title = 'General Information';
             app.GeneralInformationPanel.Position = [16 583 216 160];
 
@@ -2652,7 +2635,6 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             % Create GuidelinesPanel
             app.GuidelinesPanel = uipanel(app.TimeDomainTab);
-            app.GuidelinesPanel.AutoResizeChildren = 'off';
             app.GuidelinesPanel.Title = 'Guidelines';
             app.GuidelinesPanel.Position = [16 303 216 91];
 
@@ -2683,7 +2665,6 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             % Create ColormapPanel
             app.ColormapPanel = uipanel(app.TimeDomainTab);
-            app.ColormapPanel.AutoResizeChildren = 'off';
             app.ColormapPanel.Title = 'Colormap';
             app.ColormapPanel.Position = [16 402 216 85];
 
@@ -2712,7 +2693,6 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             % Create AOIBoundaryTruncationPanel
             app.AOIBoundaryTruncationPanel = uipanel(app.TimeDomainTab);
-            app.AOIBoundaryTruncationPanel.AutoResizeChildren = 'off';
             app.AOIBoundaryTruncationPanel.Title = 'AOI Boundary Truncation';
             app.AOIBoundaryTruncationPanel.Position = [16 169 216 126];
 
@@ -2791,7 +2771,6 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             % Create ColormapcontrolPanel_TD
             app.ColormapcontrolPanel_TD = uipanel(app.TimeDomainTab);
-            app.ColormapcontrolPanel_TD.AutoResizeChildren = 'off';
             app.ColormapcontrolPanel_TD.Title = 'Colormap control';
             app.ColormapcontrolPanel_TD.Position = [16 495 216 80];
 
@@ -2844,7 +2823,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             % Create SaveFigureButton
             app.SaveFigureButton = uibutton(app.TimeDomainTab, 'push');
             app.SaveFigureButton.ButtonPushedFcn = createCallbackFcn(app, @SaveFigureButtonPushed, true);
-            app.SaveFigureButton.Position = [732 14 121 23];
+            app.SaveFigureButton.Position = [722 15 121 23];
             app.SaveFigureButton.Text = 'Save Figure';
 
             % Create tXPickSlider
@@ -2915,7 +2894,6 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             % Create KernelSmoothingPanel
             app.KernelSmoothingPanel = uipanel(app.TimeDomainTab);
-            app.KernelSmoothingPanel.AutoResizeChildren = 'off';
             app.KernelSmoothingPanel.Title = 'Kernel Smoothing';
             app.KernelSmoothingPanel.Position = [16 102 216 59];
 
@@ -2941,12 +2919,11 @@ classdef DipTab_exported < matlab.apps.AppBase
             % Create LoadRawDataButton
             app.LoadRawDataButton = uibutton(app.TimeDomainTab, 'push');
             app.LoadRawDataButton.ButtonPushedFcn = createCallbackFcn(app, @LoadRawDataButtonPushed, true);
-            app.LoadRawDataButton.Position = [281 14 121 23];
+            app.LoadRawDataButton.Position = [294 15 121 23];
             app.LoadRawDataButton.Text = 'Load Raw Data';
 
             % Create LiquidfrontExtractionTab
             app.LiquidfrontExtractionTab = uitab(app.TabGroup);
-            app.LiquidfrontExtractionTab.AutoResizeChildren = 'off';
             app.LiquidfrontExtractionTab.Title = 'Liquidfront Extraction';
 
             % Create UIAxesLE1
@@ -2982,7 +2959,6 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             % Create ROISelectionPanel
             app.ROISelectionPanel = uipanel(app.LiquidfrontExtractionTab);
-            app.ROISelectionPanel.AutoResizeChildren = 'off';
             app.ROISelectionPanel.Title = 'ROI Selection';
             app.ROISelectionPanel.Position = [18 495 264 158];
 
@@ -3048,7 +3024,6 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             % Create GeneralInformationPanel_LE
             app.GeneralInformationPanel_LE = uipanel(app.LiquidfrontExtractionTab);
-            app.GeneralInformationPanel_LE.AutoResizeChildren = 'off';
             app.GeneralInformationPanel_LE.Title = 'General Information';
             app.GeneralInformationPanel_LE.Position = [18 661 263 84];
 
@@ -3100,7 +3075,6 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             % Create LinearFittingPanel
             app.LinearFittingPanel = uipanel(app.LiquidfrontExtractionTab);
-            app.LinearFittingPanel.AutoResizeChildren = 'off';
             app.LinearFittingPanel.Title = 'Linear Fitting';
             app.LinearFittingPanel.Position = [19 277 263 197];
 
@@ -3179,7 +3153,6 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             % Create BatchAnalysisTab
             app.BatchAnalysisTab = uitab(app.TabGroup);
-            app.BatchAnalysisTab.AutoResizeChildren = 'off';
             app.BatchAnalysisTab.Title = 'Batch Analysis';
 
             % Create UIAxesBs2
@@ -3220,7 +3193,6 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             % Create InformationPanel
             app.InformationPanel = uipanel(app.BatchAnalysisTab);
-            app.InformationPanel.AutoResizeChildren = 'off';
             app.InformationPanel.Title = 'Information';
             app.InformationPanel.Position = [17 548 189 193];
 
@@ -3372,7 +3344,6 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             % Create DisplayButtonGroup
             app.DisplayButtonGroup = uibuttongroup(app.BatchAnalysisTab);
-            app.DisplayButtonGroup.AutoResizeChildren = 'off';
             app.DisplayButtonGroup.Title = 'Display';
             app.DisplayButtonGroup.Position = [18 486 188 53];
 
@@ -3389,7 +3360,6 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             % Create StyleButtonGroup
             app.StyleButtonGroup = uibuttongroup(app.BatchAnalysisTab);
-            app.StyleButtonGroup.AutoResizeChildren = 'off';
             app.StyleButtonGroup.Title = 'Style';
             app.StyleButtonGroup.Position = [19 373 187 103];
 
@@ -3440,7 +3410,6 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             % Create FrequencyDomainTab
             app.FrequencyDomainTab = uitab(app.TabGroup);
-            app.FrequencyDomainTab.AutoResizeChildren = 'off';
             app.FrequencyDomainTab.Title = 'Frequency Domain';
 
             % Create UIAxesFD1
@@ -3491,7 +3460,6 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             % Create FourierTransformPanel
             app.FourierTransformPanel = uipanel(app.FrequencyDomainTab);
-            app.FourierTransformPanel.AutoResizeChildren = 'off';
             app.FourierTransformPanel.Title = 'Fourier Transform';
             app.FourierTransformPanel.Position = [13 403 240 290];
 
@@ -3616,7 +3584,6 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             % Create DataInformationPanel
             app.DataInformationPanel = uipanel(app.FrequencyDomainTab);
-            app.DataInformationPanel.AutoResizeChildren = 'off';
             app.DataInformationPanel.Title = 'Data Information';
             app.DataInformationPanel.Position = [13 700 239 55];
 
@@ -3652,7 +3619,6 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             % Create SingleMeasurementPanel
             app.SingleMeasurementPanel = uipanel(app.FrequencyDomainTab);
-            app.SingleMeasurementPanel.AutoResizeChildren = 'off';
             app.SingleMeasurementPanel.Title = 'Single Measurement';
             app.SingleMeasurementPanel.Position = [13 140 240 108];
 
@@ -3692,7 +3658,6 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             % Create ColormapcontrolPanel
             app.ColormapcontrolPanel = uipanel(app.FrequencyDomainTab);
-            app.ColormapcontrolPanel.AutoResizeChildren = 'off';
             app.ColormapcontrolPanel.Title = 'Colormap control';
             app.ColormapcontrolPanel.Position = [13 255 239 141];
 
