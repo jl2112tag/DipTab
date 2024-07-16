@@ -76,6 +76,8 @@ classdef DipTab_exported < matlab.apps.AppBase
         UIAxesTD2                       matlab.ui.control.UIAxes
         UIAxesTD1                       matlab.ui.control.UIAxes
         LiquidfrontExtractionTab        matlab.ui.container.Tab
+        SampleNameEditField             matlab.ui.control.EditField
+        SampleNameEditFieldLabel        matlab.ui.control.Label
         LinearFittingPanel              matlab.ui.container.Panel
         RMSEEditField                   matlab.ui.control.NumericEditField
         RMSEEditFieldLabel              matlab.ui.control.Label
@@ -100,7 +102,7 @@ classdef DipTab_exported < matlab.apps.AppBase
         DataLengthEditField_2Label_2    matlab.ui.control.Label
         BatchManagementButton           matlab.ui.control.Button
         ROISelectionPanel               matlab.ui.container.Panel
-        CentreLineCheckBox              matlab.ui.control.CheckBox
+        DisplayTabletCentreCheckBox     matlab.ui.control.CheckBox
         ROIwidthEditField               matlab.ui.control.NumericEditField
         ROIwidthEditFieldLabel          matlab.ui.control.Label
         DrawPolylineButton              matlab.ui.control.Button
@@ -687,9 +689,9 @@ classdef DipTab_exported < matlab.apps.AppBase
             axis(ax1,"xy");            
             axis(ax1,'tight');
 
-            if app.CentreLineCheckBox.Value
+            if app.DisplayTabletCentreCheckBox.Value
                 hold(ax1,"on");
-                yline(ax1,thickness/2,'--','Centre Line');
+                yline(ax1,thickness/2,'--','Tablet Centre');
             end
             
             colormap(ax1,cmap);
@@ -1629,7 +1631,7 @@ classdef DipTab_exported < matlab.apps.AppBase
                 return;
             end
                         
-            meta.sampleName = app.SampleDescriptionEditField.Value;
+            meta.sampleName = app.SampleNameEditField.Value;
             meta.thickness = app.ThicknessmmEditField_LE.Value;
             meta.refractiveIndex = app.RefractiveIndexEditField_LE.Value;
             meta.ingressTime = ingressTime;
@@ -1846,6 +1848,9 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             xLocs = Peaks.xLocs;
             yLocs = Peaks.yLocs;
+            assignin("base","xLocs",xLocs);
+            assignin("base","yLocs",yLocs);
+
 
             % totNum = size(lfMat,1);
 
@@ -1853,8 +1858,11 @@ classdef DipTab_exported < matlab.apps.AppBase
             hold(ax,"on");
             
             ft = fittype('k*x+d');
-            options = fitoptions('Method','NonlinearLeastSquares');
-            [f, fitness] = fit(xLocs',yLocs',ft,options);
+            excludedData = yLocs > thickness*2/3;
+            opts = fitoptions('Method','NonlinearLeastSquares');
+            opts.Exclude = excludedData;
+
+            [f, fitness] = fit(xLocs',yLocs',ft,opts);
             k = f.k;
             d = f.d;
             frs = fitness.rsquare;
@@ -2062,7 +2070,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             xlim(ax3,[xData(1) xData(end)]);
             ylim(ax3,[displacement(end) displacement(1)]);
 
-            if app.CentreLineCheckBox.Value
+            if app.DisplayTabletCentreCheckBox.Value
                 yline(ax3,thickness/2,'--','Centre Line');
             end
 
@@ -2301,6 +2309,10 @@ classdef DipTab_exported < matlab.apps.AppBase
                 drawnow
             end
 
+            
+            baselineVector = rawData(:,1);
+            rawData = rawData - baselineVector;
+
             app.TData.samData = rawData;
             app.TData.rawData = rawData;
             app.SystemStatusEditField.Value = 'Done';
@@ -2450,14 +2462,14 @@ classdef DipTab_exported < matlab.apps.AppBase
             displacement = flip(displacement);
             app.TData.displacement = displacement;
 
-            LfPlot(app);
-
             app.ThicknessmmEditField_LE.Value = app.ThicknessmmEditField.Value;
             app.RefractiveIndexEditField_LE.Value = app.RefractiveIndexEditField.Value;
             
             app.dataLengthEditField_LE.Value = size(samData,1);
             app.dataNumberEditField_LE.Value = size(samData,2);
-          
+            app.SampleNameEditField.Value = app.ProjectNameEditField.Value;
+
+            LfPlot(app);          
             app.TabGroup.SelectedTab = app.TabGroup.Children(2);
         end
     end
@@ -2971,13 +2983,13 @@ classdef DipTab_exported < matlab.apps.AppBase
             % Create AlphaDropDown
             app.AlphaDropDown = uidropdown(app.ROISelectionPanel);
             app.AlphaDropDown.Items = {'1.0', '0.7', '0.5', '0.3', '0.1'};
-            app.AlphaDropDown.Position = [58 108 62 22];
+            app.AlphaDropDown.Position = [58 108 53 22];
             app.AlphaDropDown.Value = '1.0';
 
             % Create ExtColormapDropDown
             app.ExtColormapDropDown = uidropdown(app.ROISelectionPanel);
             app.ExtColormapDropDown.Items = {'parula', 'jet', 'copper', 'bone', 'hot'};
-            app.ExtColormapDropDown.Position = [20 78 97 23];
+            app.ExtColormapDropDown.Position = [19 78 92 23];
             app.ExtColormapDropDown.Value = 'parula';
 
             % Create LfPlotButton
@@ -2985,7 +2997,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.LfPlotButton.ButtonPushedFcn = createCallbackFcn(app, @LfPlotButtonPushed, true);
             app.LfPlotButton.BackgroundColor = [1 1 1];
             app.LfPlotButton.FontWeight = 'bold';
-            app.LfPlotButton.Position = [130 78 115 23];
+            app.LfPlotButton.Position = [120 78 134 23];
             app.LfPlotButton.Text = 'Replot';
 
             % Create DrawPolylineButton
@@ -2999,27 +3011,27 @@ classdef DipTab_exported < matlab.apps.AppBase
             % Create ROIwidthEditFieldLabel
             app.ROIwidthEditFieldLabel = uilabel(app.ROISelectionPanel);
             app.ROIwidthEditFieldLabel.HorizontalAlignment = 'right';
-            app.ROIwidthEditFieldLabel.Position = [17 47 58 22];
+            app.ROIwidthEditFieldLabel.Position = [17 46 58 22];
             app.ROIwidthEditFieldLabel.Text = 'ROI width';
 
             % Create ROIwidthEditField
             app.ROIwidthEditField = uieditfield(app.ROISelectionPanel, 'numeric');
             app.ROIwidthEditField.Limits = [1 200];
             app.ROIwidthEditField.ValueDisplayFormat = '%.0f';
-            app.ROIwidthEditField.Position = [81 47 40 22];
-            app.ROIwidthEditField.Value = 40;
+            app.ROIwidthEditField.Position = [81 46 40 22];
+            app.ROIwidthEditField.Value = 30;
 
-            % Create CentreLineCheckBox
-            app.CentreLineCheckBox = uicheckbox(app.ROISelectionPanel);
-            app.CentreLineCheckBox.Text = 'Centre Line';
-            app.CentreLineCheckBox.Position = [135 108 84 22];
-            app.CentreLineCheckBox.Value = true;
+            % Create DisplayTabletCentreCheckBox
+            app.DisplayTabletCentreCheckBox = uicheckbox(app.ROISelectionPanel);
+            app.DisplayTabletCentreCheckBox.Text = 'Display Tablet Centre';
+            app.DisplayTabletCentreCheckBox.Position = [121 108 136 22];
+            app.DisplayTabletCentreCheckBox.Value = true;
 
             % Create BatchManagementButton
             app.BatchManagementButton = uibutton(app.LiquidfrontExtractionTab, 'push');
             app.BatchManagementButton.ButtonPushedFcn = createCallbackFcn(app, @BatchManagementButtonPushed, true);
             app.BatchManagementButton.FontWeight = 'bold';
-            app.BatchManagementButton.Position = [26 229 246 33];
+            app.BatchManagementButton.Position = [26 185 246 33];
             app.BatchManagementButton.Text = 'Batch Management';
 
             % Create GeneralInformationPanel_LE
@@ -3150,6 +3162,16 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.RMSEEditField = uieditfield(app.LinearFittingPanel, 'numeric');
             app.RMSEEditField.ValueDisplayFormat = '%5.2f';
             app.RMSEEditField.Position = [189 48 50 22];
+
+            % Create SampleNameEditFieldLabel
+            app.SampleNameEditFieldLabel = uilabel(app.LiquidfrontExtractionTab);
+            app.SampleNameEditFieldLabel.HorizontalAlignment = 'right';
+            app.SampleNameEditFieldLabel.Position = [25 240 81 22];
+            app.SampleNameEditFieldLabel.Text = 'Sample Name';
+
+            % Create SampleNameEditField
+            app.SampleNameEditField = uieditfield(app.LiquidfrontExtractionTab, 'text');
+            app.SampleNameEditField.Position = [111 240 168 22];
 
             % Create BatchAnalysisTab
             app.BatchAnalysisTab = uitab(app.TabGroup);
