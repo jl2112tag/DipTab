@@ -100,7 +100,7 @@ classdef DipTab_exported < matlab.apps.AppBase
         NumberofScansEditField_2Label_2  matlab.ui.control.Label
         dataLengthEditField_LE          matlab.ui.control.NumericEditField
         DataLengthEditField_2Label_2    matlab.ui.control.Label
-        BatchManagementButton           matlab.ui.control.Button
+        DataComparisonButton            matlab.ui.control.Button
         ROISelectionPanel               matlab.ui.container.Panel
         DisplayTabletCentreCheckBox     matlab.ui.control.CheckBox
         ROIwidthEditField               matlab.ui.control.NumericEditField
@@ -113,17 +113,13 @@ classdef DipTab_exported < matlab.apps.AppBase
         UIAxesLE3                       matlab.ui.control.UIAxes
         UIAxesLE2                       matlab.ui.control.UIAxes
         UIAxesLE1                       matlab.ui.control.UIAxes
-        BatchAnalysisTab                matlab.ui.container.Tab
-        ColourPlotNewButton             matlab.ui.control.Button
-        DPlotNewButton                  matlab.ui.control.Button
-        PlotButton_2                    matlab.ui.control.Button
-        FittingCheckBox                 matlab.ui.control.CheckBox
+        DataComparisonTab               matlab.ui.container.Tab
+        ExportTableasCSVFormatButton    matlab.ui.control.Button
+        PlotButton_DCNew                matlab.ui.control.Button
+        PlotButton_DC3D                 matlab.ui.control.Button
+        PlotButton_DC                   matlab.ui.control.Button
         LegendCheckBox                  matlab.ui.control.CheckBox
-        StyleButtonGroup                matlab.ui.container.ButtonGroup
-        SDErrorBarButton                matlab.ui.control.RadioButton
-        SDShadowedButton                matlab.ui.control.RadioButton
-        AllRangeButton                  matlab.ui.control.RadioButton
-        DisplayButtonGroup              matlab.ui.container.ButtonGroup
+        PlotButtonGroup                 matlab.ui.container.ButtonGroup
         BatchButton                     matlab.ui.control.RadioButton
         IndividualButton                matlab.ui.control.RadioButton
         FittingFunctionParametersLabel  matlab.ui.control.Label
@@ -141,22 +137,11 @@ classdef DipTab_exported < matlab.apps.AppBase
         BatchNameEditFieldLabel         matlab.ui.control.Label
         MeasurementListBox              matlab.ui.control.ListBox
         MeasurementListBoxLabel         matlab.ui.control.Label
-        InformationPanel                matlab.ui.container.Panel
-        BIBatchEditField                matlab.ui.control.EditField
-        BatchLabel                      matlab.ui.control.Label
-        BIIngressTimesecEditField       matlab.ui.control.NumericEditField
-        IngressTimesecEditFieldLabel    matlab.ui.control.Label
-        BIRefractiveIndexEditField      matlab.ui.control.NumericEditField
-        RefractiveIndexEditField_2Label  matlab.ui.control.Label
-        BIDescriptionEditField          matlab.ui.control.EditField
-        SampleDescriptionLabel          matlab.ui.control.Label
-        BICentreLinemmEditField         matlab.ui.control.NumericEditField
-        DistancetoCentremmLabel         matlab.ui.control.Label
         RemoveButton                    matlab.ui.control.Button
         UngroupButton                   matlab.ui.control.Button
         GroupButton                     matlab.ui.control.Button
-        UIAxesBs1                       matlab.ui.control.UIAxes
-        UIAxesBs2                       matlab.ui.control.UIAxes
+        UIAxesCD1                       matlab.ui.control.UIAxes
+        UIAxesCD2                       matlab.ui.control.UIAxes
         FrequencyDomainTab              matlab.ui.container.Tab
         ColormapcontrolPanel            matlab.ui.container.Panel
         ftColorbarCheckBox              matlab.ui.control.CheckBox
@@ -228,10 +213,11 @@ classdef DipTab_exported < matlab.apps.AppBase
         FData % Frequency domain data (fast Fourier transfrom)
         stopProcess % variable for forcing process stopped     
         Handler % axis component handler
-        BData % Batch data
+        CData % Data comparison data
         plotUpdate % display update option
         maxSam % max sample value
         inAng = deg2rad(8.8) % THz beam incident angle
+        Tcell % Cell structure for table
     end
     
     methods (Access = private)
@@ -245,7 +231,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.DownEditField.Value = 0;
         end
         
-        function tdPlot(app,autoStr)
+        function TDPlot(app,autoStr)
             samData = app.TData.samData;
             ToF = app.TData.ToF;
             xData = app.TData.xData;
@@ -664,7 +650,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             ax4.YLim = [pmin pmax];
         end
         
-        function LfPlot(app)
+        function LFPlot(app)
             samData = app.TData.samData;
             xData = app.TData.xData;
             displacement = app.TData.displacement;
@@ -702,12 +688,12 @@ classdef DipTab_exported < matlab.apps.AppBase
         
         function updateBatchList(app)
             % batcht list update
-            bNum = size(app.BData.batch,2);
+            bNum = size(app.CData.batch,2);
             ListBoxItems={};
             cnt = 1;
             
             for bIdx = 1:bNum
-                AddItem = app.BData.batch{bIdx};
+                AddItem = app.CData.batch{bIdx};
                 if ~isempty(AddItem)&&~sum(strcmp(AddItem,ListBoxItems))
                    ListBoxItems(cnt) = {AddItem};
                    cnt = cnt+1;
@@ -718,21 +704,20 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.BatchListBox.ItemsData = (1:length(ListBoxItems));           
         end
         
-        function plotIndividual(app)
-            linearFitExtract = 1; % option boolean for extracting linear fitting function from the measurement data
-            mItems = app.MeasurementListBox.Value;
-            listItems = app.MeasurementListBox.Items;
+        function CDPlot_Individual(app)
+            items = app.MeasurementListBox.Value;
+            itemNames = app.MeasurementListBox.Items;
             
-            if isempty(mItems)
+            if isempty(items)
                 fig = app.DipTabUIFigure;
                 uialert(fig,'No profiles selected','Warning');
                 return;                
             end
 
-            Peaks = app.BData.Peaks;
+            Peaks = app.CData.Peaks;
             
-            ax1 = app.UIAxesBs1;
-            ax2 = app.UIAxesBs2;
+            ax1 = app.UIAxesCD2;
+            ax2 = app.UIAxesCD1;
             axis(ax1,'tight');
             axis(ax2,'tight');
             xlim(ax2,[0 inf]);
@@ -740,23 +725,13 @@ classdef DipTab_exported < matlab.apps.AppBase
             cla(ax1);
             cla(ax2);
             hold(ax1,'on');
-            hold(ax2,'on');
-            
-            % fit function data for table fill-in
-            ingressTime = zeros(size(mItems,2),1);
-            k = zeros(size(mItems,2),1);
-            d = zeros(size(mItems,2),1);
-            frss = zeros(size(mItems,2),1);
-            frms = zeros(size(mItems,2),1);
-            
-            xLocs = cell(size(mItems,2));
-            fData = cell(size(mItems,2));
+            hold(ax2,'on');            
             
             lh1 = [];
             lh2 = [];
             cnt = 1;
             
-            for idx = mItems
+            for idx = items
                 xLocs = Peaks{idx}.xLocs;    
                 eFieldAmp = Peaks{idx}.eFieldAmp;
                 yLocs = Peaks{idx}.yLocs;
@@ -765,187 +740,96 @@ classdef DipTab_exported < matlab.apps.AppBase
                 h2 = plot(ax2,xLocs,yLocs,'.');
                 lh1(cnt) = h1;
                 lh2(cnt) = h2;
-              
-                
+               
                 cnt = cnt + 1;
             end
             
-            if app.FittingCheckBox.Value;
-                T = table(listItems([mItems])',ingressTime,k,d,frss,frms);
-                app.UITable.Data = T;    
-            end
-            
-            
-            
             if app.LegendCheckBox.Value
-                legend(ax1,lh1,listItems([mItems]),"Location","southeast","Interpreter","none");
-                legend(ax2,lh2,listItems([mItems]),"Location","southeast","Interpreter","none");
+                legend(ax1,lh1,itemNames([items]),"Location","southeast","Interpreter","none");
+                legend(ax2,lh2,itemNames([items]),"Location","southeast","Interpreter","none");
             else
                 legend(ax1,"off");
                 legend(ax2,"off");
             end
         end
         
-        function plotBatch(app)
+        function CDPlot_Batch(app)
             bItems = app.BatchListBox.Value;
-            sBatch = app.BatchListBox.Items(bItems);
-            
+            sBatch = app.BatchListBox.Items(bItems); % sBatch: selected batch(es)
+             
             if isempty(bItems)
                 fig = app.DipTabUIFigure;
-                uialert(fig,'No batch selected','Warning');
+                uialert(fig,'Select batch(es)','Warning');
                 return;
             end
             
-            Data = app.BData;
-            Peaks = Data.Peaks;
-            batch = Data.batch;
-            meta = Data.meta;
-            tNum = size(Peaks,2);
-            bMat = {}; %for batch data set plotting
+            Peaks = app.CData.Peaks;
+            batch = app.CData.batch;
+            meta = app.CData.meta;
+            totMeasNum = size(Peaks,2); % total measurement number
+            bMat = {}; % batch data matrix
             
-            ax = app.UIAxesBs2;
-            axis(ax,'tight');
-            xlim(ax,[0, inf]);
-            ylim(ax,[0, inf]);
-            cla(ax);
-            hold(ax,'on');
+            ax1 = app.UIAxesCD1;
+            ax2 = app.UIAxesCD2;
+            axis(ax1,'tight');
+            axis(ax2,'tight');
+            xlim(ax2,[0 inf]);
+            ylim(ax2,[0 inf]);
+            cla(ax1);
+            cla(ax2);
+            hold(ax1,'on');
+            hold(ax2,'on');            
+            
+            lh1 = []; % legend list 1
+            lh2 = []; % legend list 2
             cnt = 1;
             
-            for bIdx = sBatch % sBatch: selected batch(es)
-                bIdxMat = strcmp(batch,bIdx);
-                bMat(cnt,1:2) = {cnt,bIdx};
-                bNum = sum(bIdxMat);
-                cnt2 = 0;
-                itpItvs = zeros(sum(bIdxMat),1); % interpolation interval vectors
-                mEndTs = zeros(sum(bIdxMat),1); % measurement end time
+            for bIdx = sBatch 
+                bIdxMat = strcmp(batch,bIdx); % returns measurement lists that match with bIdx in a vector form 
+                bMat(cnt,1:2) = {cnt,bIdx}; % batch data cell structure
+                bNum = sum(bIdxMat); % total number of nonzero (identical batch name) items
+                batchXLocs = [];
+                batchYLocs = [];
+                batchEFieldAmp = [];
                 
-                %calculate a suitable interpolation interval for batch data
-                for idx = 1:tNum
-                    if bIdxMat(idx)
-                        itpItvs(idx) = meta(idx).MeasurementInterval;
-                        mEndTs(idx) = Peaks{idx}(1,end);
+                for idx = 1:totMeasNum
+                    if bIdxMat(idx) % read only a selected batch measurement
+                        batchXLocs =  [batchXLocs, Peaks{idx}.xLocs];
+                        batchYLocs =  [batchYLocs, Peaks{idx}.yLocs];
+                        batchEFieldAmp = [batchEFieldAmp, Peaks{idx}.eFieldAmp];
                     end
                 end
-                
-                itpItv = min(nonzeros(itpItvs));
-                mEndT = min(nonzeros(mEndTs));
-                
-                for idx = 1:tNum
-                    if bIdxMat(idx)
-                        cnt2 = cnt2 + 1;
-                        ubLoc = sum(Peaks{idx}(1,:) <= mEndT);
-                        iT = Peaks{idx}(1,1:ubLoc); %ingress time
-                        dT = Peaks{idx}(2,1:ubLoc); %displacement time
-                        xq = 0:itpItv:mEndT;
-                        vq = interp1(iT,dT,xq,'linear');
-                        vq(isnan(vq)) = 0;
-                        bMat(cnt,4+cnt2) = {[xq;vq]};   
-                    end
-                end
-                
-                ptNum = size(xq,2);
-                bcMat= zeros(cnt2,ptNum); %batch commmon data
-                
-                for idx = 1:cnt2
-                    bcMat(idx,:) = bMat{cnt,4+idx}(2,:);
-                end
-                
-                %liquid front batch data
-                LFb = zeros(5,ptNum);
-                LFb(1,:) = (0:1:ptNum-1)*itpItv; %ingress time
-                LFb(2,:) = min(bcMat,[],1); % min values
-                LFb(3,:) = max(bcMat,[],1); % max values
-                LFb(4,:) = mean(bcMat); % mean values
-                LFb(5,:) = std(bcMat); % standard deviations
-                
 
-                bMat(cnt,4) = {LFb};
+                bMat(cnt,3) = {[batchXLocs; batchYLocs]};
+                bMat(cnt,4) = {[batchXLocs; batchEFieldAmp]};
+
                 cnt = cnt + 1;
-       end
+            end
 
-            
-            app.BData.bMat = bMat;
-            
-            
-            pMethod = app.StyleButtonGroup.SelectedObject.Text;
-            cnt = 1;
-            lh = []; %line handler
-            k = zeros(size(bItems,2),1);
-            d = zeros(size(bItems,2),1);
-            frss = zeros(size(bItems,2),1);
-            frms = zeros(size(bItems,2),1);
-            xData = cell(size(bItems,2));
-            fData = cell(size(bItems,2));
+            app.CData.bMat = bMat;
+
+            cnt2 = 1;
             
             for bIdx = sBatch
-                sbMat = bMat{cnt,4}; %selected batch matrix
-                
-                switch pMethod
-                    case 'All Range'
-                        h1 = plot(ax,sbMat(1,:),sbMat(4,:));
-                        lh(cnt) = h1;
-                        xBound = [sbMat(1,:),flip(sbMat(1,:))];
-                        yBound = [sbMat(2,:),flip(sbMat(3,:))];
-                        patch(ax,xBound,yBound,h1.Color,'EdgeColor','none','FaceAlpha',0.1);
-                    case 'SD (Shadowed)'
-                        h1 = plot(ax,sbMat(1,:),sbMat(4,:));
-                        lh(cnt) = h1;
-                        xBound = [sbMat(1,:),flip(sbMat(1,:))];
-                        yBound = [sbMat(4,:)-sbMat(5,:),flip(sbMat(4,:))+flip(sbMat(5,:))];
-                        patch(ax,xBound,yBound,h1.Color,'EdgeColor','none','FaceAlpha',0.1);
-                    case 'SD (ErrorBar)'
-                        h1 = errorbar(ax,sbMat(1,:),sbMat(4,:),sbMat(5,:));
-                end
-                
-                if app.FittingCheckBox.Value;
-                    [k,d,frs,frm,fitData] = PLFitting(app,cnt,'batch');
-                    k(cnt) = k2;
-                    d(cnt) = d;
-                    frss(cnt) = frs; %rsquare
-                    frms(cnt) = frm; %RMSE
-                    h1 = plot(ax,sbMat(1,length(fitData1):end),fitData2,'--');
-                    h1.Color = [h1.Color, 0.4];
-                end
-                cnt = cnt + 1;
+                pkPints = bMat{cnt2,3}; % peak points
+                pkAmps = bMat{cnt2,4}; % peak amplitudes
+                p1 = plot(ax1,pkPints(1,:),pkPints(2,:),'.');
+                p2 = plot(ax2,pkAmps(1,:),pkAmps(2,:),'.');
+                lh1(cnt2) = p1;
+                lh1(cnt2) = p2;
+                cnt2 = cnt2 + 1;
             end
                                     
             if app.LegendCheckBox.Value
-                legend(ax,lh,sBatch,"Location","southeast","Interpreter","none");
-            end
-            
-            if app.FittingCheckBox.Value;
-                T = table(sBatch',ks1,frss1,frms1,ks2,ds2,frss2,frms2);          
-                app.UITable.Data = T;
+                legend(ax1,lh1,sBatch,"Location","southeast","Interpreter","none");
+                legend(ax2,lh2,sBatch,"Location","southeast","Interpreter","none");
+            else
+                legend(ax1,"off");
+                legend(ax2,"off");
             end
          
         end
-        
-        function [k,d,frs,frm,fitData] = PLFitting(app,idx,opt)
-            
-            if isequal(opt,'individual')
-                Peaks = app.BData.Peaks{idx};
-                meta = app.BData.meta(idx);
-                xData = Peaks(1,:)';
-                yData = Peaks(2,:)';
-            else
-                bMat = app.BData.bMat{idx,4};
-                xData = bMat(1,:)';
-                yData = bMat(4,:)';   
-            end
-                        
-            % Regime 2 fitting
-            ft = fittype('k*x + d');
-            options = fitoptions('Method','NonlinearLeastSquares');
-            [f, fitness] = fit(xData,yData,ft,options);
-            k = f.k;
-            d = f.d;
-            frs = fitness.rsquare;
-            frm = fitness.rmse;
-            fitData = feval(f,xData);
-        end
-          
-        
-        
+      
         
         
         function output = TDSunwrap(app,pData,freq)
@@ -997,6 +881,15 @@ classdef DipTab_exported < matlab.apps.AppBase
             % shift all phase data down by the intercept value
             output = pData - shift;
         end
+        
+        function updateTable(app)
+            Tcell = app.Tcell;
+            measNum = size(Tcell,2);
+
+            sFont = uistyle("FontColor","black");
+            addStyle(app.UITable,sFont);
+            app.UITable.Data = cell2table(Tcell);
+        end
     end
 
 
@@ -1029,7 +922,6 @@ classdef DipTab_exported < matlab.apps.AppBase
 
         % Button pushed function: LoadProjectButton
         function LoadProjectButtonPushed(app, event)
-
             [filename, filepath] = uigetfile('*.mat');
             
             if isequal(filename,0)||isequal(filepath,0)
@@ -1042,23 +934,25 @@ classdef DipTab_exported < matlab.apps.AppBase
             
             %clearMemory(app);
             load(fullfile);
-            app.BData = BData;
+            app.CData = CData;
+            app.Tcell = Tcell;
             app.MeasurementListBox.Items = ItemList;
             app.MeasurementListBox.ItemsData = (1:length(ItemList));
-            
+
+            updateTable(app);            
             updateBatchList(app);
             app.SystemStatusEditField.Value = 'Project loaded.';
         end
 
         % Button pushed function: PlotButton
         function PlotButtonPushed(app, event)
-            tdPlot(app);        
+            TDPlot(app);        
         end
 
         % Value changed function: ColormapDropDown
         function ColormapDropDownValueChanged(app, event)
             value = app.ColormapDropDown.Value;
-            tdPlot(app);
+            TDPlot(app);
         end
 
         % Value changed function: EnableButton
@@ -1124,7 +1018,7 @@ classdef DipTab_exported < matlab.apps.AppBase
                 app.tYPickEditField.Enable = false;
                 app.SetDownLimitButton.Enable = false;
                 app.SetLeftLimitButton.Enable = false;
-                tdPlot(app);
+                TDPlot(app);
             end
             
         end
@@ -1265,12 +1159,12 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.UpEditField.Value = 0;
             app.DownEditField.Value = 0;
             drawnow
-            tdPlot(app);
+            TDPlot(app);
         end
 
         % Button pushed function: LfPlotButton
         function LfPlotButtonPushed(app, event)
-            LfPlot(app);
+            LFPlot(app);
             app.kmmsEditField.Value = 0;
             app.dmmEditField.Value = 0;
             app.R2EditField.Value = 0;
@@ -1280,7 +1174,6 @@ classdef DipTab_exported < matlab.apps.AppBase
 
         % Button pushed function: SaveProjectButton
         function SaveProjectButtonPushed(app, event)
-
             filter = {'*.mat';'*.*'};
             [filename, filepath] = uiputfile(filter);
             
@@ -1292,11 +1185,11 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.SystemStatusEditField.Value = 'Project saving...';
             drawnow
             
-            BData = app.BData;
-            ItemList = app.MeasurementListBox.Items;
+            CData = app.CData;
+            Tcell = app.Tcell;
+            ItemList = app.MeasurementListBox.Items;            
             
-            
-            save(fullfile,'BData','ItemList');
+            save(fullfile,'CData','Tcell','ItemList');
             app.SystemStatusEditField.Value = 'Project saved.';
         end
 
@@ -1612,14 +1505,13 @@ classdef DipTab_exported < matlab.apps.AppBase
                 return;
             end
 
-            LfPlot(app);
+            LFPlot(app);
           
             app.TabGroup.SelectedTab = app.TabGroup.Children(3);       
         end
 
-        % Button pushed function: BatchManagementButton
-        function BatchManagementButtonPushed(app, event)
-           
+        % Button pushed function: DataComparisonButton
+        function DataComparisonButtonPushed(app, event)
             try
                 Peaks = app.TData.Peaks;
                 xData = app.TData.xData;
@@ -1640,33 +1532,40 @@ classdef DipTab_exported < matlab.apps.AppBase
             parameter.R2 = app.R2EditField.Value;
             parameter.RM = app.RMSEEditField.Value;
             batch = {''};
-
-            % ubLoc = sum(xData<=ingressTime);
-            % yLocs(ubLoc:end,:) = [];
-            
+ 
             try
-                dpIdx = size(app.BData.Peaks,2)+1;
+                measNum = size(app.CData.Peaks,2)+1;
             catch ME
-                app.BData.Peaks = {};
-                dpIdx = 1;
+                app.CData.Peaks = {};
+                measNum = 1;
             end
             
-            app.BData.Peaks(dpIdx) = {Peaks};
-            app.BData.meta(dpIdx) = meta;
-            app.BData.batch(dpIdx) = batch;
-            app.BData.parameter(dpIdx) = {parameter};
+            app.CData.Peaks(measNum) = {Peaks};
+            app.CData.meta(measNum) = meta;
+            app.CData.batch(measNum) = batch;
+            app.CData.parameter(measNum) = {parameter};
+
+            % Table cell update
+            app.Tcell{measNum,1} = meta.sampleName;
+            app.Tcell{measNum,2} = meta.thickness;
+            app.Tcell{measNum,3} = meta.refractiveIndex;
+            app.Tcell{measNum,4} = meta.ingressTime;
+            app.Tcell{measNum,5} = parameter.k;
+            app.Tcell{measNum,6} = parameter.d;
+            app.Tcell{measNum,7} = parameter.R2;
+            app.Tcell{measNum,8} = parameter.RM;            
             
-            %measurment list update
+            % Measurment list update
             ListBoxItems={};
             
-            for MeasNum = 1:dpIdx
-                AddItem = app.BData.meta(MeasNum).sampleName;
+            for MeasNum = 1:measNum
+                AddItem = app.CData.meta(MeasNum).sampleName;
                 ListBoxItems{MeasNum} = AddItem;
             end
             
-%             ListBoxItems = app.TD_data.sampleNameList;
             app.MeasurementListBox.ItemsData = (1:MeasNum);
             app.MeasurementListBox.Items = ListBoxItems;
+            updateTable(app);
             
             app.TabGroup.SelectedTab = app.TabGroup.Children(3);           
         end
@@ -1680,42 +1579,29 @@ classdef DipTab_exported < matlab.apps.AppBase
                 return;
             end
             
-            app.BData.Peaks(delItem) = [];
-            app.BData.meta(delItem) = [];
-            app.BData.batch(delItem) = [];
+            app.CData.Peaks(delItem) = [];
+            app.CData.meta(delItem) = [];
+            app.CData.batch(delItem) = [];
             ListBoxItems(delItem) = [];
+            app.Tcell(delItem,:) = [];
 
             app.MeasurementListBox.Items = ListBoxItems;
             app.MeasurementListBox.ItemsData = (1:length(ListBoxItems));
+            updateTable(app);
             
             MeasurementListBoxValueChanged(app);
         end
 
         % Button pushed function: AssigndatainworkspaceButton
         function AssigndatainworkspaceButtonPushed(app, event)
-              assignin('base',"BData",app.BData);
+              assignin('base',"CData",app.CData);
+              assignin('base',"Tcell",app.Tcell);
         end
 
         % Value changed function: MeasurementListBox
         function MeasurementListBoxValueChanged(app, event)
             value = app.MeasurementListBox.Value;
             
-            if isequal(size(value,2),1)
-                meta = app.BData.meta(value);
-                batch = app.BData.batch{value};
-
-                app.BIBatchEditField.Value = batch;
-                app.BIDescriptionEditField.Value = meta.sampleName;
-                app.BICentreLinemmEditField.Value = meta.thickness/2;
-                app.BIRefractiveIndexEditField.Value = meta.refractiveIndex;
-                app.BIIngressTimesecEditField.Value = meta.ingressTime;
-            else
-                app.BIBatchEditField.Value = '';
-                app.BIDescriptionEditField.Value = '';
-                app.BICentreLinemmEditField.Value = 0;
-                app.BIRefractiveIndexEditField.Value = 0;
-                app.BIIngressTimesecEditField.Value = 0;
-            end 
         end
 
         % Button pushed function: GroupButton
@@ -1727,7 +1613,7 @@ classdef DipTab_exported < matlab.apps.AppBase
                 return;
             end
             
-            app.BData.batch(bItem) = bName;           
+            app.CData.batch(bItem) = bName;           
             updateBatchList(app);
             
         end
@@ -1736,14 +1622,14 @@ classdef DipTab_exported < matlab.apps.AppBase
         function BatchListBoxValueChanged(app, event)
             value = app.BatchListBox.Value;
             sBatch = app.BatchListBox.Items(value);            
-            tNum = size(app.BData.batch,2); % data set number
+            tNum = size(app.CData.batch,2); % data set number
             ListBoxItems={};
             cnt = 1;
             
             for idx = 1:tNum
-                meta = app.BData.meta(idx);
+                meta = app.CData.meta(idx);
                 AddItem = {meta.sampleName};
-                cBatch = app.BData.batch(idx);
+                cBatch = app.CData.batch(idx);
                 if ~isempty(AddItem)&&sum(strcmp(cBatch,sBatch))
                    ListBoxItems(cnt) = AddItem;
                    cnt = cnt+1;
@@ -1764,7 +1650,7 @@ classdef DipTab_exported < matlab.apps.AppBase
                 return;
             end
             
-            app.BData.batch(delItem) = {''};
+            app.CData.batch(delItem) = {''};
             ListBoxItems(delItem) = [];
 
             app.BatchDetailListBox.Items = ListBoxItems;
@@ -1780,7 +1666,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             
             if isequal(size(tBatch,2),1)
                 bName = app.BatchListBox.Items(tBatch);
-                app.BData.batch(bItem) = bName;
+                app.CData.batch(bItem) = bName;
             else
                 return;
             end
@@ -1800,14 +1686,14 @@ classdef DipTab_exported < matlab.apps.AppBase
                 return;
             end
             
-            tNum = size(app.BData.batch,2); % data set number
+            tNum = size(app.CData.batch,2); % data set number
             
             for idx = 1:tNum
-                meta = app.BData.meta(idx);
+                meta = app.CData.meta(idx);
                 cMeas = {meta.description};
                 sMeas = ListBoxItems(delItem);
                 if sum(strcmp(cMeas,sMeas))
-                   app.BData.batch{idx}='';
+                   app.CData.batch{idx}='';
                 end
             end
             
@@ -1816,22 +1702,15 @@ classdef DipTab_exported < matlab.apps.AppBase
            
         end
 
-        % Button pushed function: PlotButton_2
-        function PlotButton_2Pushed(app, event)
-            plotTarget = app.DisplayButtonGroup.SelectedObject.Text;
-            app.UITable.Data = [];
+        % Button pushed function: PlotButton_DC
+        function PlotButton_DCPushed(app, event)
+            plotTarget = app.PlotButtonGroup.SelectedObject.Text;
             
             if isequal(plotTarget,'Individual')
-                plotIndividual(app);
+                CDPlot_Individual(app);
             else
-                plotBatch(app);
+                CDPlot_Batch(app);
             end
-        end
-
-        % Value changed function: BIDescriptionEditField
-        function BIDescriptionEditFieldValueChanged(app, event)
-            value = app.BIDescriptionEditField.Value;
-           
         end
 
         % Button pushed function: CaculateFittingParametersButton
@@ -1848,11 +1727,6 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             xLocs = Peaks.xLocs;
             yLocs = Peaks.yLocs;
-            assignin("base","xLocs",xLocs);
-            assignin("base","yLocs",yLocs);
-
-
-            % totNum = size(lfMat,1);
 
             ax = app.UIAxesLE3;
             hold(ax,"on");
@@ -1875,16 +1749,12 @@ classdef DipTab_exported < matlab.apps.AppBase
                 
             fitData = feval(f,xData);
             plot(ax,xData,fitData,'m--');
-            % ax.YLim = [0 lfDis(end)];
-            %txtMsg = strcat("k=",compose('%5.2f',k),", m=", compose('%5.2f',m),", d=", compose('%5.2f',d));
-            legend(ax,"Liquid Front","Ingress Time Extrapolation Function","Location","southeast")
-            %app.Handler.yline_34.Value = d;
+            legend(ax,"Liquid-front","Fitting Function","Location","southeast")
             
             % Calculate the liquid ingress time in seconds
             liquidIngressTime = (thickness/2-d)/k;
             liquidIngressTime = floor(liquidIngressTime*100)/100;
-            app.LiquidIngressTimesecEditField.Value = liquidIngressTime;
-            
+            app.LiquidIngressTimesecEditField.Value = liquidIngressTime;            
         end
 
         % Button pushed function: SaveTruncatedButton
@@ -2063,6 +1933,11 @@ classdef DipTab_exported < matlab.apps.AppBase
             colVec = (colInitNum:colNum-1);
             xLocs = xData(colVec);
 
+            % trim points that have its y-value over 2/3 of the thickness
+            xLocs(yLocs > thickness*2/3) = [];
+            eFiledAmp(yLocs > thickness*2/3) = [];
+            yLocs(yLocs > thickness*2/3) = [];
+
             plot(ax1,xLocs,yLocs,'.');            
             plot(ax2,xLocs,eFiledAmp);
             plot(ax3,xLocs,yLocs,'.');
@@ -2086,8 +1961,8 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.SystemStatusEditField.Value = "Liquidfront points are selected.";
         end
 
-        % Button pushed function: DPlotNewButton
-        function DPlotNewButtonPushed(app, event)
+        % Button pushed function: PlotButton_DC3D
+        function PlotButton_DC3DPushed(app, event)
             % Create UIFigure and hide until all components are created
             fig = figure('Visible', 'on');
             fig.Position = [100 100 1200 800];
@@ -2112,7 +1987,7 @@ classdef DipTab_exported < matlab.apps.AppBase
                 return;                
             end
 
-            Peaks = app.BData.Peaks;            
+            Peaks = app.CData.Peaks;            
             lh1 = [];
             lh = [];
             cnt = 1;
@@ -2131,8 +2006,8 @@ classdef DipTab_exported < matlab.apps.AppBase
             end
         end
 
-        % Button pushed function: ColourPlotNewButton
-        function ColourPlotNewButtonPushed(app, event)
+        % Button pushed function: PlotButton_DCNew
+        function PlotButton_DCNewPushed(app, event)
             % Create UIFigure and hide until all components are created
             fig = uifigure('Visible', 'on');
             fig.Position = [100 100 1200 900];
@@ -2159,7 +2034,7 @@ classdef DipTab_exported < matlab.apps.AppBase
                 return;                
             end
 
-            Peaks = app.BData.Peaks;            
+            Peaks = app.CData.Peaks;            
             lh1 = [];
             lh = [];
             cnt = 1;
@@ -2333,7 +2208,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             %     xUnitCal(app);
             % end
             
-            tdPlot(app); % painting 2D image display
+            TDPlot(app); % painting 2D image display
 
             %app.DeployButton.Enable = true;
             app.EnableButton.Value = false;
@@ -2363,7 +2238,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             samDataAvg = mean(samData,2);
             samData = samData - samDataAvg;
             app.TData.samData = samData;
-            tdPlot(app);
+            TDPlot(app);
         end
 
         % Value changed function: tYPickEditField
@@ -2431,14 +2306,14 @@ classdef DipTab_exported < matlab.apps.AppBase
             K = gausswin(N);
             Zsmooth = conv2(samData,K,'same');
             app.TData.samData = Zsmooth;
-            tdPlot(app);
+            TDPlot(app);
         end
 
         % Button pushed function: LoadRawDataButton
         function LoadRawDataButtonPushed(app, event)
             rawData = app.TData.rawData;
             app.TData.samData = rawData;
-            tdPlot(app);
+            TDPlot(app);
         end
 
         % Button pushed function: LiquidfrontExtractionButton
@@ -2469,8 +2344,32 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.dataNumberEditField_LE.Value = size(samData,2);
             app.SampleNameEditField.Value = app.ProjectNameEditField.Value;
 
-            LfPlot(app);          
+            LFPlot(app);          
             app.TabGroup.SelectedTab = app.TabGroup.Children(2);
+        end
+
+        % Button pushed function: ExportTableasCSVFormatButton
+        function ExportTableasCSVFormatButtonPushed(app, event)
+            % Open a file save dialog box with a filter for CSV files
+            filter = {'*.csv';'*.*'};
+            [filename, filepath] = uiputfile(filter);
+            
+            % Check if the user selected a file or cancelled the dialog
+            if isequal(filename, 0) || isequal(filepath, 0)
+                return;
+            end
+            
+            % Combine the file path and file name
+            fullFileName = fullfile(filepath, filename);
+            
+            % Retrieve the cell array from the app structure
+            Tcell = app.Tcell;
+            
+            % Convert the cell array to a table and specify the column names
+            T = cell2table(Tcell, 'VariableNames', {'Sample Name', 'Thickness (mm)', 'Refractive Index', 'Ingress Time (s)','k','d', 'R^2','RMSE' });
+
+            % Write the table to a CSV file
+            writetable(T, fullFileName);
         end
     end
 
@@ -3027,12 +2926,12 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.DisplayTabletCentreCheckBox.Position = [121 108 136 22];
             app.DisplayTabletCentreCheckBox.Value = true;
 
-            % Create BatchManagementButton
-            app.BatchManagementButton = uibutton(app.LiquidfrontExtractionTab, 'push');
-            app.BatchManagementButton.ButtonPushedFcn = createCallbackFcn(app, @BatchManagementButtonPushed, true);
-            app.BatchManagementButton.FontWeight = 'bold';
-            app.BatchManagementButton.Position = [26 185 246 33];
-            app.BatchManagementButton.Text = 'Batch Management';
+            % Create DataComparisonButton
+            app.DataComparisonButton = uibutton(app.LiquidfrontExtractionTab, 'push');
+            app.DataComparisonButton.ButtonPushedFcn = createCallbackFcn(app, @DataComparisonButtonPushed, true);
+            app.DataComparisonButton.FontWeight = 'bold';
+            app.DataComparisonButton.Position = [26 185 246 33];
+            app.DataComparisonButton.Text = 'Data Comparison';
 
             % Create GeneralInformationPanel_LE
             app.GeneralInformationPanel_LE = uipanel(app.LiquidfrontExtractionTab);
@@ -3173,262 +3072,190 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.SampleNameEditField = uieditfield(app.LiquidfrontExtractionTab, 'text');
             app.SampleNameEditField.Position = [111 240 168 22];
 
-            % Create BatchAnalysisTab
-            app.BatchAnalysisTab = uitab(app.TabGroup);
-            app.BatchAnalysisTab.Title = 'Batch Analysis';
+            % Create DataComparisonTab
+            app.DataComparisonTab = uitab(app.TabGroup);
+            app.DataComparisonTab.Title = 'Data Comparison';
 
-            % Create UIAxesBs2
-            app.UIAxesBs2 = uiaxes(app.BatchAnalysisTab);
-            title(app.UIAxesBs2, 'Liquid Front Ingress')
-            xlabel(app.UIAxesBs2, 'Time (sec)')
-            ylabel(app.UIAxesBs2, 'Displacement (mm)')
-            app.UIAxesBs2.Box = 'on';
-            app.UIAxesBs2.FontSize = 11;
-            app.UIAxesBs2.Position = [900 251 530 490];
+            % Create UIAxesCD2
+            app.UIAxesCD2 = uiaxes(app.DataComparisonTab);
+            title(app.UIAxesCD2, 'Liquid Front Reflection')
+            xlabel(app.UIAxesCD2, 'Time (sec)')
+            ylabel(app.UIAxesCD2, 'E field intensity (a.u.)')
+            app.UIAxesCD2.FontWeight = 'bold';
+            app.UIAxesCD2.Box = 'on';
+            app.UIAxesCD2.FontSize = 12;
+            app.UIAxesCD2.Position = [826 27 600 230];
 
-            % Create UIAxesBs1
-            app.UIAxesBs1 = uiaxes(app.BatchAnalysisTab);
-            title(app.UIAxesBs1, 'Liquid Front Reflection')
-            xlabel(app.UIAxesBs1, 'Time (sec)')
-            ylabel(app.UIAxesBs1, 'E field intensity (a.u.)')
-            app.UIAxesBs1.Box = 'on';
-            app.UIAxesBs1.FontSize = 11;
-            app.UIAxesBs1.Position = [900 7 530 230];
+            % Create UIAxesCD1
+            app.UIAxesCD1 = uiaxes(app.DataComparisonTab);
+            title(app.UIAxesCD1, 'Liquid Front Ingress')
+            xlabel(app.UIAxesCD1, 'Time (sec)')
+            ylabel(app.UIAxesCD1, 'Displacement (mm)')
+            app.UIAxesCD1.FontWeight = 'bold';
+            app.UIAxesCD1.Box = 'on';
+            app.UIAxesCD1.FontSize = 12;
+            app.UIAxesCD1.Position = [825 262 600 490];
 
             % Create GroupButton
-            app.GroupButton = uibutton(app.BatchAnalysisTab, 'push');
+            app.GroupButton = uibutton(app.DataComparisonTab, 'push');
             app.GroupButton.ButtonPushedFcn = createCallbackFcn(app, @GroupButtonPushed, true);
-            app.GroupButton.Position = [447 656 118 30];
+            app.GroupButton.Position = [235 659 118 30];
             app.GroupButton.Text = 'Group';
 
             % Create UngroupButton
-            app.UngroupButton = uibutton(app.BatchAnalysisTab, 'push');
+            app.UngroupButton = uibutton(app.DataComparisonTab, 'push');
             app.UngroupButton.ButtonPushedFcn = createCallbackFcn(app, @UngroupButtonPushed, true);
-            app.UngroupButton.Position = [446 615 119 30];
+            app.UngroupButton.Position = [234 618 119 30];
             app.UngroupButton.Text = 'Ungroup';
 
             % Create RemoveButton
-            app.RemoveButton = uibutton(app.BatchAnalysisTab, 'push');
+            app.RemoveButton = uibutton(app.DataComparisonTab, 'push');
             app.RemoveButton.ButtonPushedFcn = createCallbackFcn(app, @RemoveButtonPushed, true);
-            app.RemoveButton.Position = [745 453 126 29];
+            app.RemoveButton.Position = [372 414 100 32];
             app.RemoveButton.Text = 'Remove';
 
-            % Create InformationPanel
-            app.InformationPanel = uipanel(app.BatchAnalysisTab);
-            app.InformationPanel.Title = 'Information';
-            app.InformationPanel.Position = [17 548 189 193];
-
-            % Create DistancetoCentremmLabel
-            app.DistancetoCentremmLabel = uilabel(app.InformationPanel);
-            app.DistancetoCentremmLabel.HorizontalAlignment = 'right';
-            app.DistancetoCentremmLabel.Position = [8 65 98 22];
-            app.DistancetoCentremmLabel.Text = 'Centre Line (mm)';
-
-            % Create BICentreLinemmEditField
-            app.BICentreLinemmEditField = uieditfield(app.InformationPanel, 'numeric');
-            app.BICentreLinemmEditField.ValueDisplayFormat = '%5.2f';
-            app.BICentreLinemmEditField.Position = [124 65 52 22];
-
-            % Create SampleDescriptionLabel
-            app.SampleDescriptionLabel = uilabel(app.InformationPanel);
-            app.SampleDescriptionLabel.HorizontalAlignment = 'right';
-            app.SampleDescriptionLabel.Position = [12 146 110 22];
-            app.SampleDescriptionLabel.Text = 'Sample Description';
-
-            % Create BIDescriptionEditField
-            app.BIDescriptionEditField = uieditfield(app.InformationPanel, 'text');
-            app.BIDescriptionEditField.ValueChangedFcn = createCallbackFcn(app, @BIDescriptionEditFieldValueChanged, true);
-            app.BIDescriptionEditField.Position = [9 124 169 22];
-
-            % Create RefractiveIndexEditField_2Label
-            app.RefractiveIndexEditField_2Label = uilabel(app.InformationPanel);
-            app.RefractiveIndexEditField_2Label.HorizontalAlignment = 'right';
-            app.RefractiveIndexEditField_2Label.Position = [8 37 92 22];
-            app.RefractiveIndexEditField_2Label.Text = 'Refractive Index';
-
-            % Create BIRefractiveIndexEditField
-            app.BIRefractiveIndexEditField = uieditfield(app.InformationPanel, 'numeric');
-            app.BIRefractiveIndexEditField.ValueDisplayFormat = '%5.2f';
-            app.BIRefractiveIndexEditField.Position = [124 37 52 22];
-
-            % Create IngressTimesecEditFieldLabel
-            app.IngressTimesecEditFieldLabel = uilabel(app.InformationPanel);
-            app.IngressTimesecEditFieldLabel.HorizontalAlignment = 'right';
-            app.IngressTimesecEditFieldLabel.Position = [8 9 104 22];
-            app.IngressTimesecEditFieldLabel.Text = 'Ingress Time (sec)';
-
-            % Create BIIngressTimesecEditField
-            app.BIIngressTimesecEditField = uieditfield(app.InformationPanel, 'numeric');
-            app.BIIngressTimesecEditField.ValueDisplayFormat = '%5.2f';
-            app.BIIngressTimesecEditField.Position = [124 9 52 22];
-
-            % Create BatchLabel
-            app.BatchLabel = uilabel(app.InformationPanel);
-            app.BatchLabel.HorizontalAlignment = 'right';
-            app.BatchLabel.Position = [10 94 36 22];
-            app.BatchLabel.Text = 'Batch';
-
-            % Create BIBatchEditField
-            app.BIBatchEditField = uieditfield(app.InformationPanel, 'text');
-            app.BIBatchEditField.Position = [55 94 121 22];
-
             % Create MeasurementListBoxLabel
-            app.MeasurementListBoxLabel = uilabel(app.BatchAnalysisTab);
+            app.MeasurementListBoxLabel = uilabel(app.DataComparisonTab);
             app.MeasurementListBoxLabel.HorizontalAlignment = 'right';
-            app.MeasurementListBoxLabel.Position = [228 722 79 22];
+            app.MeasurementListBoxLabel.Position = [21 725 79 22];
             app.MeasurementListBoxLabel.Text = 'Measurement';
 
             % Create MeasurementListBox
-            app.MeasurementListBox = uilistbox(app.BatchAnalysisTab);
+            app.MeasurementListBox = uilistbox(app.DataComparisonTab);
             app.MeasurementListBox.Items = {};
             app.MeasurementListBox.Multiselect = 'on';
             app.MeasurementListBox.ValueChangedFcn = createCallbackFcn(app, @MeasurementListBoxValueChanged, true);
-            app.MeasurementListBox.Position = [226 118 206 603];
+            app.MeasurementListBox.Position = [19 414 206 310];
             app.MeasurementListBox.Value = {};
 
             % Create BatchNameEditFieldLabel
-            app.BatchNameEditFieldLabel = uilabel(app.BatchAnalysisTab);
+            app.BatchNameEditFieldLabel = uilabel(app.DataComparisonTab);
             app.BatchNameEditFieldLabel.HorizontalAlignment = 'right';
-            app.BatchNameEditFieldLabel.Position = [450 719 72 22];
+            app.BatchNameEditFieldLabel.Position = [238 722 72 22];
             app.BatchNameEditFieldLabel.Text = 'Batch Name';
 
             % Create BatchNameEditField
-            app.BatchNameEditField = uieditfield(app.BatchAnalysisTab, 'text');
-            app.BatchNameEditField.Position = [448 694 117 25];
+            app.BatchNameEditField = uieditfield(app.DataComparisonTab, 'text');
+            app.BatchNameEditField.Position = [236 697 117 25];
 
             % Create BatchListBoxLabel
-            app.BatchListBoxLabel = uilabel(app.BatchAnalysisTab);
+            app.BatchListBoxLabel = uilabel(app.DataComparisonTab);
             app.BatchListBoxLabel.HorizontalAlignment = 'right';
-            app.BatchListBoxLabel.Position = [579 721 33 22];
+            app.BatchListBoxLabel.Position = [368 724 33 22];
             app.BatchListBoxLabel.Text = 'Batch';
 
             % Create BatchListBox
-            app.BatchListBox = uilistbox(app.BatchAnalysisTab);
+            app.BatchListBox = uilistbox(app.DataComparisonTab);
             app.BatchListBox.Items = {};
             app.BatchListBox.Multiselect = 'on';
             app.BatchListBox.ValueChangedFcn = createCallbackFcn(app, @BatchListBoxValueChanged, true);
-            app.BatchListBox.Position = [577 451 148 269];
+            app.BatchListBox.Position = [366 451 115 272];
             app.BatchListBox.Value = {};
 
             % Create BatchDetailListBoxLabel
-            app.BatchDetailListBoxLabel = uilabel(app.BatchAnalysisTab);
+            app.BatchDetailListBoxLabel = uilabel(app.DataComparisonTab);
             app.BatchDetailListBoxLabel.HorizontalAlignment = 'right';
-            app.BatchDetailListBoxLabel.Position = [740 722 70 22];
-            app.BatchDetailListBoxLabel.Text = 'Batch Detail';
+            app.BatchDetailListBoxLabel.Position = [531 725 87 22];
+            app.BatchDetailListBoxLabel.Text = 'Batch Contents';
 
             % Create BatchDetailListBox
-            app.BatchDetailListBox = uilistbox(app.BatchAnalysisTab);
+            app.BatchDetailListBox = uilistbox(app.DataComparisonTab);
             app.BatchDetailListBox.Items = {};
-            app.BatchDetailListBox.Position = [737 492 142 228];
+            app.BatchDetailListBox.Position = [491 451 181 272];
             app.BatchDetailListBox.Value = {};
 
             % Create RemoveButton_2
-            app.RemoveButton_2 = uibutton(app.BatchAnalysisTab, 'push');
+            app.RemoveButton_2 = uibutton(app.DataComparisonTab, 'push');
             app.RemoveButton_2.ButtonPushedFcn = createCallbackFcn(app, @RemoveButton_2Pushed, true);
-            app.RemoveButton_2.Position = [239 78 182 29];
+            app.RemoveButton_2.Position = [237 414 100 32];
             app.RemoveButton_2.Text = 'Remove';
 
             % Create AddButton
-            app.AddButton = uibutton(app.BatchAnalysisTab, 'push');
+            app.AddButton = uibutton(app.DataComparisonTab, 'push');
             app.AddButton.ButtonPushedFcn = createCallbackFcn(app, @AddButtonPushed, true);
-            app.AddButton.Position = [446 575 119 30];
+            app.AddButton.Position = [234 578 119 30];
             app.AddButton.Text = 'Add';
 
             % Create AssigndatainworkspaceButton
-            app.AssigndatainworkspaceButton = uibutton(app.BatchAnalysisTab, 'push');
+            app.AssigndatainworkspaceButton = uibutton(app.DataComparisonTab, 'push');
             app.AssigndatainworkspaceButton.ButtonPushedFcn = createCallbackFcn(app, @AssigndatainworkspaceButtonPushed, true);
-            app.AssigndatainworkspaceButton.Position = [25 16 177 32];
+            app.AssigndatainworkspaceButton.FontWeight = 'bold';
+            app.AssigndatainworkspaceButton.Position = [335 11 192 32];
             app.AssigndatainworkspaceButton.Text = 'Assign data in workspace';
 
             % Create SaveProjectButton
-            app.SaveProjectButton = uibutton(app.BatchAnalysisTab, 'push');
+            app.SaveProjectButton = uibutton(app.DataComparisonTab, 'push');
             app.SaveProjectButton.ButtonPushedFcn = createCallbackFcn(app, @SaveProjectButtonPushed, true);
-            app.SaveProjectButton.Position = [211 16 106 32];
+            app.SaveProjectButton.FontWeight = 'bold';
+            app.SaveProjectButton.Position = [540 11 120 32];
             app.SaveProjectButton.Text = 'Save Project';
 
             % Create LoadProjectButton
-            app.LoadProjectButton = uibutton(app.BatchAnalysisTab, 'push');
+            app.LoadProjectButton = uibutton(app.DataComparisonTab, 'push');
             app.LoadProjectButton.ButtonPushedFcn = createCallbackFcn(app, @LoadProjectButtonPushed, true);
-            app.LoadProjectButton.Position = [326 15 106 32];
+            app.LoadProjectButton.FontWeight = 'bold';
+            app.LoadProjectButton.Position = [672 11 120 32];
             app.LoadProjectButton.Text = 'Load Project';
 
             % Create UITable
-            app.UITable = uitable(app.BatchAnalysisTab);
-            app.UITable.ColumnName = {'Description'; 'Ingress Time'; 'k'; 'd'; 'R^2'; 'RMSE'};
-            app.UITable.ColumnWidth = {'auto', 60, 60, 60, 60, 60};
+            app.UITable = uitable(app.DataComparisonTab);
+            app.UITable.ColumnName = {'Sample Name'; 'Thickness (mm)'; 'n_eff'; 'Ingress Time (s)'; 'k'; 'd'; 'R^2'; 'RMSE'};
             app.UITable.RowName = {};
-            app.UITable.Position = [448 113 436 299];
+            app.UITable.ColumnEditable = [true false false false false false false false];
+            app.UITable.Position = [19 56 781 326];
 
             % Create FittingFunctionParametersLabel
-            app.FittingFunctionParametersLabel = uilabel(app.BatchAnalysisTab);
-            app.FittingFunctionParametersLabel.Position = [455 415 270 22];
+            app.FittingFunctionParametersLabel = uilabel(app.DataComparisonTab);
+            app.FittingFunctionParametersLabel.FontWeight = 'bold';
+            app.FittingFunctionParametersLabel.Position = [27 384 270 22];
             app.FittingFunctionParametersLabel.Text = 'Fitting Function Parameters';
 
-            % Create DisplayButtonGroup
-            app.DisplayButtonGroup = uibuttongroup(app.BatchAnalysisTab);
-            app.DisplayButtonGroup.Title = 'Display';
-            app.DisplayButtonGroup.Position = [18 486 188 53];
+            % Create PlotButtonGroup
+            app.PlotButtonGroup = uibuttongroup(app.DataComparisonTab);
+            app.PlotButtonGroup.Title = 'Plot';
+            app.PlotButtonGroup.Position = [684 640 120 80];
 
             % Create IndividualButton
-            app.IndividualButton = uiradiobutton(app.DisplayButtonGroup);
+            app.IndividualButton = uiradiobutton(app.PlotButtonGroup);
             app.IndividualButton.Text = 'Individual';
-            app.IndividualButton.Position = [11 7 73 22];
+            app.IndividualButton.Position = [15 32 73 22];
             app.IndividualButton.Value = true;
 
             % Create BatchButton
-            app.BatchButton = uiradiobutton(app.DisplayButtonGroup);
+            app.BatchButton = uiradiobutton(app.PlotButtonGroup);
             app.BatchButton.Text = 'Batch';
-            app.BatchButton.Position = [117 7 54 22];
-
-            % Create StyleButtonGroup
-            app.StyleButtonGroup = uibuttongroup(app.BatchAnalysisTab);
-            app.StyleButtonGroup.Title = 'Style';
-            app.StyleButtonGroup.Position = [19 373 187 103];
-
-            % Create AllRangeButton
-            app.AllRangeButton = uiradiobutton(app.StyleButtonGroup);
-            app.AllRangeButton.Text = 'All Range';
-            app.AllRangeButton.Position = [11 57 73 22];
-            app.AllRangeButton.Value = true;
-
-            % Create SDShadowedButton
-            app.SDShadowedButton = uiradiobutton(app.StyleButtonGroup);
-            app.SDShadowedButton.Text = 'SD (Shadowed)';
-            app.SDShadowedButton.Position = [11 35 105 22];
-
-            % Create SDErrorBarButton
-            app.SDErrorBarButton = uiradiobutton(app.StyleButtonGroup);
-            app.SDErrorBarButton.Text = 'SD (ErrorBar)';
-            app.SDErrorBarButton.Position = [11 11 92 22];
+            app.BatchButton.Position = [15 5 54 22];
 
             % Create LegendCheckBox
-            app.LegendCheckBox = uicheckbox(app.BatchAnalysisTab);
+            app.LegendCheckBox = uicheckbox(app.DataComparisonTab);
             app.LegendCheckBox.Text = 'Legend';
-            app.LegendCheckBox.Position = [26 342 62 22];
+            app.LegendCheckBox.Position = [700 615 62 22];
             app.LegendCheckBox.Value = true;
 
-            % Create FittingCheckBox
-            app.FittingCheckBox = uicheckbox(app.BatchAnalysisTab);
-            app.FittingCheckBox.Text = ' Fitting';
-            app.FittingCheckBox.Position = [106 342 63 22];
+            % Create PlotButton_DC
+            app.PlotButton_DC = uibutton(app.DataComparisonTab, 'push');
+            app.PlotButton_DC.ButtonPushedFcn = createCallbackFcn(app, @PlotButton_DCPushed, true);
+            app.PlotButton_DC.Position = [685 531 120 30];
+            app.PlotButton_DC.Text = 'Plot';
 
-            % Create PlotButton_2
-            app.PlotButton_2 = uibutton(app.BatchAnalysisTab, 'push');
-            app.PlotButton_2.ButtonPushedFcn = createCallbackFcn(app, @PlotButton_2Pushed, true);
-            app.PlotButton_2.Position = [28 292 163 30];
-            app.PlotButton_2.Text = 'Plot';
+            % Create PlotButton_DC3D
+            app.PlotButton_DC3D = uibutton(app.DataComparisonTab, 'push');
+            app.PlotButton_DC3D.ButtonPushedFcn = createCallbackFcn(app, @PlotButton_DC3DPushed, true);
+            app.PlotButton_DC3D.Position = [685 494 120 30];
+            app.PlotButton_DC3D.Text = '3D Plot (New)';
 
-            % Create DPlotNewButton
-            app.DPlotNewButton = uibutton(app.BatchAnalysisTab, 'push');
-            app.DPlotNewButton.ButtonPushedFcn = createCallbackFcn(app, @DPlotNewButtonPushed, true);
-            app.DPlotNewButton.Position = [28 253 163 30];
-            app.DPlotNewButton.Text = '3D Plot (New)';
+            % Create PlotButton_DCNew
+            app.PlotButton_DCNew = uibutton(app.DataComparisonTab, 'push');
+            app.PlotButton_DCNew.ButtonPushedFcn = createCallbackFcn(app, @PlotButton_DCNewPushed, true);
+            app.PlotButton_DCNew.Position = [685 457 120 30];
+            app.PlotButton_DCNew.Text = 'Colour Plot (New)';
 
-            % Create ColourPlotNewButton
-            app.ColourPlotNewButton = uibutton(app.BatchAnalysisTab, 'push');
-            app.ColourPlotNewButton.ButtonPushedFcn = createCallbackFcn(app, @ColourPlotNewButtonPushed, true);
-            app.ColourPlotNewButton.Position = [28 214 163 30];
-            app.ColourPlotNewButton.Text = 'Colour Plot (New)';
+            % Create ExportTableasCSVFormatButton
+            app.ExportTableasCSVFormatButton = uibutton(app.DataComparisonTab, 'push');
+            app.ExportTableasCSVFormatButton.ButtonPushedFcn = createCallbackFcn(app, @ExportTableasCSVFormatButtonPushed, true);
+            app.ExportTableasCSVFormatButton.FontWeight = 'bold';
+            app.ExportTableasCSVFormatButton.Position = [38 11 192 32];
+            app.ExportTableasCSVFormatButton.Text = 'Export Table as CSV Format';
 
             % Create FrequencyDomainTab
             app.FrequencyDomainTab = uitab(app.TabGroup);
@@ -3782,6 +3609,7 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             % Create DescriptionEditFieldLabel
             app.DescriptionEditFieldLabel = uilabel(app.DipTabUIFigure);
+            app.DescriptionEditFieldLabel.BackgroundColor = [0.9412 0.9412 0.9412];
             app.DescriptionEditFieldLabel.HorizontalAlignment = 'right';
             app.DescriptionEditFieldLabel.Position = [1022 853 66 22];
             app.DescriptionEditFieldLabel.Text = 'Description';
@@ -3789,6 +3617,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             % Create SampleDescriptionEditField
             app.SampleDescriptionEditField = uieditfield(app.DipTabUIFigure, 'text');
             app.SampleDescriptionEditField.HorizontalAlignment = 'right';
+            app.SampleDescriptionEditField.BackgroundColor = [0.9412 0.9412 0.9412];
             app.SampleDescriptionEditField.Position = [1098 854 303 20];
 
             % Show the figure after all components are created
