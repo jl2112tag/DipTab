@@ -705,10 +705,10 @@ classdef DipTab_exported < matlab.apps.AppBase
         end
         
         function CDPlot_Individual(app)
-            items = app.MeasurementListBox.Value;
+            itemNums = app.MeasurementListBox.Value;
             itemNames = app.MeasurementListBox.Items;
             
-            if isempty(items)
+            if isempty(itemNums)
                 fig = app.DipTabUIFigure;
                 uialert(fig,'No profiles selected','Warning');
                 return;                
@@ -716,37 +716,38 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             Peaks = app.CData.Peaks;
             
-            ax1 = app.UIAxesCD2;
-            ax2 = app.UIAxesCD1;
+            ax1 = app.UIAxesCD1;
+            ax2 = app.UIAxesCD2;
             axis(ax1,'tight');
             axis(ax2,'tight');
-            xlim(ax2,[0 inf]);
-            ylim(ax2,[0 inf]);
+            xlim(ax1,[0 inf]);
+            ylim(ax1,[0 inf]);
             cla(ax1);
             cla(ax2);
-            hold(ax1,'on');
-            hold(ax2,'on');            
+            hold(ax1,'on');   
+            hold(ax2,'on');         
             
             lh1 = [];
             lh2 = [];
             cnt = 1;
             
-            for idx = items
+            for idx = itemNums
                 xLocs = Peaks{idx}.xLocs;    
                 eFieldAmp = Peaks{idx}.eFieldAmp;
                 yLocs = Peaks{idx}.yLocs;
 
-                h1 = plot(ax1,xLocs,eFieldAmp,'.');
-                h2 = plot(ax2,xLocs,yLocs,'.');
+                h1 = plot(ax1,xLocs,yLocs,'.');
+                h2 = plot(ax2,xLocs,eFieldAmp,'.');
+                
                 lh1(cnt) = h1;
                 lh2(cnt) = h2;
-               
+                
                 cnt = cnt + 1;
             end
             
             if app.LegendCheckBox.Value
-                legend(ax1,lh1,itemNames([items]),"Location","southeast","Interpreter","none");
-                legend(ax2,lh2,itemNames([items]),"Location","southeast","Interpreter","none");
+                legend(ax1,lh1,itemNames([itemNums]),"Location","southeast","Interpreter","none");
+                legend(ax2,lh2,itemNames([itemNums]),"Location","southeast","Interpreter","none");                
             else
                 legend(ax1,"off");
                 legend(ax2,"off");
@@ -773,8 +774,8 @@ classdef DipTab_exported < matlab.apps.AppBase
             ax2 = app.UIAxesCD2;
             axis(ax1,'tight');
             axis(ax2,'tight');
-            xlim(ax2,[0 inf]);
-            ylim(ax2,[0 inf]);
+            xlim(ax1,[0 inf]);
+            ylim(ax1,[0 inf]);
             cla(ax1);
             cla(ax2);
             hold(ax1,'on');
@@ -1978,10 +1979,10 @@ classdef DipTab_exported < matlab.apps.AppBase
             ylabel(ax, 'Displacement (ps)');
             zlabel(ax, 'E field (a.u.)');
             ax.Position = [20 10 1140 780];
-            mItems = app.MeasurementListBox.Value;
-            listItems = app.MeasurementListBox.Items;
+            itemNums = app.MeasurementListBox.Value;
+            itemNames = app.MeasurementListBox.Items;
             
-            if isempty(mItems)
+            if isempty(itemNums)
                 fig = app.DipTabUIFigure;
                 uialert(fig,'No profiles selected','Warning');
                 return;                
@@ -1992,7 +1993,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             lh = [];
             cnt = 1;
             
-            for idx = mItems
+            for idx = itemNums
                 h = plot3(ax,Peaks{idx}.xLocs,Peaks{idx}.yLocs,Peaks{idx}.eFieldAmp,'.');
                 lh(cnt) = h;
                 
@@ -2000,7 +2001,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             end
                         
             if app.LegendCheckBox.Value
-                legend(ax,lh,listItems([mItems]),"Location","southeast","Interpreter","none");
+                legend(ax,lh,itemNames([itemNums]),"Location","southeast","Interpreter","none");
             else
                 legend(ax,"off");
             end
@@ -2025,10 +2026,10 @@ classdef DipTab_exported < matlab.apps.AppBase
             colorbar(ax,"northoutside");
             %zlabel(ax, 'E field (a.u.)');
             ax.Position = [20 10 1140 780];
-            mItems = app.MeasurementListBox.Value;
-            listItems = app.MeasurementListBox.Items;
+            itemNums = app.MeasurementListBox.Value;
+            itemNames = app.MeasurementListBox.Items;
             
-            if isempty(mItems)
+            if isempty(itemNums)
                 fig = app.DipTabUIFigure;
                 uialert(fig,'No profiles selected','Warning');
                 return;                
@@ -2039,15 +2040,14 @@ classdef DipTab_exported < matlab.apps.AppBase
             lh = [];
             cnt = 1;
             
-            for idx = mItems
+            for idx = itemNums
                 h = scatter(ax,Peaks{idx}.xLocs,Peaks{idx}.yLocs,[],Peaks{idx}.eFieldAmp,'.');
                 lh(cnt) = h;
-                
                 cnt = cnt + 1;
             end
                         
             if app.LegendCheckBox.Value
-                legend(ax,lh,listItems([mItems]),"Location","southeast","Interpreter","none");
+                legend(ax,lh,itemNames([itemNums]),"Location","southeast","Interpreter","none");
             else
                 legend(ax,"off");
             end
