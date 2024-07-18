@@ -76,6 +76,8 @@ classdef DipTab_exported < matlab.apps.AppBase
         UIAxesTD2                       matlab.ui.control.UIAxes
         UIAxesTD1                       matlab.ui.control.UIAxes
         LiquidfrontExtractionTab        matlab.ui.container.Tab
+        SaveFigureButton_LE             matlab.ui.control.Button
+        AutoSaveFiguresCheckBox         matlab.ui.control.CheckBox
         SampleNameEditField             matlab.ui.control.EditField
         SampleNameEditFieldLabel        matlab.ui.control.Label
         LinearFittingPanel              matlab.ui.container.Panel
@@ -102,6 +104,7 @@ classdef DipTab_exported < matlab.apps.AppBase
         DataLengthEditField_2Label_2    matlab.ui.control.Label
         DataComparisonButton            matlab.ui.control.Button
         ROISelectionPanel               matlab.ui.container.Panel
+        Upto3mmCheckBox                 matlab.ui.control.CheckBox
         DisplayTabletCentreCheckBox     matlab.ui.control.CheckBox
         ROIwidthEditField               matlab.ui.control.NumericEditField
         ROIwidthEditFieldLabel          matlab.ui.control.Label
@@ -657,6 +660,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             alp = str2num(app.AlphaDropDown.Value);
             cmap = app.ExtColormapDropDown.Value;
             thickness = app.ThicknessmmEditField_LE.Value;
+            upto3mm = app.Upto3mmCheckBox.Value;
             normOpt = 0; %normalise two sets of data
             
             if normOpt
@@ -674,6 +678,11 @@ classdef DipTab_exported < matlab.apps.AppBase
             imagesc(ax1,xData,displacement,samData,'AlphaData',alp);
             axis(ax1,"xy");            
             axis(ax1,'tight');
+
+            if upto3mm
+                ylim(ax1,[0, 3]);
+                ylim(ax3,[0, 3]);
+            end
 
             if app.DisplayTabletCentreCheckBox.Value
                 hold(ax1,"on");
@@ -1540,6 +1549,10 @@ classdef DipTab_exported < matlab.apps.AppBase
                 app.CData.Peaks = {};
                 measNum = 1;
             end
+
+            if app.AutoSaveFiguresCheckBox.Value
+               SaveFigureButton_LEPushed(app);
+            end
             
             app.CData.Peaks(measNum) = {Peaks};
             app.CData.meta(measNum) = meta;
@@ -1728,9 +1741,11 @@ classdef DipTab_exported < matlab.apps.AppBase
 
             xLocs = Peaks.xLocs;
             yLocs = Peaks.yLocs;
-
-            ax = app.UIAxesLE3;
-            hold(ax,"on");
+            
+            ax1 = app.UIAxesLE1;
+            ax3 = app.UIAxesLE3;
+            hold(ax1,"on");
+            hold(ax3,"on");
             
             ft = fittype('k*x+d');
             excludedData = yLocs > thickness*2/3;
@@ -1749,8 +1764,14 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.RMSEEditField.Value = frm;
                 
             fitData = feval(f,xData);
-            plot(ax,xData,fitData,'m--');
-            legend(ax,"Liquid-front","Fitting Function","Location","southeast")
+            plot(ax1,xData,fitData,'m--');
+            plot(ax3,xData,fitData,'m--');
+            legend(ax3,"Liquid-front","Fitting Function","Location","southeast")
+
+            if app.Upto3mmCheckBox.Value
+                ylim(ax1,[0,3]);
+                ylim(ax3,[0,3]);
+            end
             
             % Calculate the liquid ingress time in seconds
             liquidIngressTime = (thickness/2-d)/k;
@@ -1882,13 +1903,14 @@ classdef DipTab_exported < matlab.apps.AppBase
 
         % Button pushed function: DrawPolylineButton
         function DrawPolylineButtonPushed(app, event)
+            fig = app.DipTabUIFigure;
+
             try
                 samData = app.TData.samData;
                 xData = app.TData.xData;
                 displacement = app.TData.displacement;
                 thickness = app.ThicknessmmEditField_LE.Value;
             catch ME
-                fig = app.DipTabUIFigure;
                 uialert(fig,'Dataset is not ready','Warning');
                 app.EnableButton.Value = false;
                 return
@@ -1907,7 +1929,25 @@ classdef DipTab_exported < matlab.apps.AppBase
             
             app.SystemStatusEditField.Value = "Please draw a polyline using mouse on the terahertz reflectometry plot";
 
-            roi = drawpolyline(ax1,"Color","r");
+            % Try to draw a polyline and catch any errors
+            try 
+                roi = drawpolyline(ax1,"Color","r");
+
+                % Check if the ROI object is valid and contains the
+                % necessary data
+                if isempty(roi) || isempty(roi.Position)
+                    uialert(fig,'Invalid ROI Selection','Warning');
+                    disp('Invalid ROI, Selection Cancelled');
+                    return;
+                else
+                    disp('ROI selected sucessfully.');
+                end
+            catch ME
+                % Handle the error
+                uialert(fig,'ROI Selection Error','Warning');
+                return;
+            end
+
             ROImat = createMask(roi);
             K1 = gausswin(ROIwidth);
             ROImat = conv2(ROImat,K1,"same");
@@ -1942,12 +1982,20 @@ classdef DipTab_exported < matlab.apps.AppBase
             plot(ax1,xLocs,yLocs,'.');            
             plot(ax2,xLocs,eFiledAmp);
             plot(ax3,xLocs,yLocs,'.');
+
+            colormap(ax1,cmap);
             xlim(ax2,[xData(1) xData(end)]);
             xlim(ax3,[xData(1) xData(end)]);
             ylim(ax3,[displacement(end) displacement(1)]);
+            axis(ax1,'tight');
 
             if app.DisplayTabletCentreCheckBox.Value
                 yline(ax3,thickness/2,'--','Centre Line');
+            end
+
+            if app.Upto3mmCheckBox.Value
+                ylim(ax1,[0,3]);
+                ylim(ax3,[0,3]);
             end
 
             Peaks.xLocs = xLocs;
@@ -1956,9 +2004,6 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.TData.Peaks = Peaks;
 
             app.TData.fhROI = ROImat;
-            colormap(ax1,cmap);
-            axis(ax1,'tight');
-
             app.SystemStatusEditField.Value = "Liquidfront points are selected.";
         end
 
@@ -2371,6 +2416,22 @@ classdef DipTab_exported < matlab.apps.AppBase
             % Write the table to a CSV file
             writetable(T, fullFileName);
         end
+
+        % Button pushed function: SaveFigureButton_LE
+        function SaveFigureButton_LEPushed(app, event)
+            ax = app.UIAxesLE1;
+            sampleName = app.SampleNameEditField.Value;
+            sampleName = strcat(sampleName,'.pdf');
+            filter = {'*.pdf';'*.*'};
+            [filename, filepath] = uiputfile(filter,'Save as',sampleName);
+            
+            if isequal(filename,0)||isequal(filepath,0)
+                return;          
+            end
+            
+            fullfile = strcat(filepath,filename);
+            exportgraphics(ax,fullfile);
+        end
     end
 
     % Component initialization
@@ -2434,22 +2495,24 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.UIAxesTD1 = uiaxes(app.TimeDomainTab);
             title(app.UIAxesTD1, '2D Image of Terahertz Reflectometry')
             xlabel(app.UIAxesTD1, 'Time/Position (sec/mm)')
-            ylabel(app.UIAxesTD1, 'Time of flight (ps)')
+            ylabel(app.UIAxesTD1, 'Time of Flight (ps)')
             app.UIAxesTD1.PlotBoxAspectRatio = [1 1.13357400722022 1];
+            app.UIAxesTD1.FontWeight = 'bold';
             app.UIAxesTD1.XTickLabelRotation = 0;
             app.UIAxesTD1.YTickLabelRotation = 0;
             app.UIAxesTD1.ZTickLabelRotation = 0;
             app.UIAxesTD1.Box = 'on';
-            app.UIAxesTD1.FontSize = 11;
+            app.UIAxesTD1.FontSize = 12;
             app.UIAxesTD1.Position = [237 42 640 710];
 
             % Create UIAxesTD2
             app.UIAxesTD2 = uiaxes(app.TimeDomainTab);
             title(app.UIAxesTD2, 'Single E-field')
-            xlabel(app.UIAxesTD2, 'Time of flight (ps)')
+            xlabel(app.UIAxesTD2, 'Time of Flight (ps)')
             ylabel(app.UIAxesTD2, 'E field (a.u.)')
+            app.UIAxesTD2.FontWeight = 'bold';
             app.UIAxesTD2.Box = 'on';
-            app.UIAxesTD2.FontSize = 11;
+            app.UIAxesTD2.FontSize = 12;
             app.UIAxesTD2.Position = [881 539 560 220];
 
             % Create UIAxesTD3
@@ -2457,8 +2520,9 @@ classdef DipTab_exported < matlab.apps.AppBase
             title(app.UIAxesTD3, 'Cummurative E-field')
             xlabel(app.UIAxesTD3, 'Time/Position (sec/mm)')
             ylabel(app.UIAxesTD3, 'E field (a.u.)')
+            app.UIAxesTD3.FontWeight = 'bold';
             app.UIAxesTD3.Box = 'on';
-            app.UIAxesTD3.FontSize = 11;
+            app.UIAxesTD3.FontSize = 12;
             app.UIAxesTD3.Position = [883 262 560 220];
 
             % Create UIAxesTD4
@@ -2467,8 +2531,9 @@ classdef DipTab_exported < matlab.apps.AppBase
             xlabel(app.UIAxesTD4, 'Time (ps) / Frequency (THz)')
             ylabel(app.UIAxesTD4, 'Frequency (THz) / E field')
             zlabel(app.UIAxesTD4, 'Z')
+            app.UIAxesTD4.FontWeight = 'bold';
             app.UIAxesTD4.Box = 'on';
-            app.UIAxesTD4.FontSize = 11;
+            app.UIAxesTD4.FontSize = 12;
             app.UIAxesTD4.Position = [883 6 560 200];
 
             % Create GeneralInformationPanel
@@ -2842,53 +2907,58 @@ classdef DipTab_exported < matlab.apps.AppBase
             title(app.UIAxesLE1, 'Terahertz Reflectometry')
             xlabel(app.UIAxesLE1, 'Time (sec)')
             ylabel(app.UIAxesLE1, 'Displaement (mm)')
+            app.UIAxesLE1.FontWeight = 'bold';
             app.UIAxesLE1.Box = 'on';
-            app.UIAxesLE1.FontSize = 11;
-            app.UIAxesLE1.Position = [301 48 640 710];
+            app.UIAxesLE1.XGrid = 'on';
+            app.UIAxesLE1.YGrid = 'on';
+            app.UIAxesLE1.FontSize = 12;
+            app.UIAxesLE1.Position = [294 50 650 700];
 
             % Create UIAxesLE2
             app.UIAxesLE2 = uiaxes(app.LiquidfrontExtractionTab);
             title(app.UIAxesLE2, 'Liquid Front Reflection')
             xlabel(app.UIAxesLE2, 'Time (sec)')
             ylabel(app.UIAxesLE2, 'E filed (a.u.)')
+            app.UIAxesLE2.FontWeight = 'bold';
             app.UIAxesLE2.Box = 'on';
             app.UIAxesLE2.XGrid = 'on';
             app.UIAxesLE2.YGrid = 'on';
-            app.UIAxesLE2.FontSize = 11;
-            app.UIAxesLE2.Position = [968 514 470 240];
+            app.UIAxesLE2.FontSize = 12;
+            app.UIAxesLE2.Position = [960 507 470 240];
 
             % Create UIAxesLE3
             app.UIAxesLE3 = uiaxes(app.LiquidfrontExtractionTab);
             title(app.UIAxesLE3, 'Liquid Front Ingress')
             xlabel(app.UIAxesLE3, 'Time (sec)')
             ylabel(app.UIAxesLE3, 'Displacement (mm)')
+            app.UIAxesLE3.FontWeight = 'bold';
             app.UIAxesLE3.Box = 'on';
             app.UIAxesLE3.XGrid = 'on';
             app.UIAxesLE3.YGrid = 'on';
-            app.UIAxesLE3.FontSize = 11;
-            app.UIAxesLE3.Position = [972 50 470 427];
+            app.UIAxesLE3.FontSize = 12;
+            app.UIAxesLE3.Position = [960 53 470 427];
 
             % Create ROISelectionPanel
             app.ROISelectionPanel = uipanel(app.LiquidfrontExtractionTab);
             app.ROISelectionPanel.Title = 'ROI Selection';
-            app.ROISelectionPanel.Position = [18 495 264 158];
+            app.ROISelectionPanel.Position = [18 487 264 161];
 
             % Create AlphaDropDown_2Label
             app.AlphaDropDown_2Label = uilabel(app.ROISelectionPanel);
             app.AlphaDropDown_2Label.HorizontalAlignment = 'right';
-            app.AlphaDropDown_2Label.Position = [19 108 35 22];
+            app.AlphaDropDown_2Label.Position = [14 80 35 22];
             app.AlphaDropDown_2Label.Text = 'Alpha';
 
             % Create AlphaDropDown
             app.AlphaDropDown = uidropdown(app.ROISelectionPanel);
             app.AlphaDropDown.Items = {'1.0', '0.7', '0.5', '0.3', '0.1'};
-            app.AlphaDropDown.Position = [58 108 53 22];
+            app.AlphaDropDown.Position = [53 80 75 22];
             app.AlphaDropDown.Value = '1.0';
 
             % Create ExtColormapDropDown
             app.ExtColormapDropDown = uidropdown(app.ROISelectionPanel);
             app.ExtColormapDropDown.Items = {'parula', 'jet', 'copper', 'bone', 'hot'};
-            app.ExtColormapDropDown.Position = [19 78 92 23];
+            app.ExtColormapDropDown.Position = [17 52 111 23];
             app.ExtColormapDropDown.Value = 'parula';
 
             % Create LfPlotButton
@@ -2896,7 +2966,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.LfPlotButton.ButtonPushedFcn = createCallbackFcn(app, @LfPlotButtonPushed, true);
             app.LfPlotButton.BackgroundColor = [1 1 1];
             app.LfPlotButton.FontWeight = 'bold';
-            app.LfPlotButton.Position = [120 78 134 23];
+            app.LfPlotButton.Position = [153 56 91 47];
             app.LfPlotButton.Text = 'Replot';
 
             % Create DrawPolylineButton
@@ -2904,39 +2974,45 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.DrawPolylineButton.ButtonPushedFcn = createCallbackFcn(app, @DrawPolylineButtonPushed, true);
             app.DrawPolylineButton.BackgroundColor = [1 1 1];
             app.DrawPolylineButton.FontWeight = 'bold';
-            app.DrawPolylineButton.Position = [17 10 231 28];
+            app.DrawPolylineButton.Position = [153 8 90 41];
             app.DrawPolylineButton.Text = 'Draw Polyline';
 
             % Create ROIwidthEditFieldLabel
             app.ROIwidthEditFieldLabel = uilabel(app.ROISelectionPanel);
             app.ROIwidthEditFieldLabel.HorizontalAlignment = 'right';
-            app.ROIwidthEditFieldLabel.Position = [17 46 58 22];
+            app.ROIwidthEditFieldLabel.Position = [18 18 58 22];
             app.ROIwidthEditFieldLabel.Text = 'ROI width';
 
             % Create ROIwidthEditField
             app.ROIwidthEditField = uieditfield(app.ROISelectionPanel, 'numeric');
             app.ROIwidthEditField.Limits = [1 200];
             app.ROIwidthEditField.ValueDisplayFormat = '%.0f';
-            app.ROIwidthEditField.Position = [81 46 40 22];
+            app.ROIwidthEditField.Position = [82 18 44 22];
             app.ROIwidthEditField.Value = 30;
 
             % Create DisplayTabletCentreCheckBox
             app.DisplayTabletCentreCheckBox = uicheckbox(app.ROISelectionPanel);
             app.DisplayTabletCentreCheckBox.Text = 'Display Tablet Centre';
-            app.DisplayTabletCentreCheckBox.Position = [121 108 136 22];
+            app.DisplayTabletCentreCheckBox.Position = [19 112 136 22];
             app.DisplayTabletCentreCheckBox.Value = true;
+
+            % Create Upto3mmCheckBox
+            app.Upto3mmCheckBox = uicheckbox(app.ROISelectionPanel);
+            app.Upto3mmCheckBox.Text = 'Up to 3mm';
+            app.Upto3mmCheckBox.Position = [166 112 81 22];
+            app.Upto3mmCheckBox.Value = true;
 
             % Create DataComparisonButton
             app.DataComparisonButton = uibutton(app.LiquidfrontExtractionTab, 'push');
             app.DataComparisonButton.ButtonPushedFcn = createCallbackFcn(app, @DataComparisonButtonPushed, true);
             app.DataComparisonButton.FontWeight = 'bold';
-            app.DataComparisonButton.Position = [26 185 246 33];
+            app.DataComparisonButton.Position = [33 159 246 33];
             app.DataComparisonButton.Text = 'Data Comparison';
 
             % Create GeneralInformationPanel_LE
             app.GeneralInformationPanel_LE = uipanel(app.LiquidfrontExtractionTab);
             app.GeneralInformationPanel_LE.Title = 'General Information';
-            app.GeneralInformationPanel_LE.Position = [18 661 263 84];
+            app.GeneralInformationPanel_LE.Position = [18 656 263 84];
 
             % Create DataLengthEditField_2Label_2
             app.DataLengthEditField_2Label_2 = uilabel(app.GeneralInformationPanel_LE);
@@ -2987,7 +3063,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             % Create LinearFittingPanel
             app.LinearFittingPanel = uipanel(app.LiquidfrontExtractionTab);
             app.LinearFittingPanel.Title = 'Linear Fitting';
-            app.LinearFittingPanel.Position = [19 277 263 197];
+            app.LinearFittingPanel.Position = [19 281 263 197];
 
             % Create LiquidIngressTimesecEditFieldLabel
             app.LiquidIngressTimesecEditFieldLabel = uilabel(app.LinearFittingPanel);
@@ -3065,12 +3141,24 @@ classdef DipTab_exported < matlab.apps.AppBase
             % Create SampleNameEditFieldLabel
             app.SampleNameEditFieldLabel = uilabel(app.LiquidfrontExtractionTab);
             app.SampleNameEditFieldLabel.HorizontalAlignment = 'right';
-            app.SampleNameEditFieldLabel.Position = [25 240 81 22];
+            app.SampleNameEditFieldLabel.Position = [25 209 81 22];
             app.SampleNameEditFieldLabel.Text = 'Sample Name';
 
             % Create SampleNameEditField
             app.SampleNameEditField = uieditfield(app.LiquidfrontExtractionTab, 'text');
-            app.SampleNameEditField.Position = [111 240 168 22];
+            app.SampleNameEditField.Position = [111 209 168 22];
+
+            % Create AutoSaveFiguresCheckBox
+            app.AutoSaveFiguresCheckBox = uicheckbox(app.LiquidfrontExtractionTab);
+            app.AutoSaveFiguresCheckBox.Text = 'Auto-Save Figures';
+            app.AutoSaveFiguresCheckBox.Position = [28 242 121 22];
+            app.AutoSaveFiguresCheckBox.Value = true;
+
+            % Create SaveFigureButton_LE
+            app.SaveFigureButton_LE = uibutton(app.LiquidfrontExtractionTab, 'push');
+            app.SaveFigureButton_LE.ButtonPushedFcn = createCallbackFcn(app, @SaveFigureButton_LEPushed, true);
+            app.SaveFigureButton_LE.Position = [159 242 113 23];
+            app.SaveFigureButton_LE.Text = 'Save Figure';
 
             % Create DataComparisonTab
             app.DataComparisonTab = uitab(app.TabGroup);
@@ -3267,11 +3355,12 @@ classdef DipTab_exported < matlab.apps.AppBase
             xlabel(app.UIAxesFD1, 'Time/Position (sec/mm)')
             ylabel(app.UIAxesFD1, 'Frequency (THz)')
             app.UIAxesFD1.PlotBoxAspectRatio = [1.0607476635514 1 1];
+            app.UIAxesFD1.FontWeight = 'bold';
             app.UIAxesFD1.XTickLabelRotation = 0;
             app.UIAxesFD1.YTickLabelRotation = 0;
             app.UIAxesFD1.ZTickLabelRotation = 0;
             app.UIAxesFD1.Box = 'on';
-            app.UIAxesFD1.FontSize = 11;
+            app.UIAxesFD1.FontSize = 12;
             app.UIAxesFD1.Position = [262 235 570 520];
 
             % Create UIAxesFD2
@@ -3281,12 +3370,13 @@ classdef DipTab_exported < matlab.apps.AppBase
             ylabel(app.UIAxesFD2, 'Frequency (THz)')
             zlabel(app.UIAxesFD2, 'Time (ps)')
             app.UIAxesFD2.PlotBoxAspectRatio = [1.0607476635514 1 1];
+            app.UIAxesFD2.FontWeight = 'bold';
             app.UIAxesFD2.ZDir = 'reverse';
             app.UIAxesFD2.XTickLabelRotation = 0;
             app.UIAxesFD2.YTickLabelRotation = 0;
             app.UIAxesFD2.ZTickLabelRotation = 0;
             app.UIAxesFD2.Box = 'on';
-            app.UIAxesFD2.FontSize = 11;
+            app.UIAxesFD2.FontSize = 12;
             app.UIAxesFD2.Position = [840 235 570 520];
 
             % Create UIAxesFD3
@@ -3294,8 +3384,9 @@ classdef DipTab_exported < matlab.apps.AppBase
             xlabel(app.UIAxesFD3, 'Frequency (THz)')
             ylabel(app.UIAxesFD3, 'E field (a.u.)')
             app.UIAxesFD3.PlotBoxAspectRatio = [3.546875 1 1];
+            app.UIAxesFD3.FontWeight = 'bold';
             app.UIAxesFD3.Box = 'on';
-            app.UIAxesFD3.FontSize = 11;
+            app.UIAxesFD3.FontSize = 12;
             app.UIAxesFD3.Position = [263 41 570 180];
 
             % Create UIAxesFD4
@@ -3303,8 +3394,9 @@ classdef DipTab_exported < matlab.apps.AppBase
             xlabel(app.UIAxesFD4, 'Frequency (THz)')
             ylabel(app.UIAxesFD4, 'Phase')
             app.UIAxesFD4.PlotBoxAspectRatio = [3.546875 1 1];
+            app.UIAxesFD4.FontWeight = 'bold';
             app.UIAxesFD4.Box = 'on';
-            app.UIAxesFD4.FontSize = 11;
+            app.UIAxesFD4.FontSize = 12;
             app.UIAxesFD4.Position = [841 41 570 180];
 
             % Create FourierTransformPanel
