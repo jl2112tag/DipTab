@@ -117,6 +117,8 @@ classdef DipTab_exported < matlab.apps.AppBase
         UIAxesLE2                       matlab.ui.control.UIAxes
         UIAxesLE1                       matlab.ui.control.UIAxes
         DataComparisonTab               matlab.ui.container.Tab
+        DownButton                      matlab.ui.control.Button
+        UpButton                        matlab.ui.control.Button
         ExportTableasCSVFormatButton    matlab.ui.control.Button
         PlotButton_DCNew                matlab.ui.control.Button
         PlotButton_DC3D                 matlab.ui.control.Button
@@ -131,7 +133,7 @@ classdef DipTab_exported < matlab.apps.AppBase
         SaveProjectButton               matlab.ui.control.Button
         AssigndatainworkspaceButton     matlab.ui.control.Button
         AddButton                       matlab.ui.control.Button
-        RemoveButton_2                  matlab.ui.control.Button
+        RemoveButton_DC1                matlab.ui.control.Button
         BatchDetailListBox              matlab.ui.control.ListBox
         BatchDetailListBoxLabel         matlab.ui.control.Label
         BatchListBox                    matlab.ui.control.ListBox
@@ -140,7 +142,7 @@ classdef DipTab_exported < matlab.apps.AppBase
         BatchNameEditFieldLabel         matlab.ui.control.Label
         MeasurementListBox              matlab.ui.control.ListBox
         MeasurementListBoxLabel         matlab.ui.control.Label
-        RemoveButton                    matlab.ui.control.Button
+        RemoveButton_DC2                matlab.ui.control.Button
         UngroupButton                   matlab.ui.control.Button
         GroupButton                     matlab.ui.control.Button
         UIAxesCD1                       matlab.ui.control.UIAxes
@@ -1584,8 +1586,8 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.TabGroup.SelectedTab = app.TabGroup.Children(3);           
         end
 
-        % Button pushed function: RemoveButton_2
-        function RemoveButton_2Pushed(app, event)
+        % Button pushed function: RemoveButton_DC1
+        function RemoveButton_DC1Pushed(app, event)
             delItem = app.MeasurementListBox.Value;
             ListBoxItems = app.MeasurementListBox.Items;
             
@@ -1691,8 +1693,8 @@ classdef DipTab_exported < matlab.apps.AppBase
             
         end
 
-        % Button pushed function: RemoveButton
-        function RemoveButtonPushed(app, event)
+        % Button pushed function: RemoveButton_DC2
+        function RemoveButton_DC2Pushed(app, event)
             delItem = app.BatchDetailListBox.Value;
             ListBoxItems = app.BatchDetailListBox.Items;
             
@@ -2431,6 +2433,91 @@ classdef DipTab_exported < matlab.apps.AppBase
             
             fullfile = strcat(filepath,filename);
             exportgraphics(ax,fullfile);
+        end
+
+        % Button pushed function: UpButton
+        function UpButtonPushed(app, event)
+            itemNum = app.MeasurementListBox.Value;
+            ListBoxItems = app.MeasurementListBox.Items;
+            fig = app.DipTabUIFigure;
+
+            if length(itemNum) ~= 1 || itemNum == 1
+                uialert(fig,'Invalid Selection(s)','Process Aborted');
+                return;
+            end          
+                        
+            PeaksTemp = app.CData.Peaks(itemNum-1);
+            metaTemp = app.CData.meta(itemNum-1);
+            batchTemp = app.CData.batch(itemNum-1);
+            ListBoxItemsTemp = ListBoxItems(itemNum-1);
+            TcellTemp = app.Tcell(itemNum-1,:);
+
+            app.CData.Peaks(itemNum-1) = app.CData.Peaks(itemNum);
+            app.CData.meta(itemNum-1) = app.CData.meta(itemNum);
+            app.CData.batch(itemNum-1) = app.CData.batch(itemNum);
+            ListBoxItems(itemNum-1) = ListBoxItems(itemNum);
+            app.Tcell(itemNum-1,:) = app.Tcell(itemNum,:);
+
+            app.CData.Peaks(itemNum) = PeaksTemp;
+            app.CData.meta(itemNum) = metaTemp;
+            app.CData.batch(itemNum) = batchTemp;
+            ListBoxItems(itemNum) = ListBoxItemsTemp;
+            app.Tcell(itemNum,:) = TcellTemp;
+
+            app.MeasurementListBox.Value = itemNum-1;
+
+            app.MeasurementListBox.Items = ListBoxItems;
+            app.MeasurementListBox.ItemsData = (1:length(ListBoxItems));
+            updateTable(app);
+        end
+
+        % Button pushed function: DownButton
+        function DownButtonPushed(app, event)
+            itemNum = app.MeasurementListBox.Value;
+            ListBoxItems = app.MeasurementListBox.Items;
+            fig = app.DipTabUIFigure;
+
+            if length(itemNum) ~= 1 || itemNum == length(ListBoxItems)
+                uialert(fig,'Invalid Selection(s)','Process Aborted');
+                return;
+            end          
+
+            PeaksTemp = app.CData.Peaks(itemNum+1);
+            metaTemp = app.CData.meta(itemNum+1);
+            batchTemp = app.CData.batch(itemNum+1);
+            ListBoxItemsTemp = ListBoxItems(itemNum+1);
+            TcellTemp = app.Tcell(itemNum+1,:);
+
+            app.CData.Peaks(itemNum+1) = app.CData.Peaks(itemNum);
+            app.CData.meta(itemNum+1) = app.CData.meta(itemNum);
+            app.CData.batch(itemNum+1) = app.CData.batch(itemNum);
+            ListBoxItems(itemNum+1) = ListBoxItems(itemNum);
+            app.Tcell(itemNum+1,:) = app.Tcell(itemNum,:);
+
+            app.CData.Peaks(itemNum) = PeaksTemp;
+            app.CData.meta(itemNum) = metaTemp;
+            app.CData.batch(itemNum) = batchTemp;
+            ListBoxItems(itemNum) = ListBoxItemsTemp;
+            app.Tcell(itemNum,:) = TcellTemp;
+
+            app.MeasurementListBox.Value = itemNum+1;
+
+            app.MeasurementListBox.Items = ListBoxItems;
+            app.MeasurementListBox.ItemsData = (1:length(ListBoxItems));
+            updateTable(app);
+        end
+
+        % Cell edit callback: UITable
+        function UITableCellEdit(app, event)
+            indices = event.Indices;
+            newData = event.NewData;
+            ListBoxItems = app.MeasurementListBox.Items;
+
+            itemNum = indices(1);
+            app.CData.meta(itemNum).sampleName = newData;
+            ListBoxItems(itemNum) = {newData};
+            app.Tcell(itemNum,1) = {newData};
+            app.MeasurementListBox.Items = ListBoxItems;            
         end
     end
 
@@ -3172,7 +3259,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.UIAxesCD2.FontWeight = 'bold';
             app.UIAxesCD2.Box = 'on';
             app.UIAxesCD2.FontSize = 12;
-            app.UIAxesCD2.Position = [826 27 600 230];
+            app.UIAxesCD2.Position = [838 27 600 230];
 
             % Create UIAxesCD1
             app.UIAxesCD1 = uiaxes(app.DataComparisonTab);
@@ -3182,25 +3269,25 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.UIAxesCD1.FontWeight = 'bold';
             app.UIAxesCD1.Box = 'on';
             app.UIAxesCD1.FontSize = 12;
-            app.UIAxesCD1.Position = [825 262 600 490];
+            app.UIAxesCD1.Position = [837 262 600 490];
 
             % Create GroupButton
             app.GroupButton = uibutton(app.DataComparisonTab, 'push');
             app.GroupButton.ButtonPushedFcn = createCallbackFcn(app, @GroupButtonPushed, true);
-            app.GroupButton.Position = [235 659 118 30];
+            app.GroupButton.Position = [236 659 118 30];
             app.GroupButton.Text = 'Group';
 
             % Create UngroupButton
             app.UngroupButton = uibutton(app.DataComparisonTab, 'push');
             app.UngroupButton.ButtonPushedFcn = createCallbackFcn(app, @UngroupButtonPushed, true);
-            app.UngroupButton.Position = [234 618 119 30];
+            app.UngroupButton.Position = [235 621 119 30];
             app.UngroupButton.Text = 'Ungroup';
 
-            % Create RemoveButton
-            app.RemoveButton = uibutton(app.DataComparisonTab, 'push');
-            app.RemoveButton.ButtonPushedFcn = createCallbackFcn(app, @RemoveButtonPushed, true);
-            app.RemoveButton.Position = [372 414 100 32];
-            app.RemoveButton.Text = 'Remove';
+            % Create RemoveButton_DC2
+            app.RemoveButton_DC2 = uibutton(app.DataComparisonTab, 'push');
+            app.RemoveButton_DC2.ButtonPushedFcn = createCallbackFcn(app, @RemoveButton_DC2Pushed, true);
+            app.RemoveButton_DC2.Position = [498 419 84 30];
+            app.RemoveButton_DC2.Text = 'Remove';
 
             % Create MeasurementListBoxLabel
             app.MeasurementListBoxLabel = uilabel(app.DataComparisonTab);
@@ -3219,12 +3306,12 @@ classdef DipTab_exported < matlab.apps.AppBase
             % Create BatchNameEditFieldLabel
             app.BatchNameEditFieldLabel = uilabel(app.DataComparisonTab);
             app.BatchNameEditFieldLabel.HorizontalAlignment = 'right';
-            app.BatchNameEditFieldLabel.Position = [238 722 72 22];
+            app.BatchNameEditFieldLabel.Position = [239 722 72 22];
             app.BatchNameEditFieldLabel.Text = 'Batch Name';
 
             % Create BatchNameEditField
             app.BatchNameEditField = uieditfield(app.DataComparisonTab, 'text');
-            app.BatchNameEditField.Position = [236 697 117 25];
+            app.BatchNameEditField.Position = [237 697 117 25];
 
             % Create BatchListBoxLabel
             app.BatchListBoxLabel = uilabel(app.DataComparisonTab);
@@ -3237,7 +3324,7 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.BatchListBox.Items = {};
             app.BatchListBox.Multiselect = 'on';
             app.BatchListBox.ValueChangedFcn = createCallbackFcn(app, @BatchListBoxValueChanged, true);
-            app.BatchListBox.Position = [366 451 115 272];
+            app.BatchListBox.Position = [366 414 115 309];
             app.BatchListBox.Value = {};
 
             % Create BatchDetailListBoxLabel
@@ -3249,19 +3336,19 @@ classdef DipTab_exported < matlab.apps.AppBase
             % Create BatchDetailListBox
             app.BatchDetailListBox = uilistbox(app.DataComparisonTab);
             app.BatchDetailListBox.Items = {};
-            app.BatchDetailListBox.Position = [491 451 181 272];
+            app.BatchDetailListBox.Position = [491 457 181 266];
             app.BatchDetailListBox.Value = {};
 
-            % Create RemoveButton_2
-            app.RemoveButton_2 = uibutton(app.DataComparisonTab, 'push');
-            app.RemoveButton_2.ButtonPushedFcn = createCallbackFcn(app, @RemoveButton_2Pushed, true);
-            app.RemoveButton_2.Position = [237 414 100 32];
-            app.RemoveButton_2.Text = 'Remove';
+            % Create RemoveButton_DC1
+            app.RemoveButton_DC1 = uibutton(app.DataComparisonTab, 'push');
+            app.RemoveButton_DC1.ButtonPushedFcn = createCallbackFcn(app, @RemoveButton_DC1Pushed, true);
+            app.RemoveButton_DC1.Position = [238 419 84 30];
+            app.RemoveButton_DC1.Text = 'Remove';
 
             % Create AddButton
             app.AddButton = uibutton(app.DataComparisonTab, 'push');
             app.AddButton.ButtonPushedFcn = createCallbackFcn(app, @AddButtonPushed, true);
-            app.AddButton.Position = [234 578 119 30];
+            app.AddButton.Position = [235 583 119 30];
             app.AddButton.Text = 'Add';
 
             % Create AssigndatainworkspaceButton
@@ -3290,7 +3377,8 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.UITable.ColumnName = {'Sample Name'; 'Thickness (mm)'; 'n_eff'; 'Ingress Time (s)'; 'k'; 'd'; 'R^2'; 'RMSE'};
             app.UITable.RowName = {};
             app.UITable.ColumnEditable = [true false false false false false false false];
-            app.UITable.Position = [19 56 781 326];
+            app.UITable.CellEditCallback = createCallbackFcn(app, @UITableCellEdit, true);
+            app.UITable.Position = [19 56 805 326];
 
             % Create FittingFunctionParametersLabel
             app.FittingFunctionParametersLabel = uilabel(app.DataComparisonTab);
@@ -3344,6 +3432,18 @@ classdef DipTab_exported < matlab.apps.AppBase
             app.ExportTableasCSVFormatButton.FontWeight = 'bold';
             app.ExportTableasCSVFormatButton.Position = [38 11 192 32];
             app.ExportTableasCSVFormatButton.Text = 'Export Table as CSV Format';
+
+            % Create UpButton
+            app.UpButton = uibutton(app.DataComparisonTab, 'push');
+            app.UpButton.ButtonPushedFcn = createCallbackFcn(app, @UpButtonPushed, true);
+            app.UpButton.Position = [238 493 84 30];
+            app.UpButton.Text = 'Up';
+
+            % Create DownButton
+            app.DownButton = uibutton(app.DataComparisonTab, 'push');
+            app.DownButton.ButtonPushedFcn = createCallbackFcn(app, @DownButtonPushed, true);
+            app.DownButton.Position = [238 456 84 30];
+            app.DownButton.Text = 'Down';
 
             % Create FrequencyDomainTab
             app.FrequencyDomainTab = uitab(app.TabGroup);
